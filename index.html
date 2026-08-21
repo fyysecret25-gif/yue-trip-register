@@ -17,7 +17,10 @@
     input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;font-family:inherit;color:var(--ink);background:#fbfcfe}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     input[readonly]{background:#eef2f6;color:var(--ink)}
-    input[type=file]{padding:10px;font-size:14px;background:#fff}
+    input[type=file].file-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;opacity:0}
+    .pick-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .pick-btn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 10px;font-size:14px;font-weight:650;color:var(--brand);cursor:pointer;font-family:inherit}
+    .pick-btn:active{background:#eef3f8}
     .preview{display:none;width:100%;max-height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin-top:4px}
     .preview.show{display:block}
     .hint{font-size:12px;font-weight:500;color:var(--muted);margin:0}
@@ -78,15 +81,23 @@
         <label><span class="req">返程表显里程</span><input type="number" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
       </div>
       <label>行驶里程（公里）<input type="number" id="mileage" readonly tabindex="-1" placeholder="自动计算" /></label>
-      <label><span class="req">出发表显照片</span>
-        <input type="file" id="photoDepart" accept="image/*" capture="environment" required />
+      <label class="photo-field"><span class="req">出发表显照片</span>
+        <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
+        <div class="pick-row">
+          <button type="button" class="pick-btn" data-for="photoDepart" data-mode="album">从相册选择</button>
+          <button type="button" class="pick-btn" data-for="photoDepart" data-mode="camera">拍照</button>
+        </div>
         <img class="preview" id="previewDepart" alt="" />
       </label>
-      <label><span class="req">返程表显照片</span>
-        <input type="file" id="photoReturn" accept="image/*" capture="environment" required />
+      <label class="photo-field"><span class="req">返程表显照片</span>
+        <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
+        <div class="pick-row">
+          <button type="button" class="pick-btn" data-for="photoReturn" data-mode="album">从相册选择</button>
+          <button type="button" class="pick-btn" data-for="photoReturn" data-mode="camera">拍照</button>
+        </div>
         <img class="preview" id="previewReturn" alt="" />
       </label>
-      <p class="hint">请对着里程表拍照上传，系统会自动压缩后提交。</p>
+      <p class="hint">可从手机相册选取，或现场拍照；提交前会自动压缩。</p>
       <label>备注<input id="remark" maxlength="300" placeholder="可选" /></label>
       <button type="submit" id="btn">提交登记申请</button>
     </form>
@@ -151,7 +162,7 @@
             else resolve(blob);
           }, 'image/jpeg', quality);
         };
-        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('无法读取图片')); };
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('无法读取该图片（若为 HEIC，请改用 JPG/PNG，或点「拍照」重拍）')); };
         img.src = url;
       });
     }
@@ -169,6 +180,7 @@
     }
     function bindPreview(inputId, previewId) {
       $(inputId).addEventListener('change', () => {
+        $(inputId).removeAttribute('capture');
         const f = $(inputId).files && $(inputId).files[0];
         const img = $(previewId);
         if (!f) { img.classList.remove('show'); img.removeAttribute('src'); return; }
@@ -178,6 +190,15 @@
     }
     bindPreview('photoDepart', 'previewDepart');
     bindPreview('photoReturn', 'previewReturn');
+    document.querySelectorAll('.pick-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const el = $(btn.dataset.for);
+        if (!el) return;
+        if (btn.dataset.mode === 'camera') el.setAttribute('capture', 'environment');
+        else el.removeAttribute('capture');
+        el.click();
+      });
+    });
     $('departTime').addEventListener('input', recalcDuration);
     $('returnTime').addEventListener('input', recalcDuration);
     $('departOdometer').addEventListener('input', recalcMileage);
