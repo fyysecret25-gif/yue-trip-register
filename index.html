@@ -91,9 +91,9 @@
       </label>
       <div class="row2">
         <label><span class="req">出发表显里程</span><input type="number" id="departOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
-        <label><span class="req">返程表显里程</span><input type="number" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
+        <label id="returnOdoWrap"><span class="req" id="returnOdoReq">返程表显里程</span><input type="number" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
       </div>
-      <label>行驶里程（公里）<input type="number" id="mileage" readonly tabindex="-1" placeholder="自动计算" /></label>
+      <label id="mileageWrap">行驶里程（公里）<input type="number" id="mileage" readonly tabindex="-1" placeholder="自动计算" /></label>
       <label class="photo-field"><span class="req" id="photoReq">出发表显照片</span>
         <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
         <div class="pick-row">
@@ -224,12 +224,17 @@
       $('purposeOther').required = other;
       $('destination').required = !short;
       $('destReq').classList.toggle('req', !short);
+      $('returnOdometer').required = !short;
+      $('returnOdoReq').classList.toggle('req', !short);
+      $('returnOdoWrap').style.opacity = short ? '0.55' : '1';
+      $('mileageWrap').style.display = short ? 'none' : 'grid';
+      if (short) $('returnOdometer').value = '';
       $('photoDepart').required = !short;
       $('photoReturn').required = !short;
       $('photoReq').classList.toggle('req', !short);
       $('photoReq2').classList.toggle('req', !short);
       $('photoHint').textContent = short
-        ? '短程出车可不传表显照片，也可选传；目的地可不填。'
+        ? '短程出车：填出发表显即可；目的地/返程表显/照片均可不填。'
         : '可从手机相册选取，或现场拍照；提交前会自动压缩。';
     }
     $('purpose').addEventListener('change', applyPurposeRules);
