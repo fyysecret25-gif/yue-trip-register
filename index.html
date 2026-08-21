@@ -31,6 +31,10 @@
     </header>
     <form id="form">
       <label><span class="req">日期</span><input type="date" id="date" required /></label>
+      <div class="row2">
+        <label>出发时间<input type="time" id="departTime" /></label>
+        <label>返回时间<input type="time" id="returnTime" /></label>
+      </div>
       <label><span class="req">车牌号码</span>
         <select id="plate" required>
           <option value="">请选择</option>
@@ -40,10 +44,6 @@
       </label>
       <label><span class="req">司机</span><input id="driver" required maxlength="40" placeholder="姓名" /></label>
       <label><span class="req">事由 / 目的地</span><textarea id="purpose" required maxlength="200" placeholder="如：接送客人 / 机场"></textarea></label>
-      <div class="row2">
-        <label>出发时间<input type="time" id="departTime" /></label>
-        <label>返回时间<input type="time" id="returnTime" /></label>
-      </div>
       <label>行驶里程（公里）<input type="number" id="mileage" min="0" step="0.01" inputmode="decimal" placeholder="可选" /></label>
       <label>备注<input id="remark" maxlength="300" placeholder="可选" /></label>
       <button type="submit" id="btn">提交登记申请</button>
