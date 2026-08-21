@@ -185,6 +185,13 @@
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn=$('btn'); btn.disabled=true;
+      const coolUntil = Number(localStorage.getItem('trip_cool_until') || 0);
+      if (Date.now() < coolUntil) {
+        const sec = Math.ceil((coolUntil - Date.now()) / 1000);
+        show('err', '提交过于频繁，请 ' + sec + ' 秒后再试');
+        btn.disabled=false;
+        return;
+      }
       recalcMileage();
       recalcDuration();
       const f1 = $('photoDepart').files && $('photoDepart').files[0];
@@ -234,6 +241,7 @@
         localStorage.setItem('trip_driver', payload.driver);
         localStorage.setItem('trip_plate', payload.plate);
         localStorage.setItem('trip_handler', payload.handler);
+        localStorage.setItem('trip_cool_until', String(Date.now() + 60 * 1000));
         show('ok', '已提交，等待办公室同意。可关闭本页。');
         $('purpose').value=''; $('origin').value=''; $('destination').value='';
         $('departTime').value=''; $('returnTime').value=''; $('durationText').value='';
