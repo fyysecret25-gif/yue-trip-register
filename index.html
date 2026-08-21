@@ -15,7 +15,7 @@
     label{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
     .req::after{content:" *";color:var(--danger)}
     input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;font-family:inherit;color:var(--ink);background:#fbfcfe}
-    textarea{min-height:72px;resize:vertical} .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     input[readonly]{background:#eef2f6;color:var(--ink);}
     button{appearance:none;border:0;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
     button:disabled{opacity:.55} .msg{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.5}
@@ -34,14 +34,38 @@
         <label>出发时间<input type="time" id="departTime" /></label>
         <label>返回时间<input type="time" id="returnTime" /></label>
       </div>
+      <label>出车总时长<input id="durationText" readonly tabindex="-1" placeholder="根据出发/返回时间自动计算" /></label>
       <label><span class="req">车牌号码</span>
         <select id="plate" required>
           <option value="">请选择</option>
           <option value="粤B171TN">粤B171TN（GL8）</option>
           <option value="粤A7A07K">粤A7A07K（GL8）</option>
+          <option value="粤SN18R0">粤SN18R0（租用）</option>
         </select>
       </label>
-      <label><span class="req">司机</span><input id="driver" required maxlength="40" placeholder="姓名" /></label>
+      <div class="row2">
+        <label><span class="req">司机</span><input id="driver" required maxlength="40" placeholder="姓名" /></label>
+        <label><span class="req">经办人</span>
+          <select id="handler" required>
+            <option value="">请选择</option>
+            <option value="杨长京">杨长京</option>
+            <option value="赵君辉">赵君辉</option>
+            <option value="王涛">王涛</option>
+            <option value="王惠建">王惠建</option>
+            <option value="张凌源">张凌源</option>
+            <option value="刘伟英">刘伟英</option>
+            <option value="唐立新">唐立新</option>
+            <option value="肖兵">肖兵</option>
+            <option value="杜琛">杜琛</option>
+            <option value="乔石">乔石</option>
+            <option value="范未鹏">范未鹏</option>
+            <option value="李新纪">李新纪</option>
+            <option value="王昊天">王昊天</option>
+            <option value="何凌霄">何凌霄</option>
+            <option value="符乐">符乐</option>
+          </select>
+        </label>
+      </div>
       <label><span class="req">事由</span><input id="purpose" required maxlength="200" placeholder="如：接送客人" /></label>
       <label><span class="req">出发地</span><input id="origin" required maxlength="200" placeholder="如：公司" /></label>
       <label><span class="req">目的地</span><input id="destination" required maxlength="200" placeholder="如：机场" /></label>
@@ -65,7 +89,29 @@
     if (savedDriver) $('driver').value = savedDriver;
     const lastPlate = localStorage.getItem('trip_plate');
     if (lastPlate) $('plate').value = lastPlate;
+    const lastHandler = localStorage.getItem('trip_handler');
+    if (lastHandler) $('handler').value = lastHandler;
     function show(type, text) { const el=$('msg'); el.className='msg show '+type; el.textContent=text; }
+    function formatDuration(mins) {
+      if (mins == null || !Number.isFinite(mins) || mins < 0) return '';
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (h && m) return h + '小时' + m + '分钟';
+      if (h) return h + '小时';
+      return m + '分钟';
+    }
+    function recalcDuration() {
+      const a = $('departTime').value;
+      const b = $('returnTime').value;
+      if (!a || !b) { $('durationText').value = ''; return; }
+      const parse = (t) => {
+        const p = t.split(':').map(Number);
+        return p[0] * 60 + p[1];
+      };
+      let x = parse(a), y = parse(b);
+      if (y < x) y += 24 * 60;
+      $('durationText').value = formatDuration(y - x);
+    }
     function recalcMileage() {
       const a = Number($('departOdometer').value);
       const b = Number($('returnOdometer').value);
@@ -76,22 +122,27 @@
       const d = Math.round((b - a) * 100) / 100;
       $('mileage').value = d >= 0 ? String(d) : '';
     }
+    $('departTime').addEventListener('input', recalcDuration);
+    $('returnTime').addEventListener('input', recalcDuration);
     $('departOdometer').addEventListener('input', recalcMileage);
     $('returnOdometer').addEventListener('input', recalcMileage);
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn=$('btn'); btn.disabled=true;
       recalcMileage();
+      recalcDuration();
       const payload = {
         type: 'trip_request',
         date: $('date').value,
         plate: $('plate').value,
         driver: $('driver').value.trim(),
+        handler: $('handler').value,
         purpose: $('purpose').value.trim(),
         origin: $('origin').value.trim(),
         destination: $('destination').value.trim(),
         departTime: $('departTime').value,
         returnTime: $('returnTime').value,
+        durationText: $('durationText').value,
         departOdometer: $('departOdometer').value,
         returnOdometer: $('returnOdometer').value,
         mileage: $('mileage').value,
@@ -103,7 +154,6 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
-            // 请求头只能用 ASCII；中文放 JSON body，否则手机会报 TypeError
             'Title': 'Trip request',
             'Tags': 'car,office',
             'Priority': 'default',
@@ -113,9 +163,10 @@
         if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
         localStorage.setItem('trip_driver', payload.driver);
         localStorage.setItem('trip_plate', payload.plate);
+        localStorage.setItem('trip_handler', payload.handler);
         show('ok', '已提交，等待办公室同意。可关闭本页。');
         $('purpose').value=''; $('origin').value=''; $('destination').value='';
-        $('departTime').value=''; $('returnTime').value='';
+        $('departTime').value=''; $('returnTime').value=''; $('durationText').value='';
         $('departOdometer').value=''; $('returnOdometer').value=''; $('mileage').value=''; $('remark').value='';
       } catch (err) {
         const tip = (err && err.message) ? err.message : String(err);
