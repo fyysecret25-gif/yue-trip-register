@@ -16,6 +16,7 @@
     .req::after{content:" *";color:var(--danger)}
     input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;font-family:inherit;color:var(--ink);background:#fbfcfe}
     textarea{min-height:72px;resize:vertical} .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    input[readonly]{background:#eef2f6;color:var(--ink);}
     button{appearance:none;border:0;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
     button:disabled{opacity:.55} .msg{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.5}
     .msg.show{display:block} .msg.ok{background:#e8f6ee;color:var(--ok);border:1px solid #b7e0c7} .msg.err{background:#fdecec;color:var(--danger);border:1px solid #f3c1bd}
@@ -42,8 +43,13 @@
       </label>
       <label><span class="req">司机</span><input id="driver" required maxlength="40" placeholder="姓名" /></label>
       <label><span class="req">事由</span><input id="purpose" required maxlength="200" placeholder="如：接送客人" /></label>
+      <label><span class="req">出发地</span><input id="origin" required maxlength="200" placeholder="如：公司" /></label>
       <label><span class="req">目的地</span><input id="destination" required maxlength="200" placeholder="如：机场" /></label>
-      <label>行驶里程（公里）<input type="number" id="mileage" min="0" step="0.01" inputmode="decimal" placeholder="可选" /></label>
+      <div class="row2">
+        <label><span class="req">出发表显里程</span><input type="number" id="departOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
+        <label><span class="req">返程表显里程</span><input type="number" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
+      </div>
+      <label>行驶里程（公里）<input type="number" id="mileage" readonly tabindex="-1" placeholder="自动计算" /></label>
       <label>备注<input id="remark" maxlength="300" placeholder="可选" /></label>
       <button type="submit" id="btn">提交登记申请</button>
     </form>
@@ -60,18 +66,34 @@
     const lastPlate = localStorage.getItem('trip_plate');
     if (lastPlate) $('plate').value = lastPlate;
     function show(type, text) { const el=$('msg'); el.className='msg show '+type; el.textContent=text; }
+    function recalcMileage() {
+      const a = Number($('departOdometer').value);
+      const b = Number($('returnOdometer').value);
+      if (!Number.isFinite(a) || !Number.isFinite(b) || $('departOdometer').value==='' || $('returnOdometer').value==='') {
+        $('mileage').value = '';
+        return;
+      }
+      const d = Math.round((b - a) * 100) / 100;
+      $('mileage').value = d >= 0 ? String(d) : '';
+    }
+    $('departOdometer').addEventListener('input', recalcMileage);
+    $('returnOdometer').addEventListener('input', recalcMileage);
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn=$('btn'); btn.disabled=true;
+      recalcMileage();
       const payload = {
         type: 'trip_request',
         date: $('date').value,
         plate: $('plate').value,
         driver: $('driver').value.trim(),
         purpose: $('purpose').value.trim(),
+        origin: $('origin').value.trim(),
         destination: $('destination').value.trim(),
         departTime: $('departTime').value,
         returnTime: $('returnTime').value,
+        departOdometer: $('departOdometer').value,
+        returnOdometer: $('returnOdometer').value,
         mileage: $('mileage').value,
         remark: $('remark').value.trim(),
         submittedAt: new Date().toISOString(),
@@ -92,7 +114,9 @@
         localStorage.setItem('trip_driver', payload.driver);
         localStorage.setItem('trip_plate', payload.plate);
         show('ok', '已提交，等待办公室同意。可关闭本页。');
-        $('purpose').value=''; $('destination').value=''; $('departTime').value=''; $('returnTime').value=''; $('mileage').value=''; $('remark').value='';
+        $('purpose').value=''; $('origin').value=''; $('destination').value='';
+        $('departTime').value=''; $('returnTime').value='';
+        $('departOdometer').value=''; $('returnOdometer').value=''; $('mileage').value=''; $('remark').value='';
       } catch (err) {
         const tip = (err && err.message) ? err.message : String(err);
         show('err', tip.replace(/^TypeError:\s*/i, '提交失败：'));
