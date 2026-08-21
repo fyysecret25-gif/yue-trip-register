@@ -73,15 +73,28 @@
           </select>
         </label>
       </div>
-      <label><span class="req">事由</span><input id="purpose" required maxlength="200" placeholder="如：接送客人" /></label>
+      <label><span class="req">事由</span>
+        <select id="purpose" required>
+          <option value="">请选择</option>
+          <option value="短程出车">短程出车</option>
+          <option value="接送客人">接送客人</option>
+          <option value="公务出行">公务出行</option>
+          <option value="其他">其他</option>
+        </select>
+      </label>
+      <label id="purposeOtherWrap" style="display:none"><span class="req">其他事由</span>
+        <input id="purposeOther" maxlength="200" placeholder="请填写具体事由" />
+      </label>
       <label><span class="req">出发地</span><input id="origin" required maxlength="200" placeholder="如：公司" /></label>
-      <label><span class="req">目的地</span><input id="destination" required maxlength="200" placeholder="如：机场" /></label>
+      <label id="destWrap"><span class="req" id="destReq">目的地</span>
+        <input id="destination" required maxlength="200" placeholder="如：机场；短程可不填" />
+      </label>
       <div class="row2">
         <label><span class="req">出发表显里程</span><input type="number" id="departOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
         <label><span class="req">返程表显里程</span><input type="number" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
       </div>
       <label>行驶里程（公里）<input type="number" id="mileage" readonly tabindex="-1" placeholder="自动计算" /></label>
-      <label class="photo-field"><span class="req">出发表显照片</span>
+      <label class="photo-field"><span class="req" id="photoReq">出发表显照片</span>
         <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
         <div class="pick-row">
           <button type="button" class="pick-btn" data-for="photoDepart" data-mode="album">从相册选择</button>
@@ -89,7 +102,7 @@
         </div>
         <img class="preview" id="previewDepart" alt="" />
       </label>
-      <label class="photo-field"><span class="req">返程表显照片</span>
+      <label class="photo-field"><span class="req" id="photoReq2">返程表显照片</span>
         <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
         <div class="pick-row">
           <button type="button" class="pick-btn" data-for="photoReturn" data-mode="album">从相册选择</button>
@@ -97,7 +110,7 @@
         </div>
         <img class="preview" id="previewReturn" alt="" />
       </label>
-      <p class="hint">可从手机相册选取，或现场拍照；提交前会自动压缩。</p>
+      <p class="hint" id="photoHint">可从手机相册选取，或现场拍照；提交前会自动压缩。短程出车可不传照片。</p>
       <label>备注<input id="remark" maxlength="300" placeholder="可选" /></label>
       <button type="submit" id="btn">提交登记申请</button>
     </form>
@@ -199,6 +212,28 @@
         el.click();
       });
     });
+    function resolvePurpose() {
+      const v = $('purpose').value;
+      if (v === '其他') return ($('purposeOther').value || '').trim();
+      return v;
+    }
+    function applyPurposeRules() {
+      const short = $('purpose').value === '短程出车';
+      const other = $('purpose').value === '其他';
+      $('purposeOtherWrap').style.display = other ? 'grid' : 'none';
+      $('purposeOther').required = other;
+      $('destination').required = !short;
+      $('destReq').classList.toggle('req', !short);
+      $('photoDepart').required = !short;
+      $('photoReturn').required = !short;
+      $('photoReq').classList.toggle('req', !short);
+      $('photoReq2').classList.toggle('req', !short);
+      $('photoHint').textContent = short
+        ? '短程出车可不传表显照片，也可选传；目的地可不填。'
+        : '可从手机相册选取，或现场拍照；提交前会自动压缩。';
+    }
+    $('purpose').addEventListener('change', applyPurposeRules);
+    applyPurposeRules();
     $('departTime').addEventListener('input', recalcDuration);
     $('returnTime').addEventListener('input', recalcDuration);
     $('departOdometer').addEventListener('input', recalcMileage);
@@ -215,25 +250,33 @@
       }
       recalcMileage();
       recalcDuration();
+      const purpose = resolvePurpose();
+      if (!purpose) { show('err', $('purpose').value === '其他' ? '请填写其他事由' : '请选择事由'); btn.disabled=false; return; }
+      const short = purpose === '短程出车';
       const f1 = $('photoDepart').files && $('photoDepart').files[0];
       const f2 = $('photoReturn').files && $('photoReturn').files[0];
-      if (!f1 || !f2) { show('err', '请上传出发与返程表显照片'); btn.disabled=false; return; }
+      if (!short && (!f1 || !f2)) { show('err', '请上传出发与返程表显照片'); btn.disabled=false; return; }
+      if ((f1 && !f2) || (!f1 && f2)) { show('err', '表显照片请成对上传，或全部不传'); btn.disabled=false; return; }
       try {
-        show('ok', '正在压缩照片…');
-        const [b1, b2] = await Promise.all([compressImage(f1), compressImage(f2)]);
-        const stamp = Date.now().toString(36);
-        show('ok', '正在上传照片…');
-        const [photoDepartUrl, photoReturnUrl] = await Promise.all([
-          uploadPhoto(b1, 'depart-' + stamp + '.jpg'),
-          uploadPhoto(b2, 'return-' + stamp + '.jpg'),
-        ]);
+        let photoDepartUrl = '';
+        let photoReturnUrl = '';
+        if (f1 && f2) {
+          show('ok', '正在压缩照片…');
+          const [b1, b2] = await Promise.all([compressImage(f1), compressImage(f2)]);
+          const stamp = Date.now().toString(36);
+          show('ok', '正在上传照片…');
+          [photoDepartUrl, photoReturnUrl] = await Promise.all([
+            uploadPhoto(b1, 'depart-' + stamp + '.jpg'),
+            uploadPhoto(b2, 'return-' + stamp + '.jpg'),
+          ]);
+        }
         const payload = {
           type: 'trip_request',
           date: $('date').value,
           plate: $('plate').value,
           driver: $('driver').value.trim(),
           handler: $('handler').value,
-          purpose: $('purpose').value.trim(),
+          purpose,
           origin: $('origin').value.trim(),
           destination: $('destination').value.trim(),
           departTime: $('departTime').value,
@@ -242,11 +285,11 @@
           departOdometer: $('departOdometer').value,
           returnOdometer: $('returnOdometer').value,
           mileage: $('mileage').value,
-          photoDepartUrl,
-          photoReturnUrl,
           remark: $('remark').value.trim(),
           submittedAt: new Date().toISOString(),
         };
+        if (photoDepartUrl) payload.photoDepartUrl = photoDepartUrl;
+        if (photoReturnUrl) payload.photoReturnUrl = photoReturnUrl;
         show('ok', '正在提交申请…');
         const r = await fetch(NTFY + '/' + TOPIC, {
           method: 'POST',
@@ -264,12 +307,14 @@
         localStorage.setItem('trip_handler', payload.handler);
         localStorage.setItem('trip_cool_until', String(Date.now() + 60 * 1000));
         show('ok', '已提交，等待办公室同意。可关闭本页。');
-        $('purpose').value=''; $('origin').value=''; $('destination').value='';
+        $('purpose').value=''; $('purposeOther').value='';
+        $('origin').value=''; $('destination').value='';
         $('departTime').value=''; $('returnTime').value=''; $('durationText').value='';
         $('departOdometer').value=''; $('returnOdometer').value=''; $('mileage').value=''; $('remark').value='';
         $('photoDepart').value=''; $('photoReturn').value='';
         $('previewDepart').classList.remove('show');
         $('previewReturn').classList.remove('show');
+        applyPurposeRules();
       } catch (err) {
         const tip = (err && err.message) ? err.message : String(err);
         show('err', tip.replace(/^TypeError:\s*/i, '提交失败：'));
