@@ -9,8 +9,8 @@
     :root { --bg:#f0f3f7; --card:#fff; --ink:#1a2332; --muted:#5a6a7a; --line:#d8e0ea; --brand:#1f4e79; --brand2:#2e6da4; --ok:#1b7a4e; --danger:#b42318; }
     *{box-sizing:border-box} body{margin:0;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:radial-gradient(1200px 500px at 10% -10%,#d9e8f7 0%,transparent 55%),var(--bg);min-height:100vh;padding:20px 16px 40px}
     .wrap{max-width:440px;margin:0 auto} header{text-align:center;margin-bottom:18px}
-    .brand{font-size:13px;letter-spacing:.12em;color:var(--brand);font-weight:700;margin-bottom:6px}
-    h1{margin:0;font-size:24px;font-weight:750} .sub{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+    .brand{font-size:13px;letter-spacing:.04em;color:var(--brand);font-weight:700;margin-bottom:6px;line-height:1.45}
+    h1{margin:0;font-size:24px;font-weight:750}
     form{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(31,78,121,.08);padding:18px 16px 20px;display:grid;gap:14px}
     label{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
     .req::after{content:" *";color:var(--danger)}
@@ -19,15 +19,13 @@
     button{appearance:none;border:0;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
     button:disabled{opacity:.55} .msg{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.5}
     .msg.show{display:block} .msg.ok{background:#e8f6ee;color:var(--ok);border:1px solid #b7e0c7} .msg.err{background:#fdecec;color:var(--danger);border:1px solid #f3c1bd}
-    .ft{text-align:center;margin-top:16px;font-size:12px;color:var(--muted)}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">南方公司本级</div>
+      <div class="brand">中铁十八局集团南方工程有限公司</div>
       <h1>出车登记</h1>
-      <p class="sub">填写后提交，办公室同意后正式入账。手机流量可直接打开本页。</p>
     </header>
     <form id="form">
       <label><span class="req">日期</span><input type="date" id="date" required /></label>
@@ -43,13 +41,13 @@
         </select>
       </label>
       <label><span class="req">司机</span><input id="driver" required maxlength="40" placeholder="姓名" /></label>
-      <label><span class="req">事由 / 目的地</span><textarea id="purpose" required maxlength="200" placeholder="如：接送客人 / 机场"></textarea></label>
+      <label><span class="req">事由</span><input id="purpose" required maxlength="200" placeholder="如：接送客人" /></label>
+      <label><span class="req">目的地</span><input id="destination" required maxlength="200" placeholder="如：机场" /></label>
       <label>行驶里程（公里）<input type="number" id="mileage" min="0" step="0.01" inputmode="decimal" placeholder="可选" /></label>
       <label>备注<input id="remark" maxlength="300" placeholder="可选" /></label>
       <button type="submit" id="btn">提交登记申请</button>
     </form>
     <div class="msg" id="msg"></div>
-    <p class="ft">提交后为「待审批」，办公室点同意后计入正式出车记录。</p>
   </div>
   <script>
     const NTFY = "https://ntfy.sh";
@@ -71,6 +69,7 @@
         plate: $('plate').value,
         driver: $('driver').value.trim(),
         purpose: $('purpose').value.trim(),
+        destination: $('destination').value.trim(),
         departTime: $('departTime').value,
         returnTime: $('returnTime').value,
         mileage: $('mileage').value,
@@ -93,7 +92,7 @@
         localStorage.setItem('trip_driver', payload.driver);
         localStorage.setItem('trip_plate', payload.plate);
         show('ok', '已提交，等待办公室同意。可关闭本页。');
-        $('purpose').value=''; $('departTime').value=''; $('returnTime').value=''; $('mileage').value=''; $('remark').value='';
+        $('purpose').value=''; $('destination').value=''; $('departTime').value=''; $('returnTime').value=''; $('mileage').value=''; $('remark').value='';
       } catch (err) {
         const tip = (err && err.message) ? err.message : String(err);
         show('err', tip.replace(/^TypeError:\s*/i, '提交失败：'));
