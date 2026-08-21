@@ -82,7 +82,8 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
-            'Title': '出车登记申请',
+            // 请求头只能用 ASCII；中文放 JSON body，否则手机会报 TypeError
+            'Title': 'Trip request',
             'Tags': 'car,office',
             'Priority': 'default',
           },
@@ -94,7 +95,8 @@
         show('ok', '已提交，等待办公室同意。可关闭本页。');
         $('purpose').value=''; $('departTime').value=''; $('returnTime').value=''; $('mileage').value=''; $('remark').value='';
       } catch (err) {
-        show('err', (err && err.message) || String(err));
+        const tip = (err && err.message) ? err.message : String(err);
+        show('err', tip.replace(/^TypeError:\s*/i, '提交失败：'));
       } finally { btn.disabled=false; }
     });
   </script>
