@@ -234,7 +234,7 @@
       $('photoReq').classList.toggle('req', !short);
       $('photoReq2').classList.toggle('req', !short);
       $('photoHint').textContent = short
-        ? '短程出车：填出发表显即可；目的地/返程表显/照片均可不填。'
+        ? '短程出车（单程≤5km、来回≤10km）：填出发表显即可；目的地/返程表显/照片均可不填。'
         : '可从手机相册选取，或现场拍照；提交前会自动压缩。';
     }
     $('purpose').addEventListener('change', applyPurposeRules);
