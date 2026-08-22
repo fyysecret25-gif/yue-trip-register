@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f4e79" />
+  <title>物资领用申请</title>
+  <style>
+    :root { --bg:#f0f3f7; --card:#fff; --ink:#1a2332; --muted:#5a6a7a; --line:#d8e0ea; --brand:#1f4e79; --brand2:#2e6da4; --ok:#1b7a4e; --danger:#b42318; }
+    *{box-sizing:border-box} body{margin:0;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:radial-gradient(1000px 400px at 0% -10%,#d9e8f7,transparent 55%),var(--bg);min-height:100vh;padding:20px 16px 40px}
+    .wrap{max-width:480px;margin:0 auto} header{text-align:center;margin-bottom:16px}
+    .brand{font-size:13px;color:var(--brand);font-weight:700;line-height:1.45} h1{margin:6px 0 0;font-size:22px}
+    .tabs{display:flex;gap:8px;margin-bottom:12px} .tabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px;font-weight:650;cursor:pointer}
+    .tabs button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .panel{display:none}.panel.show{display:block}
+    form,.query-box,.gate-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:12px;box-shadow:0 8px 28px rgba(31,78,121,.08)}
+    label{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600} .req::after{content:" *";color:var(--danger)}
+    input,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;font-family:inherit;background:#fbfcfe}
+    textarea{min-height:64px;resize:vertical} .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .item-row{border:1px dashed var(--line);border-radius:12px;padding:12px;display:grid;gap:10px;background:#f8fafc}
+    .btn-line{border:1px solid var(--line);background:#f7f9fc;border-radius:10px;padding:10px;font-weight:650;cursor:pointer}
+    .btn-del{color:var(--danger);font-size:13px;justify-self:end;background:none;border:0;cursor:pointer}
+    button.primary{border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
+    button.primary:disabled{opacity:.55}
+    .msg{padding:12px;border-radius:12px;font-size:14px;line-height:1.5;display:none}.msg.show{display:block}
+    .msg.ok{background:#e8f6ee;color:var(--ok);border:1px solid #b7e0c7} .msg.err{background:#fdecec;color:var(--danger);border:1px solid #f3c1bd}
+    .ok-box{display:none;padding:12px;border-radius:12px;border:1px solid #b7e4c7;background:#edf9f1;font-size:13px;line-height:1.5;color:var(--ok)}.ok-box.show{display:grid;gap:8px}
+    .hint{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+    .badge{display:inline-block;font-size:13px;font-weight:750;padding:4px 10px;border-radius:999px;margin-bottom:8px}
+    .badge.pending{background:#ffe6a8;color:#b45309}.badge.approved{background:#d8f3e4;color:var(--ok)}.badge.rejected,.badge.denied{background:#fde2e0;color:var(--danger)}
+    .query-result{display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#f8fafc;font-size:14px;line-height:1.55}.query-result.show{display:block}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">中铁十八局集团南方工程有限公司</div>
+      <h1>物资领用申请</h1>
+      <p class="hint">提交后由办公室审批；通过后记入采购申请台账</p>
+    </header>
+    <div class="gate-card" id="gateBox" style="display:grid">
+      <label class="req">登记口令<input id="accessCodeInput" autocomplete="off" placeholder="办公室下发的个人口令" /></label>
+      <button type="button" class="btn-line" id="btnUnlock">进入申请</button>
+      <p class="hint">与出车登记共用口令；链接可带 ?k=口令</p>
+      <div class="msg" id="gateMsg"></div>
+    </div>
+    <div id="appMain" style="display:none">
+      <div class="tabs">
+        <button type="button" class="on" data-panel="submitPanel">提交申请</button>
+        <button type="button" data-panel="queryPanel">查询进度</button>
+      </div>
+      <div id="submitPanel" class="panel show">
+        <form id="form">
+          <label>申请日期<input id="applyDate" type="date" /></label>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:var(--brand)">
+            <span>申请物资</span><button type="button" class="btn-line" id="btnAddRow">+ 加一行</button>
+          </div>
+          <div id="itemsBox"></div>
+          <label>用途说明<input id="purpose" maxlength="200" placeholder="如：办公使用" /></label>
+          <label>备注<textarea id="note" maxlength="300"></textarea></label>
+          <button type="submit" class="primary" id="btnSubmit">提交申请</button>
+          <div class="msg" id="msg"></div>
+          <div class="ok-box" id="okBox">
+            <div>提交成功！申请编号：<strong id="okId"></strong></div>
+            <button type="button" class="btn-line" id="btnCopyId">复制编号</button>
+          </div>
+        </form>
+      </div>
+      <div id="queryPanel" class="panel">
+        <div class="query-box">
+          <label>申请编号<input id="queryId" maxlength="10" placeholder="如 2026082201" /></label>
+          <button type="button" class="primary" id="btnQuery">查询</button>
+          <div class="msg" id="queryMsg"></div>
+          <div class="query-result" id="queryResult"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const NTFY = "https://ntfy.sh";
+    const TOPIC = "yue-trip-lk56m7z8ray1fq293p4d";
+    const NEED_ACCESS = true;
+    const $ = (id) => document.getElementById(id);
+    let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('material_request_code') || '').trim();
+
+    function show(el, text, ok) { el.textContent = text; el.className = 'msg show ' + (ok ? 'ok' : 'err'); }
+    function itemTpl(idx) {
+      return '<div class="item-row"><label class="req">品名<input data-f="name" maxlength="120" /></label><div class="row2"><label>规格<input data-f="spec" maxlength="120" /></label><label>单位<input data-f="unit" maxlength="20" /></label></div><label class="req">数量<input data-f="qty" type="number" min="1" step="1" /></label>' + (idx > 0 ? '<button type="button" class="btn-del" data-del>删除本行</button>' : '') + '</div>';
+    }
+    function renderItems(n) {
+      const box = $('itemsBox'); box.innerHTML = '';
+      for (let i = 0; i < n; i++) box.insertAdjacentHTML('beforeend', itemTpl(i));
+      box.querySelectorAll('[data-del]').forEach((btn) => btn.addEventListener('click', () => {
+        btn.closest('.item-row').remove();
+        if (!box.querySelector('.item-row')) renderItems(1);
+      }));
+    }
+    function collectItems() {
+      return [...document.querySelectorAll('.item-row')].map((row) => ({
+        name: row.querySelector('[data-f="name"]').value.trim(),
+        spec: row.querySelector('[data-f="spec"]').value.trim(),
+        unit: row.querySelector('[data-f="unit"]').value.trim(),
+        qty: row.querySelector('[data-f="qty"]').value.trim(),
+      }));
+    }
+    function enterApp() { $('gateBox').style.display = 'none'; $('appMain').style.display = 'block'; }
+    function unlock(code) {
+      const c = String(code || '').trim();
+      if (!c) { show($('gateMsg'), '请填写登记口令', false); return false; }
+      accessCode = c; localStorage.setItem('material_request_code', c); enterApp(); return true;
+    }
+    if (NEED_ACCESS) {
+      if (accessCode) unlock(accessCode);
+      else if (new URLSearchParams(location.search).get('k')) $('accessCodeInput').value = new URLSearchParams(location.search).get('k');
+      $('btnUnlock').addEventListener('click', () => unlock($('accessCodeInput').value));
+    } else enterApp();
+
+    document.querySelectorAll('.tabs button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tabs button').forEach((b) => b.classList.remove('on'));
+        btn.classList.add('on');
+        document.querySelectorAll('.panel').forEach((p) => p.classList.remove('show'));
+        $(btn.dataset.panel).classList.add('show');
+      });
+    });
+
+    $('applyDate').value = new Date().toISOString().slice(0, 10);
+    $('btnAddRow').addEventListener('click', () => {
+      const n = document.querySelectorAll('.item-row').length;
+      $('itemsBox').insertAdjacentHTML('beforeend', itemTpl(n));
+      const row = $('itemsBox').lastElementChild;
+      row.querySelector('[data-del]')?.addEventListener('click', () => {
+        row.remove(); if (!$('itemsBox').querySelector('.item-row')) renderItems(1);
+      });
+    });
+
+    async function fetchStatusMessages() {
+      const url = NTFY + '/' + encodeURIComponent(TOPIC) + '/json?poll=1&since=72h';
+      const r = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
+      const text = (await r.text()).trim();
+      if (!text) return [];
+      const out = [];
+      for (const line of text.split('\n')) {
+        if (!line.trim()) continue;
+        let msg; try { msg = JSON.parse(line); } catch { continue; }
+        if (!msg || msg.event !== 'message') continue;
+        let body = {};
+        try { body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {}); } catch { continue; }
+        if (body.type !== 'material_status') continue;
+        out.push({ body, time: Number(msg.time) || 0 });
+      }
+      return out;
+    }
+    async function findStatusByToken(token) {
+      const list = await fetchStatusMessages();
+      let best = null;
+      for (const row of list) {
+        if (String(row.body.clientToken || '') !== String(token)) continue;
+        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
+      }
+      return best;
+    }
+    async function queryById(id) {
+      const list = await fetchStatusMessages();
+      let best = null;
+      for (const row of list) {
+        if (String(row.body.id || '') !== String(id)) continue;
+        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
+      }
+      if (!best) throw new Error('未找到该编号（请核对，或稍后再查）');
+      return best;
+    }
+    function statusLabel(s) {
+      return ({ pending: '待审批', approved: '已通过', rejected: '已驳回', denied: '未受理' })[s] || s;
+    }
+    function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    $('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = $('btnSubmit'); btn.disabled = true; $('okBox').classList.remove('show');
+      try {
+        const code = accessCode || $('accessCodeInput')?.value?.trim() || '';
+        if (code) localStorage.setItem('material_request_code', code);
+        const clientToken = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)).slice(0, 16);
+        const payload = {
+          type: 'material_request',
+          clientToken,
+          accessCode: code,
+          applyDate: $('applyDate').value,
+          purpose: $('purpose').value.trim(),
+          note: $('note').value.trim(),
+          items: collectItems(),
+          submittedAt: new Date().toISOString(),
+        };
+        if (!payload.accessCode && NEED_ACCESS) throw new Error('缺少登记口令');
+        show($('msg'), '正在提交…', true);
+        const r = await fetch(NTFY + '/' + TOPIC, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json; charset=utf-8', Title: 'Material request', Tags: 'material,office' },
+          body: JSON.stringify(payload),
+        });
+        if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
+        show($('msg'), '已送达，正在获取申请编号…', true);
+        let assignedId = '', deniedMsg = '';
+        const deadline = Date.now() + 20000;
+        while (Date.now() < deadline && !assignedId && !deniedMsg) {
+          try {
+            const found = await findStatusByToken(clientToken);
+            if (found && found.status === 'denied') deniedMsg = found.rejectReason || '申请被拒绝';
+            else if (found && found.id && found.status !== 'denied') assignedId = String(found.id);
+          } catch (_) {}
+          if (!assignedId && !deniedMsg) await new Promise((x) => setTimeout(x, 1500));
+        }
+        if (deniedMsg) show($('msg'), deniedMsg, false);
+        else if (assignedId) {
+          localStorage.setItem('material_last_id', assignedId);
+          $('okId').textContent = assignedId;
+          $('okBox').classList.add('show');
+          $('queryId').value = assignedId;
+          show($('msg'), '提交成功', true);
+        } else show($('msg'), '已提交，但暂未取到编号。请稍后在「查询进度」查询，或联系办公室。', false);
+      } catch (err) {
+        show($('msg'), err.message || String(err), false);
+      } finally { btn.disabled = false; }
+    });
+
+    $('btnCopyId').addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText($('okId').textContent.trim()); show($('msg'), '编号已复制', true); }
+      catch { show($('msg'), '复制失败', false); }
+    });
+
+    $('btnQuery').addEventListener('click', async () => {
+      const id = $('queryId').value.trim();
+      if (!/^\d{10}$/.test(id)) { show($('queryMsg'), '请输入 10 位申请编号', false); return; }
+      $('btnQuery').disabled = true;
+      try {
+        const info = await queryById(id);
+        $('queryResult').className = 'query-result show';
+        $('queryResult').innerHTML = '<span class="badge ' + info.status + '">' + statusLabel(info.status) + '</span>' +
+          '<p>申请人：' + esc(info.applicantName) + '</p>' +
+          '<p>物资：' + esc((info.items || []).map((i) => i.name + ' ×' + i.qty).join('；')) + '</p>' +
+          (info.rejectReason ? '<p>驳回：' + esc(info.rejectReason) + '</p>' : '');
+        show($('queryMsg'), '查询成功', true);
+      } catch (e) {
+        $('queryResult').className = 'query-result';
+        show($('queryMsg'), e.message, false);
+      } finally { $('btnQuery').disabled = false; }
+    });
+
+    renderItems(1);
+    const lastId = localStorage.getItem('material_last_id') || '';
+    if (lastId) $('queryId').value = lastId;
+  </script>
+</body>
+</html>
