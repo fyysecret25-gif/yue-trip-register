@@ -33,6 +33,16 @@
     .ok-box .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
     .ok-box .acts button{flex:1;min-width:110px;border:0;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;font-size:14px}
     .ok-box .acts button.sec{background:#e8eef5;color:var(--brand)}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+    .tabs button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit}
+    .tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+    .panel{display:none}.panel.active{display:block}
+    .panel-card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(31,78,121,.08);padding:18px 16px 20px}
+    .query-result{display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#f8fafc;font-size:14px}
+    .query-result.show{display:block}
+    .badge{display:inline-block;font-size:13px;font-weight:750;padding:4px 10px;border-radius:999px;margin-bottom:8px}
+    .badge.pending{background:#ffe6a8;color:#b45309}.badge.approved{background:#d8f3e4;color:var(--ok)}.badge.rejected{background:#fde2e0;color:var(--danger)}
+    .qgrid{display:grid;gap:8px}.qgrid div{display:flex;justify-content:space-between;gap:12px}.qgrid b{color:var(--muted);font-weight:650;flex-shrink:0}
   </style>
 </head>
 <body>
@@ -40,8 +50,12 @@
     <header>
       <div class="brand">中铁十八局集团南方工程有限公司</div>
       <h1>出车登记</h1>
-      <div class="toplinks"><a href="./status.html">查询申请进度</a></div>
     </header>
+    <div class="tabs" role="tablist">
+      <button type="button" class="active" id="tabReg" data-panel="panelReg">出车登记</button>
+      <button type="button" id="tabQuery" data-panel="panelQuery">查询进度</button>
+    </div>
+    <div class="panel active" id="panelReg">
     <form id="form">
       <label><span class="req">日期</span><input type="date" id="date" required /></label>
       <div class="row2">
@@ -128,6 +142,18 @@
       <div class="acts">
         <button type="button" id="btnCopyId">复制编号</button>
         <button type="button" class="sec" id="btnGotoStatus">查询进度</button>
+      </div>
+    </div>
+    </div>
+    <div class="panel" id="panelQuery">
+      <div class="panel-card">
+        <label>申请编号
+          <input id="queryId" type="text" autocomplete="off" spellcheck="false" placeholder="提交成功后显示的编号" />
+        </label>
+        <button type="button" id="btnQuery" style="width:100%;margin-top:8px;background:linear-gradient(135deg,var(--brand),var(--brand2))">查询</button>
+        <div class="msg" id="queryMsg"></div>
+        <div class="query-result" id="queryResult"></div>
+        <p class="hint" style="margin-top:12px">同意或驳回后可在此查看结果。刚提交若暂无结果，请隔几秒再查。</p>
       </div>
     </div>
   </div>
@@ -375,10 +401,100 @@
         show('ok', '编号已复制');
       } catch { show('err', '复制失败，请长按编号手动复制'); }
     });
+    function switchPanel(panelId) {
+      document.querySelectorAll('.panel').forEach((el) => el.classList.toggle('active', el.id === panelId));
+      document.querySelectorAll('.tabs button').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.panel === panelId);
+      });
+    }
+    document.querySelectorAll('.tabs button').forEach((btn) => {
+      btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
+    });
+    function showQueryMsg(type, text) {
+      const el = $('queryMsg');
+      el.className = 'msg show ' + type;
+      el.textContent = text;
+    }
+    function statusLabel(s) {
+      return ({ pending: '待审批', approved: '已同意登记', rejected: '已驳回' })[s] || s;
+    }
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function fmtWhen(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return String(iso);
+        const p = (n) => String(n).padStart(2, '0');
+        return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+      } catch { return String(iso); }
+    }
+    function renderQuery(info) {
+      $('queryResult').className = 'query-result show';
+      $('queryResult').innerHTML =
+        '<span class="badge ' + info.status + '">' + statusLabel(info.status) + '</span>' +
+        '<div class="qgrid">' +
+        '<div><b>编号</b><span>' + esc(info.id) + '</span></div>' +
+        '<div><b>日期</b><span>' + esc(info.date || '—') + '</span></div>' +
+        '<div><b>车牌</b><span>' + esc(info.plate || '—') + '</span></div>' +
+        '<div><b>司机</b><span>' + esc(info.driver || '—') + '</span></div>' +
+        '<div><b>事由</b><span>' + esc(info.purpose || '—') + '</span></div>' +
+        (info.rejectReason ? '<div><b>驳回原因</b><span>' + esc(info.rejectReason) + '</span></div>' : '') +
+        '<div><b>提交</b><span>' + esc(fmtWhen(info.submittedAt)) + '</span></div>' +
+        '<div><b>审批</b><span>' + esc(fmtWhen(info.decidedAt)) + '</span></div>' +
+        '</div>';
+    }
+    async function queryNtfy(id) {
+      const url = NTFY + '/' + encodeURIComponent(TOPIC) + '/json?poll=1&since=7d';
+      const r = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
+      const text = (await r.text()).trim();
+      if (!text) throw new Error('暂无状态记录（可能尚未回写或已过期）');
+      let best = null;
+      for (const line of text.split('\n')) {
+        if (!line.trim()) continue;
+        let msg;
+        try { msg = JSON.parse(line); } catch { continue; }
+        if (!msg || msg.event !== 'message') continue;
+        let body = {};
+        try {
+          body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {});
+        } catch { continue; }
+        if (body.type !== 'trip_status') continue;
+        if (String(body.id || '').toLowerCase() !== id.toLowerCase()) continue;
+        const t = Number(msg.time) || 0;
+        if (!best || t >= best._t) best = Object.assign({}, body, { _t: t });
+      }
+      if (!best) throw new Error('未找到该编号（请核对，或稍后再查）');
+      return best;
+    }
+    async function doQuery() {
+      const id = $('queryId').value.trim();
+      if (!id) { showQueryMsg('err', '请填写申请编号'); return; }
+      $('btnQuery').disabled = true;
+      $('queryResult').className = 'query-result';
+      showQueryMsg('ok', '查询中…');
+      try {
+        const info = await queryNtfy(id);
+        showQueryMsg('ok', '查询成功');
+        renderQuery(info);
+      } catch (e) {
+        showQueryMsg('err', e.message || String(e));
+      } finally {
+        $('btnQuery').disabled = false;
+      }
+    }
+    $('btnQuery').addEventListener('click', doQuery);
+    $('queryId').addEventListener('keydown', (e) => { if (e.key === 'Enter') doQuery(); });
     $('btnGotoStatus').addEventListener('click', () => {
       const id = ($('okId').textContent || localStorage.getItem('trip_last_id') || '').trim();
-      location.href = './status.html?id=' + encodeURIComponent(id);
+      $('queryId').value = id;
+      switchPanel('panelQuery');
+      if (id) doQuery();
     });
+    const lastId = localStorage.getItem('trip_last_id') || '';
+    if (lastId) $('queryId').value = lastId;
   </script>
 </body>
 </html>
