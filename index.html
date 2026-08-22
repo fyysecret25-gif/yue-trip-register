@@ -43,6 +43,7 @@
     .badge{display:inline-block;font-size:13px;font-weight:750;padding:4px 10px;border-radius:999px;margin-bottom:8px}
     .badge.pending{background:#ffe6a8;color:#b45309}.badge.approved{background:#d8f3e4;color:var(--ok)}.badge.rejected{background:#fde2e0;color:var(--danger)}
     .qgrid{display:grid;gap:8px}.qgrid div{display:flex;justify-content:space-between;gap:12px}.qgrid b{color:var(--muted);font-weight:650;flex-shrink:0}
+    .gate-card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(31,78,121,.08);padding:18px 16px 20px;display:grid;gap:12px}
   </style>
 </head>
 <body>
@@ -51,6 +52,15 @@
       <div class="brand">中铁十八局集团南方工程有限公司</div>
       <h1>出车登记</h1>
     </header>
+    <div class="gate-card" id="gateBox" style="display:grid">
+      <label><span class="req">登记口令</span>
+        <input id="accessCodeInput" autocomplete="off" spellcheck="false" placeholder="办公室发给你的个人口令" />
+      </label>
+      <button type="button" id="btnUnlock">进入登记</button>
+      <p class="hint">一人一口令。专属链接会自动填入。口令泄露导致的乱申请可追溯到持有人。</p>
+      <div class="msg" id="gateMsg"></div>
+    </div>
+    <div id="appMain" style="display:none">
     <div class="tabs" role="tablist">
       <button type="button" class="active" id="tabReg" data-panel="panelReg">出车登记</button>
       <button type="button" id="tabQuery" data-panel="panelQuery">查询进度</button>
@@ -156,11 +166,43 @@
         <p class="hint" style="margin-top:12px">同意或驳回后可在此查看结果。刚提交若暂无结果，请隔几秒再查。</p>
       </div>
     </div>
+    </div>
   </div>
   <script>
     const NTFY = "https://ntfy.sh";
     const TOPIC = "yue-trip-lk56m7z8ray1fq293p4d";
+    const NEED_ACCESS = true;
     const $ = (id) => document.getElementById(id);
+    let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('trip_access_code') || '').trim();
+    function showGateMsg(type, text) {
+      const el = $('gateMsg');
+      el.className = 'msg show ' + type;
+      el.textContent = text;
+    }
+    function enterApp() {
+      $('gateBox').style.display = 'none';
+      $('appMain').style.display = 'block';
+    }
+    function unlockWithCode(code) {
+      const c = String(code || '').trim();
+      if (!c) { showGateMsg('err', '请填写登记口令'); return false; }
+      accessCode = c;
+      localStorage.setItem('trip_access_code', c);
+      enterApp();
+      return true;
+    }
+    if (NEED_ACCESS) {
+      if (accessCode) unlockWithCode(accessCode);
+      else if (new URLSearchParams(location.search).get('k')) {
+        $('accessCodeInput').value = new URLSearchParams(location.search).get('k');
+      }
+      $('btnUnlock').addEventListener('click', () => unlockWithCode($('accessCodeInput').value));
+      $('accessCodeInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') unlockWithCode($('accessCodeInput').value);
+      });
+    } else {
+      enterApp();
+    }
     const today = new Date();
     $('date').value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
     const savedDriver = localStorage.getItem('trip_driver') || '';
@@ -320,6 +362,7 @@
         const payload = {
           type: 'trip_request',
           clientToken,
+          accessCode: accessCode || localStorage.getItem('trip_access_code') || '',
           date: $('date').value,
           plate: $('plate').value,
           driver: $('driver').value.trim(),
@@ -336,6 +379,11 @@
           remark: $('remark').value.trim(),
           submittedAt: new Date().toISOString(),
         };
+        if (!payload.accessCode && NEED_ACCESS) {
+          show('err', '缺少登记口令，请返回重新登录');
+          btn.disabled = false;
+          return;
+        }
         if (photoDepartUrl) payload.photoDepartUrl = photoDepartUrl;
         if (photoReturnUrl) payload.photoReturnUrl = photoReturnUrl;
         show('ok', '正在提交申请…');
@@ -353,26 +401,33 @@
         if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
         show('ok', '已送达，正在获取申请编号…');
         let assignedId = '';
+        let deniedMsg = '';
         const deadline = Date.now() + 20000;
-        while (Date.now() < deadline && !assignedId) {
+        while (Date.now() < deadline && !assignedId && !deniedMsg) {
           try {
             const found = await findStatusByToken(clientToken);
-            if (found && found.id) assignedId = String(found.id);
+            if (found && found.status === 'denied') {
+              deniedMsg = found.rejectReason || '登记被拒绝';
+            } else if (found && found.id && found.status !== 'denied') {
+              assignedId = String(found.id);
+            }
           } catch (_) {}
-          if (!assignedId) await new Promise((x) => setTimeout(x, 1500));
+          if (!assignedId && !deniedMsg) await new Promise((x) => setTimeout(x, 1500));
         }
         localStorage.setItem('trip_driver', payload.driver);
         localStorage.setItem('trip_plate', payload.plate);
         localStorage.setItem('trip_handler', payload.handler);
         localStorage.setItem('trip_cool_until', String(Date.now() + 60 * 1000));
-        if (assignedId) {
+        if (deniedMsg) {
+          show('err', deniedMsg);
+        } else if (assignedId) {
           localStorage.setItem('trip_last_id', assignedId);
           $('okId').textContent = assignedId;
           $('okBox').classList.add('show');
           $('queryId').value = assignedId;
           show('ok', '提交成功');
         } else {
-          show('err', '已提交，但暂未取到编号。请稍后在「查询进度」按日期序号查询，或联系办公室。');
+          show('err', '已提交，但暂未取到编号。请稍后在「查询进度」查询，或联系办公室。');
         }
         $('purpose').value=''; $('purposeOther').value='';
         $('origin').value=''; $('destination').value='';
