@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f4e79" />
+  <title>出车申请进度</title>
+  <style>
+    :root { --bg:#f0f3f7; --card:#fff; --ink:#1a2332; --muted:#5a6a7a; --line:#d8e0ea; --brand:#1f4e79; --ok:#1b7a4e; --warn:#b45309; --danger:#b42318; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:radial-gradient(1200px 500px at 10% -10%,#d9e8f7 0%,transparent 55%),var(--bg);min-height:100vh;padding:20px 16px 40px}
+    .wrap{max-width:440px;margin:0 auto}
+    header{text-align:center;margin-bottom:18px}
+    h1{margin:0;font-size:22px;font-weight:750}
+    .sub{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.5}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 16px;box-shadow:0 8px 28px rgba(31,78,121,.08)}
+    label{display:grid;gap:6px;font-size:13px;font-weight:650;margin-bottom:12px}
+    input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px;font-family:ui-monospace,Consolas,monospace}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    button{flex:1;min-width:120px;border:0;border-radius:10px;padding:12px 14px;font-size:15px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff}
+    button.sec{background:#e8eef5;color:var(--brand)}
+    .msg{margin-top:12px;font-size:13px;line-height:1.5;display:none}
+    .msg.show{display:block}.msg.err{color:var(--danger)}.msg.ok{color:var(--ok)}
+    .result{margin-top:14px;display:none;border:1px solid var(--line);border-radius:12px;padding:14px;background:#f8fafc}
+    .result.show{display:block}
+    .badge{display:inline-block;font-size:13px;font-weight:750;padding:4px 10px;border-radius:999px}
+    .badge.pending{background:#ffe6a8;color:var(--warn)}
+    .badge.approved{background:#d8f3e4;color:var(--ok)}
+    .badge.rejected{background:#fde2e0;color:var(--danger)}
+    .grid{margin-top:10px;display:grid;gap:8px;font-size:14px}
+    .grid div{display:flex;justify-content:space-between;gap:12px}
+    .grid b{color:var(--muted);font-weight:650;flex-shrink:0}
+    .hint{margin-top:14px;font-size:12px;color:var(--muted);line-height:1.55}
+    a{color:var(--brand)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>查询申请进度</h1>
+      <p class="sub">输入提交成功时的申请编号。状态约保留近数日（ntfy 缓存）。</p>
+    </header>
+    <div class="card">
+      <label>申请编号
+        <input id="id" type="text" autocomplete="off" spellcheck="false" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+      </label>
+      <div class="row">
+        <button type="button" id="btn">查询</button>
+        <button type="button" class="sec" id="btnReg">去登记</button>
+      </div>
+      <div class="msg" id="msg"></div>
+      <div class="result" id="result"></div>
+      <p class="hint">审批通过或驳回后会自动更新。刚提交可查「待审批」；若暂无结果请隔几秒再查。</p>
+    </div>
+  </div>
+  <script>
+    const NTFY = "https://ntfy.sh";
+    const TOPIC = "yue-trip-lk56m7z8ray1fq293p4d";
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    function showMsg(type, text) {
+      const el = $('msg');
+      el.className = 'msg show ' + type;
+      el.textContent = text;
+    }
+    function statusLabel(s) {
+      return ({ pending: '待审批', approved: '已同意登记', rejected: '已驳回' })[s] || s;
+    }
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function fmt(iso) {
+      if (!iso) return '—';
+      try {
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return String(iso);
+        const p = (n) => String(n).padStart(2, '0');
+        return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+      } catch { return String(iso); }
+    }
+    function render(info) {
+      $('result').className = 'result show';
+      $('result').innerHTML =
+        '<span class="badge ' + info.status + '">' + statusLabel(info.status) + '</span>' +
+        '<div class="grid">' +
+        '<div><b>编号</b><span>' + esc(info.id) + '</span></div>' +
+        '<div><b>日期</b><span>' + esc(info.date || '—') + '</span></div>' +
+        '<div><b>车牌</b><span>' + esc(info.plate || '—') + '</span></div>' +
+        '<div><b>司机</b><span>' + esc(info.driver || '—') + '</span></div>' +
+        '<div><b>事由</b><span>' + esc(info.purpose || '—') + '</span></div>' +
+        (info.rejectReason ? '<div><b>驳回原因</b><span>' + esc(info.rejectReason) + '</span></div>' : '') +
+        '<div><b>提交</b><span>' + esc(fmt(info.submittedAt)) + '</span></div>' +
+        '<div><b>审批</b><span>' + esc(fmt(info.decidedAt)) + '</span></div>' +
+        '</div>';
+    }
+    async function queryNtfy(id) {
+      const url = NTFY + '/' + encodeURIComponent(TOPIC) + '/json?poll=1&since=7d';
+      const r = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
+      const text = (await r.text()).trim();
+      if (!text) throw new Error('暂无状态记录（可能尚未回写或已过期）');
+      let best = null;
+      for (const line of text.split('\n')) {
+        if (!line.trim()) continue;
+        let msg;
+        try { msg = JSON.parse(line); } catch { continue; }
+        if (!msg || msg.event !== 'message') continue;
+        let body = {};
+        try {
+          body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {});
+        } catch { continue; }
+        if (body.type !== 'trip_status') continue;
+        if (String(body.id || '').toLowerCase() !== id.toLowerCase()) continue;
+        const t = Number(msg.time) || 0;
+        if (!best || t >= best._t) best = Object.assign({}, body, { _t: t });
+      }
+      if (!best) throw new Error('未找到该编号（请核对，或稍后再查）');
+      return best;
+    }
+    async function doQuery() {
+      const id = $('id').value.trim();
+      if (!id) { showMsg('err', '请填写申请编号'); return; }
+      $('btn').disabled = true;
+      $('result').className = 'result';
+      showMsg('ok', '查询中…');
+      try {
+        const info = await queryNtfy(id);
+        showMsg('ok', '查询成功');
+        render(info);
+      } catch (e) {
+        showMsg('err', e.message || String(e));
+      } finally {
+        $('btn').disabled = false;
+      }
+    }
+    $('id').value = params.get('id') || localStorage.getItem('trip_last_id') || '';
+    $('btn').addEventListener('click', doQuery);
+    $('id').addEventListener('keydown', (e) => { if (e.key === 'Enter') doQuery(); });
+    $('btnReg').addEventListener('click', () => { location.href = './'; });
+    if ($('id').value) doQuery();
+  </script>
+</body>
+</html>
