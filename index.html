@@ -27,6 +27,12 @@
     button{appearance:none;border:0;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
     button:disabled{opacity:.55} .msg{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.5}
     .msg.show{display:block} .msg.ok{background:#e8f6ee;color:var(--ok);border:1px solid #b7e0c7} .msg.err{background:#fdecec;color:var(--danger);border:1px solid #f3c1bd}
+    .toplinks{margin-top:8px;font-size:13px}.toplinks a{color:var(--brand);font-weight:650}
+    .ok-box{display:none;margin-top:12px;padding:12px;border-radius:12px;border:1px solid #b7e4c7;background:#edf9f1;font-size:13px;line-height:1.5;color:var(--ok)}
+    .ok-box.show{display:block}.ok-box code{display:block;margin:8px 0;padding:8px;background:#fff;border-radius:8px;border:1px solid var(--line);color:var(--ink);font-size:12px;word-break:break-all;font-family:ui-monospace,Consolas,monospace}
+    .ok-box .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .ok-box .acts button{flex:1;min-width:110px;border:0;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;font-size:14px}
+    .ok-box .acts button.sec{background:#e8eef5;color:var(--brand)}
   </style>
 </head>
 <body>
@@ -34,6 +40,7 @@
     <header>
       <div class="brand">中铁十八局集团南方工程有限公司</div>
       <h1>出车登记</h1>
+      <div class="toplinks"><a href="./status.html">查询申请进度</a></div>
     </header>
     <form id="form">
       <label><span class="req">日期</span><input type="date" id="date" required /></label>
@@ -115,6 +122,14 @@
       <button type="submit" id="btn">提交登记申请</button>
     </form>
     <div class="msg" id="msg"></div>
+    <div class="ok-box" id="okBox">
+      <div>已提交，等待办公室同意。请保存申请编号：</div>
+      <code id="okId"></code>
+      <div class="acts">
+        <button type="button" id="btnCopyId">复制编号</button>
+        <button type="button" class="sec" id="btnGotoStatus">查询进度</button>
+      </div>
+    </div>
   </div>
   <script>
     const NTFY = "https://ntfy.sh";
@@ -275,8 +290,11 @@
             uploadPhoto(b2, 'return-' + stamp + '.jpg'),
           ]);
         }
+        const clientId = (crypto.randomUUID && crypto.randomUUID())
+          || (Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10));
         const payload = {
           type: 'trip_request',
+          clientId,
           date: $('date').value,
           plate: $('plate').value,
           driver: $('driver').value.trim(),
@@ -296,6 +314,7 @@
         if (photoDepartUrl) payload.photoDepartUrl = photoDepartUrl;
         if (photoReturnUrl) payload.photoReturnUrl = photoReturnUrl;
         show('ok', '正在提交申请…');
+        $('okBox').classList.remove('show');
         const r = await fetch(NTFY + '/' + TOPIC, {
           method: 'POST',
           headers: {
@@ -307,11 +326,36 @@
           body: JSON.stringify(payload),
         });
         if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
+        // 立即回写 pending，便于马上查进度（办公室入库后/审批后会再覆盖）
+        try {
+          await fetch(NTFY + '/' + TOPIC, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              'Title': 'Trip pending ' + clientId.slice(0, 8),
+              'Tags': 'trip_status,car',
+            },
+            body: JSON.stringify({
+              type: 'trip_status',
+              id: clientId,
+              status: 'pending',
+              date: payload.date,
+              plate: payload.plate,
+              driver: payload.driver,
+              purpose: payload.purpose,
+              submittedAt: payload.submittedAt,
+              publishedAt: new Date().toISOString(),
+            }),
+          });
+        } catch (_) {}
         localStorage.setItem('trip_driver', payload.driver);
         localStorage.setItem('trip_plate', payload.plate);
         localStorage.setItem('trip_handler', payload.handler);
         localStorage.setItem('trip_cool_until', String(Date.now() + 60 * 1000));
-        show('ok', '已提交，等待办公室同意。可关闭本页。');
+        localStorage.setItem('trip_last_id', clientId);
+        $('okId').textContent = clientId;
+        $('okBox').classList.add('show');
+        show('ok', '提交成功');
         $('purpose').value=''; $('purposeOther').value='';
         $('origin').value=''; $('destination').value='';
         $('departTime').value=''; $('returnTime').value=''; $('durationText').value='';
@@ -324,6 +368,16 @@
         const tip = (err && err.message) ? err.message : String(err);
         show('err', tip.replace(/^TypeError:\s*/i, '提交失败：'));
       } finally { btn.disabled=false; }
+    });
+    $('btnCopyId').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(($('okId').textContent || '').trim());
+        show('ok', '编号已复制');
+      } catch { show('err', '复制失败，请长按编号手动复制'); }
+    });
+    $('btnGotoStatus').addEventListener('click', () => {
+      const id = ($('okId').textContent || localStorage.getItem('trip_last_id') || '').trim();
+      location.href = './status.html?id=' + encodeURIComponent(id);
     });
   </script>
 </body>
