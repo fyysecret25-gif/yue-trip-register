@@ -6,122 +6,508 @@
   <meta name="theme-color" content="#1f4e79" />
   <title>出车登记</title>
   <style>
-    :root { --bg:#f0f3f7; --card:#fff; --ink:#1a2332; --muted:#5a6a7a; --line:#d8e0ea; --brand:#1f4e79; --brand2:#2e6da4; --ok:#1b7a4e; --danger:#b42318; }
-    *{box-sizing:border-box} body{margin:0;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:radial-gradient(1200px 500px at 10% -10%,#d9e8f7 0%,transparent 55%),var(--bg);min-height:100vh;padding:20px 16px 40px}
-    .wrap{max-width:440px;margin:0 auto} header{text-align:center;margin-bottom:18px}
-    .brand{font-size:13px;letter-spacing:.04em;color:var(--brand);font-weight:700;margin-bottom:6px;line-height:1.45}
-    h1{margin:0;font-size:24px;font-weight:750}
-    form{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(31,78,121,.08);padding:18px 16px 20px;display:grid;gap:14px}
-    label{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
-    .req::after{content:" *";color:var(--danger)}
-    input,select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;font-family:inherit;color:var(--ink);background:#fbfcfe}
-    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    input[readonly]{background:#eef2f6;color:var(--ink)}
-    input[type=file].file-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;opacity:0}
-    .pick-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .pick-btn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px 10px;font-size:14px;font-weight:650;color:var(--brand);cursor:pointer;font-family:inherit}
-    .pick-btn:active{background:#eef3f8}
-    .preview{display:none;width:100%;max-height:140px;object-fit:cover;border-radius:10px;border:1px solid var(--line);margin-top:4px}
-    .preview.show{display:block}
-    .hint{font-size:12px;font-weight:500;color:var(--muted);margin:0}
-    button{appearance:none;border:0;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
-    button:disabled{opacity:.55} .msg{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-size:14px;line-height:1.5}
-    .msg.show{display:block} .msg.ok{background:#e8f6ee;color:var(--ok);border:1px solid #b7e0c7} .msg.err{background:#fdecec;color:var(--danger);border:1px solid #f3c1bd}
-    .toplinks{margin-top:8px;font-size:13px}.toplinks a{color:var(--brand);font-weight:650}
-    .ok-box{display:none;margin-top:12px;padding:12px;border-radius:12px;border:1px solid #b7e4c7;background:#edf9f1;font-size:13px;line-height:1.5;color:var(--ok)}
-    .ok-box.show{display:block}.ok-box code{display:block;margin:8px 0;padding:8px;background:#fff;border-radius:8px;border:1px solid var(--line);color:var(--ink);font-size:12px;word-break:break-all;font-family:ui-monospace,Consolas,monospace}
-    .ok-box .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .ok-box .acts button{flex:1;min-width:110px;border:0;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff;font-size:14px}
-    .ok-box .acts button.sec{background:#e8eef5;color:var(--brand)}
-    .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}
-    .tabs button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;font-size:14px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit}
-    .tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
-    .panel{display:none}.panel.active{display:block}
-    .panel-card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(31,78,121,.08);padding:18px 16px 20px}
-    .query-result{display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#f8fafc;font-size:14px}
-    .query-result.show{display:block}
-    .badge{display:inline-block;font-size:13px;font-weight:750;padding:4px 10px;border-radius:999px;margin-bottom:8px}
-    .badge.pending{background:#ffe6a8;color:#b45309}.badge.approved{background:#d8f3e4;color:var(--ok)}.badge.rejected{background:#fde2e0;color:var(--danger)}
-    .qgrid{display:grid;gap:8px}.qgrid div{display:flex;justify-content:space-between;gap:12px}.qgrid b{color:var(--muted);font-weight:650;flex-shrink:0}
-    .gate-card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 28px rgba(31,78,121,.08);padding:18px 16px 20px;display:grid;gap:12px}
-    .user-bar{display:none;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 28px rgba(31,78,121,.08);font-size:14px}
-    .user-bar.show{display:flex}.user-bar .name{font-weight:700;color:var(--brand)}
-    .btn-logout{appearance:none;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:650;color:var(--muted);cursor:pointer;font-family:inherit}
-    .mine-toolbar{display:flex;justify-content:flex-end;margin-bottom:10px}
-    .mine-toolbar button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:650;color:var(--brand);cursor:pointer;font-family:inherit}
-    .mine-list{display:grid;gap:8px}
-    .mine-item{display:grid;gap:4px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;cursor:pointer;text-align:left;font-family:inherit;width:100%}
-    .mine-item:active{background:#eef3f8}
-    .mine-item .row1{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--ink)}
-    .mine-item .row2{font-size:12px;color:var(--muted);line-height:1.45}
-    .mine-empty{text-align:center;padding:24px 12px;font-size:13px;color:var(--muted);line-height:1.5}
+    :root {
+      --bg: #f0f3f7;
+      --card: #fff;
+      --ink: #1a2332;
+      --muted: #5a6a7a;
+      --line: #d8e0ea;
+      --brand: #1f4e79;
+      --brand2: #2e6da4;
+      --ok: #1b7a4e;
+      --danger: #b42318;
+      --radius: 14px;
+      --shadow: 0 8px 28px rgba(31, 78, 121, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #d9e8f7 0%, transparent 55%),
+        radial-gradient(900px 400px at 100% 0%, #e8f0e9 0%, transparent 50%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 20px 16px 40px;
+    }
+    .wrap { max-width: 440px; margin: 0 auto; }
+    header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    .brand {
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--brand);
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.45;
+    }
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 750;
+      letter-spacing: 0.02em;
+    }
+    form {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 16px 20px;
+      display: grid;
+      gap: 14px;
+    }
+    label {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .req::after { content: " *"; color: var(--danger); }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 12px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--ink);
+      background: #fbfcfe;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(31, 78, 121, 0.25);
+      border-color: var(--brand2);
+      background: #fff;
+    }
+    textarea { min-height: 72px; resize: vertical; }
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      cursor: pointer;
+      margin-top: 4px;
+    }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+    .msg {
+      display: none;
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .msg.show { display: block; }
+    .msg.ok { background: #e8f6ee; color: var(--ok); border: 1px solid #b7e0c7; }
+    .msg.err { background: #fdecec; color: var(--danger); border: 1px solid #f3c1bd; }
+    input[type="file"].file-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+      opacity: 0;
+    }
+    .pick-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .pick-btn {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px 10px;
+      font-size: 14px;
+      font-weight: 650;
+      color: var(--brand);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .pick-btn:active { background: #eef3f8; }
+    .preview {
+      display: none;
+      width: 100%;
+      max-height: 140px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      margin-top: 4px;
+    }
+    .preview.show { display: block; }
+    .hint {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      margin: 0;
+    }
+    .ft {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .toplinks { margin-top: 8px; font-size: 13px; }
+    .toplinks a { color: var(--brand); font-weight: 650; }
+    .ok-box {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #b7e4c7;
+      background: #edf9f1;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--ok);
+    }
+    .ok-box.show { display: block; }
+    .ok-box code {
+      display: block;
+      margin: 8px 0;
+      padding: 8px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 12px;
+      word-break: break-all;
+      font-family: ui-monospace, Consolas, monospace;
+    }
+    .ok-box .acts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .ok-box .acts button {
+      flex: 1;
+      min-width: 110px;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--brand);
+      color: #fff;
+    }
+    .ok-box .acts button.sec { background: #e8eef5; color: var(--brand); }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+    .tabs button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .tabs button.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .panel-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px 16px 20px;
+    }
+    .query-result {
+      display: none;
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      font-size: 14px;
+    }
+    .query-result.show { display: block; }
+    .badge {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 750;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+    .badge.pending { background: #ffe6a8; color: #b45309; }
+    .badge.approved { background: #d8f3e4; color: var(--ok); }
+    .badge.rejected { background: #fde2e0; color: var(--danger); }
+    .qgrid { display: grid; gap: 8px; }
+    .qgrid div { display: flex; justify-content: space-between; gap: 12px; }
+    .qgrid b { color: var(--muted); font-weight: 650; flex-shrink: 0; }
+    .gate-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px 16px 20px;
+      display: grid;
+      gap: 12px;
+    }
+    .user-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 0 0 12px;
+      padding: 10px 12px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      font-size: 14px;
+    }
+    .user-bar.show { display: flex; }
+    .user-bar .name { font-weight: 700; color: var(--brand); }
+    .btn-logout {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0;
+    }
+    .mine-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+    .mine-toolbar button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--brand);
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0;
+    }
+    .mine-list { display: grid; gap: 8px; }
+    .mine-item {
+      display: grid;
+      gap: 4px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #f8fafc;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      width: 100%;
+    }
+    .mine-item:active { background: #eef3f8; }
+    .mine-item .row1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .mine-item .row2 {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-change-code {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--brand);
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0;
+    }
+    .change-banner {
+      display: none;
+      margin: 0 0 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #b7d4f0;
+      background: #eef6fc;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--ink);
+    }
+    .change-banner.show { display: block; }
+    .change-banner .acts { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .change-banner button {
+      appearance: none;
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0;
+    }
+    .change-banner .primary { background: var(--brand); color: #fff; }
+    .change-banner .ghost { background: #fff; color: var(--muted); border: 1px solid var(--line); }
+    .code-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .code-mask.show { display: flex; }
+    .code-dialog {
+      width: 100%;
+      max-width: 360px;
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 18px 16px 16px;
+      display: grid;
+      gap: 12px;
+    }
+    .code-dialog h2 { margin: 0; font-size: 18px; }
+    .code-dialog label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
+    .code-dialog input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 16px;
+      font-family: inherit;
+    }
+    .code-dialog .hint { font-size: 12px; color: var(--muted); margin: 0; line-height: 1.45; }
+    .code-dialog .acts { display: flex; gap: 8px; }
+    .code-dialog .acts button {
+      flex: 1;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0;
+    }
+    .code-dialog .acts .primary { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; }
+    .code-dialog .acts .ghost { background: #eef2f6; color: var(--ink); }
+
+    .mine-empty {
+      text-align: center;
+      padding: 24px 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">中铁十八局集团南方工程有限公司</div>
+      <div class="brand" id="unit">中铁十八局集团南方工程有限公司</div>
       <h1>出车登记</h1>
     </header>
-    <div class="gate-card" id="gateBox" style="display:grid">
+
+    <div class="gate-card" id="gateBox" style="display:none">
       <label><span class="req">登记口令</span>
         <input id="accessCodeInput" autocomplete="off" spellcheck="false" placeholder="办公室发给你的个人口令" />
       </label>
-      <button type="button" id="btnUnlock">登录</button>
+      <button type="button" id="btnUnlock" style="width:100%;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer">登录</button>
       <p class="hint">输入办公室下发的个人口令登录，可登记出车并查看自己的申请记录与进度。</p>
       <div class="msg" id="gateMsg"></div>
     </div>
+
     <div id="appMain" style="display:none">
     <div class="user-bar" id="userBar">
       <span class="name" id="userGreeting">您好</span>
-      <button type="button" class="btn-logout" id="btnLogout">退出</button>
+      <div class="user-actions">
+        <button type="button" class="btn-change-code" id="btnChangeCode">修改口令</button>
+        <button type="button" class="btn-logout" id="btnLogout">退出</button>
+      </div>
+    </div>
+    <div class="change-banner" id="changeBanner">
+      <div>建议尽快修改个人登记口令，仅自己知道更安全。</div>
+      <div class="acts">
+        <button type="button" class="primary" id="btnBannerChange">去修改</button>
+        <button type="button" class="ghost" id="btnBannerDismiss">知道了</button>
+      </div>
     </div>
     <div class="tabs" role="tablist">
       <button type="button" class="active" id="tabReg" data-panel="panelReg">出车登记</button>
-      <button type="button" id="tabMine" data-panel="panelMine">我的申请</button>
-      <button type="button" id="tabQuery" data-panel="panelQuery">查编号</button>
+      <button type="button" id="tabMine" data-panel="panelMine">查询进度</button>
     </div>
+
     <div class="panel active" id="panelReg">
-    <form id="form">
-      <label><span class="req">日期</span><input type="date" id="date" required /></label>
+    <form id="form" autocomplete="on">
+      <label><span class="req">日期</span>
+        <input type="date" name="date" id="date" required />
+      </label>
       <div class="row2">
-        <label>出发时间<input type="time" id="departTime" /></label>
-        <label>返回时间<input type="time" id="returnTime" /></label>
+        <label>出发时间
+          <input type="time" name="departTime" id="departTime" />
+        </label>
+        <label>返回时间
+          <input type="time" name="returnTime" id="returnTime" />
+        </label>
       </div>
-      <label>出车总时长<input id="durationText" readonly tabindex="-1" placeholder="根据出发/返回时间自动计算" /></label>
+      <label>出车总时长
+        <input id="durationText" readonly tabindex="-1" placeholder="根据出发/返回时间自动计算" />
+      </label>
       <label><span class="req">车牌号码</span>
-        <select id="plate" required>
+        <select name="plate" id="plate" required>
           <option value="">请选择</option>
-          <option value="粤B171TN">粤B171TN（GL8）</option>
-          <option value="粤A7A07K">粤A7A07K（GL8）</option>
-          <option value="粤SN18R0">粤SN18R0（GL8）</option>
         </select>
       </label>
       <div class="row2">
-        <label><span class="req">司机</span><input id="driver" required maxlength="40" placeholder="姓名" /></label>
+        <label><span class="req">司机</span>
+          <input name="driver" id="driver" required maxlength="40" placeholder="姓名" />
+        </label>
         <label><span class="req">经办人</span>
-          <select id="handler" required>
+          <select name="handler" id="handler" required>
             <option value="">请选择</option>
-            <option value="杨长京">杨长京</option>
-            <option value="赵君辉">赵君辉</option>
-            <option value="王涛">王涛</option>
-            <option value="王惠建">王惠建</option>
-            <option value="张凌源">张凌源</option>
-            <option value="刘伟英">刘伟英</option>
-            <option value="唐立新">唐立新</option>
-            <option value="肖兵">肖兵</option>
-            <option value="杜琛">杜琛</option>
-            <option value="乔石">乔石</option>
-            <option value="范未鹏">范未鹏</option>
-            <option value="李新纪">李新纪</option>
-            <option value="王昊天">王昊天</option>
-            <option value="何凌霄">何凌霄</option>
-            <option value="符乐">符乐</option>
           </select>
         </label>
       </div>
       <label><span class="req">事由</span>
-        <select id="purpose" required>
+        <select name="purpose" id="purpose" required>
           <option value="">请选择</option>
           <option value="短程出车">短程出车</option>
           <option value="接送客人">接送客人</option>
@@ -132,74 +518,111 @@
       <label id="purposeOtherWrap" style="display:none"><span class="req">其他事由</span>
         <input id="purposeOther" maxlength="200" placeholder="请填写具体事由" />
       </label>
-      <label><span class="req">出发地</span><input id="origin" required maxlength="200" placeholder="如：公司" /></label>
-      <label id="destWrap"><span class="req" id="destReq">目的地</span>
-        <input id="destination" required maxlength="200" placeholder="如：机场；短程可不填" />
+      <label><span class="req">出发地</span>
+        <input name="origin" id="origin" required maxlength="200" placeholder="如：公司" />
       </label>
-      <div class="row2">
-        <label><span class="req">出发表显里程</span><input type="number" id="departOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
-        <label id="returnOdoWrap"><span class="req" id="returnOdoReq">返程表显里程</span><input type="number" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" /></label>
+      <label id="destWrap"><span class="req" id="destReq">目的地</span>
+        <input name="destination" id="destination" required maxlength="200" placeholder="如：机场；短程可不填" />
+      </label>
+      <div class="row2" id="odoRow">
+        <label><span class="req">出发表显里程</span>
+          <input type="number" name="departOdometer" id="departOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" />
+        </label>
+        <label id="returnOdoWrap"><span class="req" id="returnOdoReq">返程表显里程</span>
+          <input type="number" name="returnOdometer" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" />
+        </label>
       </div>
-      <label id="mileageWrap">行驶里程（公里）<input type="number" id="mileage" readonly tabindex="-1" placeholder="自动计算" /></label>
-      <label class="photo-field"><span class="req" id="photoReq">出发表显照片</span>
+      <label id="mileageWrap">行驶里程（公里）
+        <input type="number" name="mileage" id="mileage" readonly tabindex="-1" placeholder="自动计算" />
+      </label>
+      <label class="photo-field" id="photoBlock"><span class="req" id="photoReq">出发表显照片</span>
         <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
         <div class="pick-row">
           <button type="button" class="pick-btn" data-for="photoDepart" data-mode="album">从相册选择</button>
           <button type="button" class="pick-btn" data-for="photoDepart" data-mode="camera">拍照</button>
         </div>
-        <img class="preview" id="previewDepart" alt="" />
+        <img class="preview" id="previewDepart" alt="出发表显预览" />
       </label>
-      <label class="photo-field"><span class="req" id="photoReq2">返程表显照片</span>
+      <label class="photo-field" id="photoBlock2"><span class="req" id="photoReq2">返程表显照片</span>
         <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
         <div class="pick-row">
           <button type="button" class="pick-btn" data-for="photoReturn" data-mode="album">从相册选择</button>
           <button type="button" class="pick-btn" data-for="photoReturn" data-mode="camera">拍照</button>
         </div>
-        <img class="preview" id="previewReturn" alt="" />
+        <img class="preview" id="previewReturn" alt="返程表显预览" />
       </label>
       <p class="hint" id="photoHint">可从手机相册选取，或现场拍照；提交前会自动压缩。短程出车可不传照片。</p>
-      <label>备注<input id="remark" maxlength="300" placeholder="可选" /></label>
+      <label>备注
+        <input name="remark" id="remark" maxlength="300" placeholder="可选" />
+      </label>
       <button type="submit" id="btn">提交登记申请</button>
     </form>
     <div class="msg" id="msg"></div>
     <div class="ok-box" id="okBox">
-      <div>已提交，等待办公室同意。请保存申请编号：</div>
+      <div>已提交，等待办公室同意。申请编号：</div>
       <code id="okId"></code>
       <div class="acts">
         <button type="button" id="btnCopyId">复制编号</button>
-        <button type="button" class="sec" id="btnGotoStatus">查询进度</button>
+        <button type="button" class="sec" id="btnGotoStatus">查看进度</button>
       </div>
+      <p class="hint" style="margin:8px 0 0">可在「查询进度」查看本人全部申请记录</p>
     </div>
     </div>
+
     <div class="panel" id="panelMine">
       <div class="panel-card">
-        <div class="mine-toolbar"><button type="button" id="btnRefreshMine">刷新</button></div>
+        <div class="mine-toolbar">
+          <button type="button" id="btnRefreshMine">刷新</button>
+        </div>
         <div class="msg" id="mineMsg"></div>
         <div class="mine-list" id="mineList"></div>
         <div class="query-result" id="mineDetail"></div>
-        <p class="hint" style="margin-top:12px">公网仅显示近 72 小时内有状态回写的申请；更早记录请联系办公室。</p>
+        <p class="hint" id="mineHint" style="margin-top:12px">显示本人全部申请；同意或驳回后在此查看结果。刚提交若暂无结果，请隔几秒点刷新。</p>
       </div>
     </div>
-    <div class="panel" id="panelQuery">
-      <div class="panel-card">
-        <label>申请编号
-          <input id="queryId" type="text" autocomplete="off" spellcheck="false" inputmode="numeric" placeholder="如 2026082201" />
-        </label>
-        <button type="button" id="btnQuery" style="width:100%;margin-top:8px;background:linear-gradient(135deg,var(--brand),var(--brand2))">查询</button>
-        <div class="msg" id="queryMsg"></div>
-        <div class="query-result" id="queryResult"></div>
-        <p class="hint" style="margin-top:12px">同意或驳回后可在此查看结果。刚提交若暂无结果，请隔几秒再查。</p>
-      </div>
     </div>
+
+  <div class="code-mask" id="codeMask">
+    <div class="code-dialog" role="dialog" aria-labelledby="codeDlgTitle">
+      <h2 id="codeDlgTitle">修改登记口令</h2>
+      <p class="hint">新口令须为 6 位小写字母与数字，且同时包含字母和数字（不含 4）。</p>
+      <label>新口令
+        <input id="newCodeInput" autocomplete="new-password" maxlength="6" spellcheck="false" placeholder="如 abc123" />
+      </label>
+      <label>确认新口令
+        <input id="newCodeConfirm" autocomplete="new-password" maxlength="6" spellcheck="false" />
+      </label>
+      <div class="msg" id="changeCodeMsg"></div>
+      <div class="acts">
+        <button type="button" class="ghost" id="btnChangeCancel">取消</button>
+        <button type="button" class="primary" id="btnChangeSubmit">保存</button>
+      </div>
     </div>
   </div>
+
+  </div>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"updatedAt":"2026-08-24T08:55:16.565Z"};</script>
+
+
   <script>
-    const NTFY = "https://ntfy.sh";
-    const TOPIC = "yue-trip-lk56m7z8ray1fq293p4d";
-    const NEED_ACCESS = true;
+    const PUB = window.__TRIP_PUBLIC__ || null;
+    const IS_PUBLIC = !!PUB;
+    const VEHICLE_API = IS_PUBLIC ? '' : (location.pathname.includes('/vehicle') ? '/api/vehicle' : '/api');
+    const NTFY = IS_PUBLIC
+      ? { server: String(PUB.ntfyServer || 'https://ntfy.sh').replace(/\/$/, ''), topic: String(PUB.ntfyTopic || '') }
+      : null;
     const $ = (id) => document.getElementById(id);
+    const today = new Date();
+    const ymd = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    $('date').value = ymd;
+
+    const savedDriver = localStorage.getItem('trip_driver') || '';
+    if (savedDriver) $('driver').value = savedDriver;
+
     let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('trip_access_code') || '').trim();
     let accessName = localStorage.getItem('trip_access_name') || '';
+    let needAccessCode = false;
+
     function myIdsKey() { return 'trip_my_ids_' + (accessCode || '_'); }
     function loadMyIdList() {
       try { return JSON.parse(localStorage.getItem(myIdsKey()) || '[]'); } catch { return []; }
@@ -216,6 +639,76 @@
       });
       localStorage.setItem(myIdsKey(), JSON.stringify(list.slice(0, 100)));
     }
+    function resolvePublicAccess(code) {
+      const c = String(code || '').trim();
+      if (!c) return null;
+      return (PUB.accessCodes || []).find((row) => String(row.code || '').trim() === c) || null;
+    }
+    async function fetchPublicStatusMessages() {
+      const url = `${NTFY.server}/${encodeURIComponent(NTFY.topic)}/json?poll=1&since=72h`;
+      const r = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
+      const text = (await r.text()).trim();
+      if (!text) return [];
+      const out = [];
+      for (const line of text.split('\n')) {
+        if (!line.trim()) continue;
+        let msg;
+        try { msg = JSON.parse(line); } catch { continue; }
+        if (!msg || msg.event !== 'message') continue;
+        let body = {};
+        try { body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {}); } catch { continue; }
+        if (body.type !== 'trip_status') continue;
+        out.push({ body, time: Number(msg.time) || 0 });
+      }
+      return out;
+    }
+    async function findStatusByToken(token) {
+      const list = await fetchPublicStatusMessages();
+      let best = null;
+      for (const row of list) {
+        if (String(row.body.clientToken || '') !== String(token)) continue;
+        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
+      }
+      return best;
+    }
+    async function uploadPhotoNtfy(blob, filename) {
+      const r = await fetch(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
+        method: 'PUT',
+        headers: { Filename: filename, Title: 'Trip photo' },
+        body: blob,
+      });
+      if (!r.ok) throw new Error('照片上传失败 HTTP ' + r.status);
+      const j = await r.json();
+      const url = j && j.attachment && j.attachment.url;
+      if (!url) throw new Error('未取得照片链接');
+      return url;
+    }
+    function populateVehicleOptions(vehicles) {
+      const sel = $('plate');
+      sel.innerHTML = '<option value="">请选择</option>';
+      (vehicles || []).forEach((v) => {
+        const opt = document.createElement('option');
+        opt.value = v.plate;
+        opt.textContent = v.model ? `${v.plate}（${v.model}）` : v.plate;
+        sel.appendChild(opt);
+      });
+      const lastPlate = localStorage.getItem('trip_plate');
+      if (lastPlate && [...sel.options].some((o) => o.value === lastPlate)) sel.value = lastPlate;
+    }
+    function populateHandlerOptions(handlers) {
+      const hsel = $('handler');
+      hsel.innerHTML = '<option value="">请选择</option>';
+      (handlers || []).forEach((n) => {
+        const opt = document.createElement('option');
+        opt.value = n;
+        opt.textContent = n;
+        hsel.appendChild(opt);
+      });
+      const lastHandler = localStorage.getItem('trip_handler');
+      if (lastHandler && [...hsel.options].some((o) => o.value === lastHandler)) hsel.value = lastHandler;
+    }
+
     function showGateMsg(type, text) {
       const el = $('gateMsg');
       el.className = 'msg show ' + type;
@@ -223,9 +716,12 @@
     }
     function updateUserBar() {
       const bar = $('userBar');
-      if (!NEED_ACCESS) { bar.classList.remove('show'); return; }
+      if (!needAccessCode) {
+        bar.classList.remove('show');
+        return;
+      }
       bar.classList.add('show');
-      $('userGreeting').textContent = accessName ? ('您好，' + accessName) : '您好';
+      $('userGreeting').textContent = accessName ? `您好，${accessName}` : '您好';
     }
     function enterApp() {
       $('gateBox').style.display = 'none';
@@ -243,99 +739,221 @@
       $('accessCodeInput').value = '';
       showGateMsg('ok', '已退出，请重新登录');
     }
-    function unlockWithCode(code) {
+    function maybeShowChangeBanner(should) {
+      if (IS_PUBLIC) return;
+      const dismissed = sessionStorage.getItem('trip_change_banner_dismissed') === '1';
+      $('changeBanner').classList.toggle('show', !!should && !dismissed);
+    }
+    async function unlockWithCode(code) {
       const c = String(code || '').trim();
-      if (!c) { showGateMsg('err', '请填写登记口令'); return false; }
-      accessCode = c;
-      localStorage.setItem('trip_access_code', c);
-      enterApp();
-      return true;
-    }
-    if (NEED_ACCESS) {
-      if (accessCode) unlockWithCode(accessCode);
-      else if (new URLSearchParams(location.search).get('k')) {
-        $('accessCodeInput').value = new URLSearchParams(location.search).get('k');
+      if (!c) {
+        showGateMsg('err', '请填写登记口令');
+        return false;
       }
-      $('btnUnlock').addEventListener('click', () => unlockWithCode($('accessCodeInput').value));
-      $('accessCodeInput').addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') unlockWithCode($('accessCodeInput').value);
+      const btn = $('btnUnlock');
+      btn.disabled = true;
+      showGateMsg('ok', '正在验证…');
+      try {
+        if (IS_PUBLIC) {
+          const row = resolvePublicAccess(c);
+          if (!row) throw new Error('口令无效');
+          accessCode = c;
+          accessName = row.name || '';
+          localStorage.setItem('trip_access_code', c);
+          if (accessName) localStorage.setItem('trip_access_name', accessName);
+          enterApp();
+          return true;
+        }
+        const r = await fetch(`${VEHICLE_API}/session?k=${encodeURIComponent(c)}`, {
+          headers: { 'X-Access-Code': c },
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || '口令无效');
+        accessCode = c;
+        accessName = data.name || '';
+        localStorage.setItem('trip_access_code', c);
+        if (accessName) localStorage.setItem('trip_access_name', accessName);
+        enterApp();
+        maybeShowChangeBanner(data.shouldPromptChangeCode);
+        return true;
+      } catch (e) {
+        showGateMsg('err', e.message || '口令无效');
+        return false;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function loadMeta() {
+      if (IS_PUBLIC) {
+        needAccessCode = !!PUB.needAccessCode;
+        $('unit').textContent = PUB.company || '';
+        populateVehicleOptions(PUB.vehicles || []);
+        populateHandlerOptions(PUB.handlers || []);
+        $('btnChangeCode').style.display = 'none';
+        $('changeBanner').style.display = 'none';
+        $('mineHint').textContent = '显示本人全部申请；公网仅显示近 72 小时内有状态回写的申请，更早记录请联系办公室。';
+        if (needAccessCode) {
+          if (accessCode) await unlockWithCode(accessCode);
+          else {
+            $('gateBox').style.display = 'grid';
+            $('appMain').style.display = 'none';
+            const k = new URLSearchParams(location.search).get('k') || '';
+            if (k) $('accessCodeInput').value = k;
+          }
+        } else {
+          enterApp();
+        }
+        return;
+      }
+      const r = await fetch(`${VEHICLE_API}/meta`);
+      const data = await r.json();
+      needAccessCode = !!data.needAccessCode;
+      if (data.company) $('unit').textContent = data.company;
+      else if (data.unitShort) $('unit').textContent = data.unitShort;
+      populateVehicleOptions(data.vehicles || []);
+      populateHandlerOptions(data.handlers || []);
+
+      if (data.needAccessCode) {
+        if (accessCode) await unlockWithCode(accessCode);
+        else {
+          $('gateBox').style.display = 'grid';
+          $('appMain').style.display = 'none';
+          if (new URLSearchParams(location.search).get('k')) {
+            $('accessCodeInput').value = new URLSearchParams(location.search).get('k');
+          }
+        }
+      } else {
+        enterApp();
+      }
+    }
+
+    $('btnUnlock').addEventListener('click', () => { unlockWithCode($('accessCodeInput').value); });
+    $('accessCodeInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') unlockWithCode($('accessCodeInput').value);
+    });
+    $('btnLogout').addEventListener('click', logout);
+    if (!IS_PUBLIC) {
+      $('btnChangeCode').addEventListener('click', () => {
+        $('codeMask').classList.add('show');
+        $('newCodeInput').value = '';
+        $('newCodeConfirm').value = '';
+        $('changeCodeMsg').className = 'msg';
       });
-      $('btnLogout').addEventListener('click', logout);
-    } else {
-      enterApp();
+      $('btnBannerChange').addEventListener('click', () => $('btnChangeCode').click());
+      $('btnBannerDismiss').addEventListener('click', () => {
+        sessionStorage.setItem('trip_change_banner_dismissed', '1');
+        $('changeBanner').classList.remove('show');
+      });
+      $('btnChangeCancel').addEventListener('click', () => $('codeMask').classList.remove('show'));
+      $('btnChangeSubmit').addEventListener('click', async () => {
+        const newCode = $('newCodeInput').value.trim();
+        const confirm = $('newCodeConfirm').value.trim();
+        if (newCode !== confirm) {
+          $('changeCodeMsg').className = 'msg show err';
+          $('changeCodeMsg').textContent = '两次输入不一致';
+          return;
+        }
+        try {
+          const r = await fetch(`${VEHICLE_API}/change-access-code`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Access-Code': accessCode },
+            body: JSON.stringify({ accessCode, newCode }),
+          });
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.error || '修改失败');
+          accessCode = data.code || newCode;
+          accessName = data.name || accessName;
+          localStorage.setItem('trip_access_code', accessCode);
+          if (accessName) localStorage.setItem('trip_access_name', accessName);
+          $('codeMask').classList.remove('show');
+          updateUserBar();
+          show('ok', '口令已更新');
+        } catch (e) {
+          $('changeCodeMsg').className = 'msg show err';
+          $('changeCodeMsg').textContent = e.message || String(e);
+        }
+      });
     }
-    const today = new Date();
-    $('date').value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    const savedDriver = localStorage.getItem('trip_driver') || '';
-    if (savedDriver) $('driver').value = savedDriver;
-    const lastPlate = localStorage.getItem('trip_plate');
-    if (lastPlate) $('plate').value = lastPlate;
-    const lastHandler = localStorage.getItem('trip_handler');
-    if (lastHandler) $('handler').value = lastHandler;
-    function show(type, text) { const el=$('msg'); el.className='msg show '+type; el.textContent=text; }
-    function formatDuration(mins) {
-      if (mins == null || !Number.isFinite(mins) || mins < 0) return '';
-      const h = Math.floor(mins / 60);
-      const m = mins % 60;
-      if (h && m) return h + '小时' + m + '分钟';
-      if (h) return h + '小时';
-      return m + '分钟';
+
+    function show(type, text) {
+      const el = $('msg');
+      el.className = `msg show ${type}`;
+      el.textContent = text;
     }
-    function recalcDuration() {
-      const a = $('departTime').value;
-      const b = $('returnTime').value;
-      if (!a || !b) { $('durationText').value = ''; return; }
-      const parse = (t) => { const p = t.split(':').map(Number); return p[0] * 60 + p[1]; };
-      let x = parse(a), y = parse(b);
-      if (y < x) y += 24 * 60;
-      $('durationText').value = formatDuration(y - x);
-    }
+
     function recalcMileage() {
       const a = Number($('departOdometer').value);
       const b = Number($('returnOdometer').value);
-      if (!Number.isFinite(a) || !Number.isFinite(b) || $('departOdometer').value==='' || $('returnOdometer').value==='') {
+      if (!Number.isFinite(a) || !Number.isFinite(b) || $('departOdometer').value === '' || $('returnOdometer').value === '') {
         $('mileage').value = '';
         return;
       }
       const d = Math.round((b - a) * 100) / 100;
       $('mileage').value = d >= 0 ? String(d) : '';
     }
+    function formatDuration(mins) {
+      if (mins == null || !Number.isFinite(mins) || mins < 0) return '';
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (h && m) return `${h}小时${m}分钟`;
+      if (h) return `${h}小时`;
+      return `${m}分钟`;
+    }
+    function recalcDuration() {
+      const a = $('departTime').value;
+      const b = $('returnTime').value;
+      if (!a || !b) { $('durationText').value = ''; return; }
+      const parse = (t) => {
+        const p = t.split(':').map(Number);
+        return p[0] * 60 + p[1];
+      };
+      let x = parse(a), y = parse(b);
+      if (y < x) y += 24 * 60;
+      $('durationText').value = formatDuration(y - x);
+    }
+    $('departOdometer').addEventListener('input', recalcMileage);
+    $('returnOdometer').addEventListener('input', recalcMileage);
+    $('departTime').addEventListener('input', recalcDuration);
+    $('returnTime').addEventListener('input', recalcDuration);
+
     function compressImage(file, maxSide = 1600, quality = 0.72) {
       return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(file);
         const img = new Image();
         img.onload = () => {
           URL.revokeObjectURL(url);
-          let w = img.width, h = img.height;
+          let w = img.width;
+          let h = img.height;
           if (w > maxSide || h > maxSide) {
-            if (w >= h) { h = Math.round(h * maxSide / w); w = maxSide; }
-            else { w = Math.round(w * maxSide / h); h = maxSide; }
+            if (w >= h) { h = Math.round((h * maxSide) / w); w = maxSide; }
+            else { w = Math.round((w * maxSide) / h); h = maxSide; }
           }
           const canvas = document.createElement('canvas');
-          canvas.width = w; canvas.height = h;
+          canvas.width = w;
+          canvas.height = h;
           canvas.getContext('2d').drawImage(img, 0, 0, w, h);
           canvas.toBlob((blob) => {
             if (!blob) reject(new Error('图片压缩失败'));
             else resolve(blob);
           }, 'image/jpeg', quality);
         };
-        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('无法读取该图片（若为 HEIC，请改用 JPG/PNG，或点「拍照」重拍）')); };
+        img.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error('无法读取该图片（若为 HEIC，请改用 JPG/PNG，或点「拍照」重拍）'));
+        };
         img.src = url;
       });
     }
-    async function uploadPhoto(blob, filename) {
-      const r = await fetch(NTFY + '/' + TOPIC, {
-        method: 'PUT',
-        headers: { 'Filename': filename, 'Title': 'Trip photo' },
-        body: blob,
+    function blobToDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const fr = new FileReader();
+        fr.onload = () => resolve(fr.result);
+        fr.onerror = () => reject(new Error('读取图片失败'));
+        fr.readAsDataURL(blob);
       });
-      if (!r.ok) throw new Error('照片上传失败 HTTP ' + r.status);
-      const j = await r.json();
-      const url = j && j.attachment && j.attachment.url;
-      if (!url) throw new Error('未取得照片链接');
-      return url;
     }
-    function bindPreview(inputId, previewId) {
+    function bindPhotoPreview(inputId, previewId) {
       $(inputId).addEventListener('change', () => {
         $(inputId).removeAttribute('capture');
         const f = $(inputId).files && $(inputId).files[0];
@@ -345,8 +963,9 @@
         img.classList.add('show');
       });
     }
-    bindPreview('photoDepart', 'previewDepart');
-    bindPreview('photoReturn', 'previewReturn');
+    bindPhotoPreview('photoDepart', 'previewDepart');
+    bindPhotoPreview('photoReturn', 'previewReturn');
+
     document.querySelectorAll('.pick-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         const el = $(btn.dataset.for);
@@ -356,6 +975,7 @@
         el.click();
       });
     });
+
     function resolvePurpose() {
       const v = $('purpose').value;
       if (v === '其他') return ($('purposeOther').value || '').trim();
@@ -383,46 +1003,137 @@
     }
     $('purpose').addEventListener('change', applyPurposeRules);
     applyPurposeRules();
-    $('departTime').addEventListener('input', recalcDuration);
-    $('returnTime').addEventListener('input', recalcDuration);
-    $('departOdometer').addEventListener('input', recalcMileage);
-    $('returnOdometer').addEventListener('input', recalcMileage);
+
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn=$('btn'); btn.disabled=true;
+      const btn = $('btn');
+      btn.disabled = true;
       const coolUntil = Number(localStorage.getItem('trip_cool_until') || 0);
       if (Date.now() < coolUntil) {
         const sec = Math.ceil((coolUntil - Date.now()) / 1000);
-        show('err', '提交过于频繁，请 ' + sec + ' 秒后再试');
-        btn.disabled=false;
+        show('err', `提交过于频繁，请 ${sec} 秒后再试`);
+        btn.disabled = false;
         return;
       }
       recalcMileage();
       recalcDuration();
       const purpose = resolvePurpose();
-      if (!purpose) { show('err', $('purpose').value === '其他' ? '请填写其他事由' : '请选择事由'); btn.disabled=false; return; }
+      if (!purpose) {
+        show('err', $('purpose').value === '其他' ? '请填写其他事由' : '请选择事由');
+        btn.disabled = false;
+        return;
+      }
       const short = purpose === '短程出车';
       const f1 = $('photoDepart').files && $('photoDepart').files[0];
       const f2 = $('photoReturn').files && $('photoReturn').files[0];
-      if (!short && (!f1 || !f2)) { show('err', '请上传出发与返程表显照片'); btn.disabled=false; return; }
-      if ((f1 && !f2) || (!f1 && f2)) { show('err', '表显照片请成对上传，或全部不传'); btn.disabled=false; return; }
+      if (!short && (!f1 || !f2)) {
+        show('err', '请上传出发与返程表显照片');
+        btn.disabled = false;
+        return;
+      }
+      if ((f1 && !f2) || (!f1 && f2)) {
+        show('err', '表显照片请成对上传，或全部不传');
+        btn.disabled = false;
+        return;
+      }
       try {
-        let photoDepartUrl = '';
-        let photoReturnUrl = '';
+        if (IS_PUBLIC) {
+          if (!NTFY?.topic) throw new Error('公网收件未配置，请联系办公室');
+          let photoDepartUrl = '';
+          let photoReturnUrl = '';
+          if (f1 && f2) {
+            show('ok', '正在压缩照片…');
+            const [b1, b2] = await Promise.all([compressImage(f1), compressImage(f2)]);
+            const stamp = Date.now().toString(36);
+            show('ok', '正在上传照片…');
+            [photoDepartUrl, photoReturnUrl] = await Promise.all([
+              uploadPhotoNtfy(b1, `depart-${stamp}.jpg`),
+              uploadPhotoNtfy(b2, `return-${stamp}.jpg`),
+            ]);
+          }
+          const clientToken = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)).slice(0, 16);
+          const payload = {
+            type: 'trip_request',
+            clientToken,
+            accessCode: accessCode || localStorage.getItem('trip_access_code') || '',
+            date: $('date').value,
+            plate: $('plate').value,
+            driver: $('driver').value.trim(),
+            handler: $('handler').value,
+            purpose,
+            origin: $('origin').value.trim(),
+            destination: $('destination').value.trim(),
+            departTime: $('departTime').value,
+            returnTime: $('returnTime').value,
+            durationText: $('durationText').value,
+            departOdometer: $('departOdometer').value,
+            returnOdometer: $('returnOdometer').value,
+            mileage: $('mileage').value,
+            remark: $('remark').value.trim(),
+            submittedAt: new Date().toISOString(),
+          };
+          if (!payload.accessCode && needAccessCode) throw new Error('缺少登记口令，请返回重新登录');
+          if (photoDepartUrl) payload.photoDepartUrl = photoDepartUrl;
+          if (photoReturnUrl) payload.photoReturnUrl = photoReturnUrl;
+          show('ok', '正在提交申请…');
+          $('okBox').classList.remove('show');
+          const r = await fetch(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              Title: 'Trip request',
+              Tags: 'car,office',
+            },
+            body: JSON.stringify(payload),
+          });
+          if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
+          show('ok', '已送达，正在获取申请编号…');
+          let assignedId = '';
+          let deniedMsg = '';
+          const deadline = Date.now() + 20000;
+          while (Date.now() < deadline && !assignedId && !deniedMsg) {
+            try {
+              const found = await findStatusByToken(clientToken);
+              if (found && found.status === 'denied') deniedMsg = found.rejectReason || '登记被拒绝';
+              else if (found && found.id && found.status !== 'denied') assignedId = String(found.id);
+            } catch (_) { /* retry */ }
+            if (!assignedId && !deniedMsg) await new Promise((x) => setTimeout(x, 1500));
+          }
+          localStorage.setItem('trip_driver', payload.driver);
+          localStorage.setItem('trip_plate', payload.plate);
+          localStorage.setItem('trip_handler', payload.handler);
+          localStorage.setItem('trip_cool_until', String(Date.now() + 60 * 1000));
+          if (deniedMsg) {
+            show('err', deniedMsg);
+          } else if (assignedId) {
+            const found = await findStatusByToken(clientToken).catch(() => null);
+            if (found && found.accessName) {
+              accessName = found.accessName;
+              localStorage.setItem('trip_access_name', accessName);
+              updateUserBar();
+            }
+            addMyId(assignedId, {
+              date: payload.date,
+              plate: payload.plate,
+              purpose: payload.purpose,
+              submittedAt: payload.submittedAt,
+            });
+            localStorage.setItem('trip_last_id', assignedId);
+            $('okId').textContent = assignedId;
+            $('okBox').classList.add('show');
+            show('ok', '提交成功');
+          } else {
+            show('err', '已提交，但暂未取到编号。请稍后在「查询进度」查看，或联系办公室。');
+          }
+        } else {
+        let photoDepart = '';
+        let photoReturn = '';
         if (f1 && f2) {
           show('ok', '正在压缩照片…');
           const [b1, b2] = await Promise.all([compressImage(f1), compressImage(f2)]);
-          const stamp = Date.now().toString(36);
-          show('ok', '正在上传照片…');
-          [photoDepartUrl, photoReturnUrl] = await Promise.all([
-            uploadPhoto(b1, 'depart-' + stamp + '.jpg'),
-            uploadPhoto(b2, 'return-' + stamp + '.jpg'),
-          ]);
+          [photoDepart, photoReturn] = await Promise.all([blobToDataUrl(b1), blobToDataUrl(b2)]);
         }
-        const clientToken = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)).slice(0, 16);
         const payload = {
-          type: 'trip_request',
-          clientToken,
           accessCode: accessCode || localStorage.getItem('trip_access_code') || '',
           date: $('date').value,
           plate: $('plate').value,
@@ -438,228 +1149,66 @@
           returnOdometer: $('returnOdometer').value,
           mileage: $('mileage').value,
           remark: $('remark').value.trim(),
-          submittedAt: new Date().toISOString(),
+          k: accessCode || new URLSearchParams(location.search).get('k') || '',
         };
-        if (!payload.accessCode && NEED_ACCESS) {
-          show('err', '缺少登记口令，请返回重新登录');
-          btn.disabled = false;
-          return;
-        }
-        if (photoDepartUrl) payload.photoDepartUrl = photoDepartUrl;
-        if (photoReturnUrl) payload.photoReturnUrl = photoReturnUrl;
-        show('ok', '正在提交申请…');
+        if (photoDepart) payload.photoDepart = photoDepart;
+        if (photoReturn) payload.photoReturn = photoReturn;
+        show('ok', '正在提交…');
         $('okBox').classList.remove('show');
-        const r = await fetch(NTFY + '/' + TOPIC, {
+        const r = await fetch(`${VEHICLE_API}/submit`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Title': 'Trip request',
-            'Tags': 'car,office',
-            'Priority': 'default',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
-        show('ok', '已送达，正在获取申请编号…');
-        let assignedId = '';
-        let deniedMsg = '';
-        const deadline = Date.now() + 20000;
-        while (Date.now() < deadline && !assignedId && !deniedMsg) {
-          try {
-            const found = await findStatusByToken(clientToken);
-            if (found && found.status === 'denied') {
-              deniedMsg = found.rejectReason || '登记被拒绝';
-            } else if (found && found.id && found.status !== 'denied') {
-              assignedId = String(found.id);
-            }
-          } catch (_) {}
-          if (!assignedId && !deniedMsg) await new Promise((x) => setTimeout(x, 1500));
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || '提交失败');
+        if (data.accessName) {
+          accessName = data.accessName;
+          localStorage.setItem('trip_access_name', accessName);
+          updateUserBar();
         }
         localStorage.setItem('trip_driver', payload.driver);
         localStorage.setItem('trip_plate', payload.plate);
         localStorage.setItem('trip_handler', payload.handler);
         localStorage.setItem('trip_cool_until', String(Date.now() + 60 * 1000));
-        if (deniedMsg) {
-          show('err', deniedMsg);
-        } else if (assignedId) {
-          const found = await findStatusByToken(clientToken).catch(() => null);
-          if (found && found.accessName) {
-            accessName = found.accessName;
-            localStorage.setItem('trip_access_name', accessName);
-            updateUserBar();
-          }
-          addMyId(assignedId, {
-            date: payload.date,
-            plate: payload.plate,
-            purpose: payload.purpose,
-            submittedAt: payload.submittedAt,
-          });
-          localStorage.setItem('trip_last_id', assignedId);
-          $('okId').textContent = assignedId;
-          $('okBox').classList.add('show');
-          $('queryId').value = assignedId;
-          show('ok', '提交成功');
-        } else {
-          show('err', '已提交，但暂未取到编号。请稍后在「我的申请」查看，或联系办公室。');
+        localStorage.setItem('trip_last_id', data.id || '');
+        $('okId').textContent = data.id || '';
+        $('okBox').classList.add('show');
+        show('ok', '提交成功');
         }
-        $('purpose').value=''; $('purposeOther').value='';
-        $('origin').value=''; $('destination').value='';
-        $('departTime').value=''; $('returnTime').value=''; $('durationText').value='';
-        $('departOdometer').value=''; $('returnOdometer').value=''; $('mileage').value=''; $('remark').value='';
-        $('photoDepart').value=''; $('photoReturn').value='';
+        $('purpose').value = '';
+        $('purposeOther').value = '';
+        $('origin').value = '';
+        $('destination').value = '';
+        $('departTime').value = '';
+        $('returnTime').value = '';
+        $('durationText').value = '';
+        $('departOdometer').value = '';
+        $('returnOdometer').value = '';
+        $('mileage').value = '';
+        $('remark').value = '';
+        $('photoDepart').value = '';
+        $('photoReturn').value = '';
         $('previewDepart').classList.remove('show');
         $('previewReturn').classList.remove('show');
         applyPurposeRules();
       } catch (err) {
-        const tip = (err && err.message) ? err.message : String(err);
-        show('err', tip.replace(/^TypeError:\s*/i, '提交失败：'));
-      } finally { btn.disabled=false; }
-    });
-    async function fetchStatusMessages() {
-      const url = NTFY + '/' + encodeURIComponent(TOPIC) + '/json?poll=1&since=72h';
-      const r = await fetch(url, { headers: { Accept: 'application/json' } });
-      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
-      const text = (await r.text()).trim();
-      if (!text) return [];
-      const out = [];
-      for (const line of text.split('\n')) {
-        if (!line.trim()) continue;
-        let msg;
-        try { msg = JSON.parse(line); } catch { continue; }
-        if (!msg || msg.event !== 'message') continue;
-        let body = {};
-        try {
-          body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {});
-        } catch { continue; }
-        if (body.type !== 'trip_status') continue;
-        out.push({ body, time: Number(msg.time) || 0 });
-      }
-      return out;
-    }
-    async function findStatusByToken(token) {
-      const list = await fetchStatusMessages();
-      let best = null;
-      for (const row of list) {
-        if (String(row.body.clientToken || '') !== String(token)) continue;
-        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
-      }
-      return best;
-    }
-    async function queryNtfy(id) {
-      const list = await fetchStatusMessages();
-      let best = null;
-      for (const row of list) {
-        if (String(row.body.id || '') !== String(id)) continue;
-        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
-      }
-      if (!best) throw new Error('未找到该编号（请核对，或稍后再查）');
-      return best;
-    }
-    $('btnCopyId').addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(($('okId').textContent || '').trim());
-        show('ok', '编号已复制');
-      } catch { show('err', '复制失败，请长按编号手动复制'); }
-    });
-    function statusLabel(s) {
-      return ({ pending: '待审批', approved: '已同意登记', rejected: '已驳回' })[s] || s;
-    }
-    function esc(s) {
-      return String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-    function fmtWhen(iso) {
-      if (!iso) return '—';
-      try {
-        const d = new Date(iso);
-        if (Number.isNaN(d.getTime())) return String(iso);
-        const p = (n) => String(n).padStart(2, '0');
-        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
-      } catch { return String(iso); }
-    }
-    function renderRecordDetail(info, targetId) {
-      const el = $(targetId);
-      el.className = 'query-result show';
-      el.innerHTML = '<span class="badge ' + info.status + '">' + statusLabel(info.status) + '</span>' +
-        '<div class="qgrid">' +
-        '<div><b>编号</b><span>' + esc(info.id) + '</span></div>' +
-        '<div><b>日期</b><span>' + esc(info.date || '—') + '</span></div>' +
-        '<div><b>车牌</b><span>' + esc(info.plate || '—') + '</span></div>' +
-        '<div><b>司机</b><span>' + esc(info.driver || '—') + '</span></div>' +
-        '<div><b>事由</b><span>' + esc(info.purpose || '—') + '</span></div>' +
-        (info.rejectReason ? '<div><b>驳回原因</b><span>' + esc(info.rejectReason) + '</span></div>' : '') +
-        '<div><b>提交</b><span>' + esc(fmtWhen(info.submittedAt)) + '</span></div>' +
-        '<div><b>审批</b><span>' + esc(fmtWhen(info.decidedAt)) + '</span></div></div>';
-    }
-    function renderMineList(records) {
-      const box = $('mineList');
-      $('mineDetail').className = 'query-result';
-      if (!records.length) {
-        box.innerHTML = '<div class="mine-empty">暂无申请记录<br>提交出车登记后将显示在此</div>';
-        return;
-      }
-      box.innerHTML = records.map((r) =>
-        '<button type="button" class="mine-item" data-id="' + esc(r.id) + '">' +
-        '<div class="row1"><span>' + esc(r.id) + '</span><span class="badge ' + esc(r.status) + '">' + statusLabel(r.status) + '</span></div>' +
-        '<div class="row2">' + esc(r.date || '—') + ' · ' + esc(r.plate || '—') + ' · ' + esc(r.purpose || '—') + '</div></button>'
-      ).join('');
-      box.querySelectorAll('.mine-item').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const rec = records.find((x) => String(x.id) === btn.dataset.id);
-          if (rec) renderRecordDetail(rec, 'mineDetail');
-        });
-      });
-    }
-    function showMineMsg(type, text) {
-      const el = $('mineMsg');
-      el.className = 'msg show ' + type;
-      el.textContent = text;
-    }
-    async function loadMyRecords() {
-      $('btnRefreshMine').disabled = true;
-      showMineMsg('ok', '加载中…');
-      try {
-        const name = accessName || localStorage.getItem('trip_access_name') || '';
-        const stored = loadMyIdList();
-        const list = await fetchStatusMessages();
-        const byId = new Map();
-        for (const row of list) {
-          const b = row.body;
-          if (!b.id || String(b.id).startsWith('denied-')) continue;
-          const matchName = name && b.accessName === name;
-          const matchId = stored.some((s) => s.id === b.id);
-          if (!matchName && !matchId) continue;
-          if (b.accessName && !name) {
-            accessName = b.accessName;
-            localStorage.setItem('trip_access_name', accessName);
-            updateUserBar();
-          }
-          const prev = byId.get(b.id);
-          if (!prev || row.time >= prev._t) byId.set(b.id, Object.assign({}, b, { _t: row.time }));
-        }
-        for (const s of stored) {
-          if (!byId.has(s.id)) {
-            byId.set(s.id, {
-              id: s.id,
-              status: 'pending',
-              date: s.date,
-              plate: s.plate,
-              purpose: s.purpose || '',
-              submittedAt: s.submittedAt,
-            });
-          }
-        }
-        const records = [...byId.values()]
-          .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
-        renderMineList(records);
-        showMineMsg('ok', records.length ? ('共 ' + records.length + ' 条申请') : '暂无申请记录');
-      } catch (e) {
-        $('mineList').innerHTML = '';
-        showMineMsg('err', e.message || String(e));
+        show('err', err.message || String(err));
       } finally {
-        $('btnRefreshMine').disabled = false;
+        btn.disabled = false;
       }
-    }
-    $('btnRefreshMine').addEventListener('click', loadMyRecords);
+    });
+
+    $('btnCopyId').addEventListener('click', async () => {
+      const id = $('okId').textContent.trim();
+      try {
+        await navigator.clipboard.writeText(id);
+        show('ok', '编号已复制');
+      } catch {
+        show('err', '复制失败，请长按编号手动复制');
+      }
+    });
+
     function switchPanel(panelId) {
       document.querySelectorAll('.panel').forEach((el) => el.classList.toggle('active', el.id === panelId));
       document.querySelectorAll('.tabs button').forEach((btn) => {
@@ -670,38 +1219,137 @@
     document.querySelectorAll('.tabs button').forEach((btn) => {
       btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
     });
-    function showQueryMsg(type, text) {
-      const el = $('queryMsg');
+
+    function showMineMsg(type, text) {
+      const el = $('mineMsg');
       el.className = 'msg show ' + type;
       el.textContent = text;
     }
-    function renderQuery(info) {
-      renderRecordDetail(info, 'queryResult');
+    function statusLabel(s) {
+      return ({ pending: '待审批', approved: '已同意登记', rejected: '已驳回' })[s] || s;
     }
-    async function doQuery() {
-      const id = $('queryId').value.trim();
-      if (!id) { showQueryMsg('err', '请填写申请编号'); return; }
-      $('btnQuery').disabled = true;
-      $('queryResult').className = 'query-result';
-      showQueryMsg('ok', '查询中…');
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+      ));
+    }
+    function fmtWhen(iso) {
+      if (!iso) return '—';
       try {
-        const info = await queryNtfy(id);
-        showQueryMsg('ok', '查询成功');
-        renderQuery(info);
-      } catch (e) {
-        showQueryMsg('err', e.message || String(e));
-      } finally {
-        $('btnQuery').disabled = false;
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return String(iso);
+        const p = (n) => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+      } catch {
+        return String(iso);
       }
     }
-    $('btnQuery').addEventListener('click', doQuery);
-    $('queryId').addEventListener('keydown', (e) => { if (e.key === 'Enter') doQuery(); });
+    function renderRecordDetail(info, targetId) {
+      const el = $(targetId);
+      el.className = 'query-result show';
+      el.innerHTML = `
+        <span class="badge ${info.status}">${statusLabel(info.status)}</span>
+        <div class="qgrid">
+          <div><b>编号</b><span>${esc(info.id)}</span></div>
+          <div><b>日期</b><span>${esc(info.date || '—')}</span></div>
+          <div><b>车牌</b><span>${esc(info.plate || '—')}</span></div>
+          <div><b>司机</b><span>${esc(info.driver || '—')}</span></div>
+          <div><b>事由</b><span>${esc(info.purpose || '—')}</span></div>
+          ${info.rejectReason ? `<div><b>驳回原因</b><span>${esc(info.rejectReason)}</span></div>` : ''}
+          <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
+          <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
+        </div>`;
+    }
+    function renderMineList(records) {
+      const box = $('mineList');
+      $('mineDetail').className = 'query-result';
+      if (!records.length) {
+        box.innerHTML = '<div class="mine-empty">暂无申请记录<br>提交出车登记后将显示在此</div>';
+        return;
+      }
+      box.innerHTML = records.map((r) => `
+        <button type="button" class="mine-item" data-id="${esc(r.id)}">
+          <div class="row1">
+            <span>${esc(r.id)}</span>
+            <span class="badge ${esc(r.status)}">${statusLabel(r.status)}</span>
+          </div>
+          <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
+        </button>`).join('');
+      box.querySelectorAll('.mine-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const rec = records.find((x) => String(x.id) === btn.dataset.id);
+          if (rec) renderRecordDetail(rec, 'mineDetail');
+        });
+      });
+    }
+    async function loadMyRecords() {
+      $('btnRefreshMine').disabled = true;
+      showMineMsg('ok', '加载中…');
+      try {
+        let records = [];
+        if (IS_PUBLIC) {
+          const name = accessName || localStorage.getItem('trip_access_name') || '';
+          const stored = loadMyIdList();
+          const list = await fetchPublicStatusMessages();
+          const byId = new Map();
+          for (const row of list) {
+            const b = row.body;
+            if (!b.id || String(b.id).startsWith('denied-')) continue;
+            const matchName = name && b.accessName === name;
+            const matchId = stored.some((s) => s.id === b.id);
+            if (!matchName && !matchId) continue;
+            if (b.accessName && !name) {
+              accessName = b.accessName;
+              localStorage.setItem('trip_access_name', accessName);
+              updateUserBar();
+            }
+            const prev = byId.get(b.id);
+            if (!prev || row.time >= prev._t) byId.set(b.id, Object.assign({}, b, { _t: row.time }));
+          }
+          for (const s of stored) {
+            if (!byId.has(s.id)) {
+              byId.set(s.id, {
+                id: s.id,
+                status: 'pending',
+                date: s.date,
+                plate: s.plate,
+                purpose: s.purpose,
+                submittedAt: s.submittedAt,
+              });
+            }
+          }
+          records = [...byId.values()]
+            .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
+        } else {
+        const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
+        const r = await fetch(`${VEHICLE_API}/my-records${qs}`, {
+          headers: accessCode ? { 'X-Access-Code': accessCode } : {},
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || '加载失败');
+        if (data.accessName) {
+          accessName = data.accessName;
+          localStorage.setItem('trip_access_name', accessName);
+          updateUserBar();
+        }
+        records = data.records || [];
+        }
+        renderMineList(records);
+        showMineMsg('ok', records.length ? `共 ${records.length} 条申请` : '暂无申请记录');
+      } catch (e) {
+        $('mineList').innerHTML = '';
+        showMineMsg('err', e.message || String(e));
+      } finally {
+        $('btnRefreshMine').disabled = false;
+      }
+    }
+    $('btnRefreshMine').addEventListener('click', loadMyRecords);
+
     $('btnGotoStatus').addEventListener('click', () => {
       switchPanel('panelMine');
-      loadMyRecords();
     });
-    const lastId = localStorage.getItem('trip_last_id') || '';
-    if (lastId) $('queryId').value = lastId;
+
+    loadMeta().catch((e) => show('err', '无法连接登记服务：' + e.message));
   </script>
 </body>
 </html>
