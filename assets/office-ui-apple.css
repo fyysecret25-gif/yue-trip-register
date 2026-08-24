@@ -1,0 +1,885 @@
+/**
+ * Apple 官网视觉层：白/灰底 · 少文案 · 产品卡渐变
+ */
+
+:root {
+  --apple-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --apple-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --apple-ink: #1d1d1f;
+  --apple-muted: #6e6e73;
+  --apple-muted-2: #86868b;
+  --apple-link: #0066cc;
+  --apple-surface: #ffffff;
+  --apple-bg: #f5f5f7;
+  --apple-shadow-soft: 0 2px 16px rgba(0, 0, 0, 0.06);
+  --apple-shadow-lift: 0 18px 42px rgba(0, 0, 0, 0.12);
+  --reveal-delay: 0.06s;
+  /* 覆盖豆沙绿主题 → Apple 灰白 */
+  --bg: #f5f5f7;
+  --bg-accent: #e8e8ed;
+  --surface: #ffffff;
+  --surface-hover: #fafafa;
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-strong: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --line: rgba(0, 0, 0, 0.08);
+  --shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.1);
+  --office-page-bg-image: none;
+}
+
+body {
+  background-color: var(--apple-bg) !important;
+  background-image: none !important;
+  font-feature-settings: "kern" 1, "liga" 1;
+  letter-spacing: -0.011em;
+  color: var(--apple-ink);
+}
+
+/* 删/藏说明性文字 */
+.hub-hero-eyebrow,
+.hub-hero-sub,
+.hub-footer,
+.ios-widget-sub,
+.reimburse-hub-hint,
+.reimburse-pending-path,
+.chrome-updated,
+.period-hint,
+.workplan-page .ft,
+.hub-card .hint,
+.approval-page .hint,
+.ledger-save-hint,
+.advance-link-hint,
+.ledger-footnote,
+.ledger-sheet-info,
+.hint,
+.page-submeta,
+.register-page .brand,
+.register-page .page-sub,
+.register-page .ft,
+#file-launch-gate .pw-sub,
+.workplan-page .hdr-meta {
+  display: none !important;
+}
+
+/* 登记页口令提示条：仅 .show 时展示，避免与上方「藏说明文字」规则冲突 */
+body.register-page .change-banner:not(.show),
+body.register-page .change-banner[hidden] {
+  display: none !important;
+}
+
+body.register-page .change-banner.show {
+  display: grid !important;
+  gap: 8px;
+}
+
+body.register-page .change-banner .acts button {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+body.register-page .notice-bar:not(.is-visible),
+body.register-page .notice-bar[hidden] {
+  display: none !important;
+}
+
+body.register-page .notice-bar.is-visible {
+  display: flex !important;
+}
+
+body.register-page .notice-actions button {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Hub 顶栏已显示页面标题时，去掉正文区重复 header */
+body.register-page.with-chrome .wrap > header {
+  display: none !important;
+}
+
+.hub-hero {
+  text-align: center;
+  padding-top: clamp(12px, 2vw, 24px);
+  margin-bottom: clamp(28px, 3.5vw, 40px);
+}
+
+.hub-company {
+  font-size: clamp(2.125rem, 1.4rem + 2.4vw, 3.25rem);
+  font-weight: 700;
+  letter-spacing: -0.048em;
+  line-height: 1.05;
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--apple-ink);
+}
+
+.hub-urgent.is-empty {
+  display: none;
+}
+
+.hub-urgent h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-urgent-head h2 .office-icon-urgent svg {
+  width: 18px;
+  height: 18px;
+  color: #ff3b30;
+}
+
+.hub-urgent-empty {
+  display: none;
+}
+
+.office-chrome-shell {
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.1);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.office-module-nav {
+  background: transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.office-mod-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--apple-muted);
+  transition: color 0.25s var(--apple-ease), background 0.25s var(--apple-ease);
+}
+
+.office-mod-link:hover {
+  transform: none;
+  color: var(--apple-ink);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.office-mod-link.is-active {
+  color: #fff;
+  font-weight: 600;
+  background: var(--apple-ink);
+  border-color: var(--apple-ink);
+  box-shadow: none;
+}
+
+.office-chrome-bar .chrome-title {
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+.chrome-btn {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-color: rgba(0, 0, 0, 0.1);
+  transition: transform 0.28s var(--apple-ease), background 0.28s var(--apple-ease), box-shadow 0.28s var(--apple-ease);
+}
+
+.chrome-btn:hover {
+  transform: scale(1.03);
+  box-shadow: var(--apple-shadow-soft);
+}
+
+.chrome-back-btn {
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--apple-link);
+  background: rgba(0, 0, 0, 0.04);
+  box-shadow: none;
+}
+
+.chrome-back-btn:hover {
+  color: #004d99;
+  background: rgba(0, 102, 204, 0.1);
+  box-shadow: none;
+  transform: translateX(-2px);
+}
+
+.chrome-back-btn:active,
+.chrome-back-btn.is-pressing {
+  background: rgba(0, 102, 204, 0.16);
+}
+
+.chrome-back-icon svg {
+  width: 13px;
+  height: 13px;
+}
+
+.office-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.office-icon svg {
+  display: block;
+}
+
+.ios-widget-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition:
+    transform 0.32s var(--apple-ease-out),
+    background 0.24s ease,
+    box-shadow 0.24s ease;
+}
+
+.ios-widget-icon .office-icon-module svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hub-urgent-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--apple-link);
+  text-decoration: none;
+  transition: gap 0.28s var(--apple-ease);
+}
+
+.hub-urgent-all:hover {
+  gap: 7px;
+  color: var(--apple-link);
+}
+
+.hub-urgent-all .office-icon-chevron {
+  transition: transform 0.28s var(--apple-ease);
+}
+
+.hub-urgent-all:hover .office-icon-chevron {
+  transform: translateX(3px);
+}
+
+.ios-widget-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  border-top-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.cockpit-module-widget .ios-widget-foot-label {
+  display: none;
+}
+
+.ios-widget-foot-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  opacity: 0.92;
+  transition: gap 0.28s var(--apple-ease), opacity 0.2s ease;
+}
+
+.ios-widget-foot-action .office-icon-chevron svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.28s var(--apple-ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ios-widget-card:hover .ios-widget-foot-action {
+    gap: 5px;
+    opacity: 1;
+  }
+
+  .ios-widget-card:hover .ios-widget-foot-action .office-icon-chevron {
+    transform: translateX(2px);
+  }
+}
+
+/* 产品卡渐变（apple.com 区块色） */
+.ios-widget-card[data-module="workplan"] {
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.32) 0%, transparent 55%),
+    linear-gradient(160deg, #6b9b7a 0%, #3d6b52 48%, #2d5a3d 100%);
+  box-shadow: 0 16px 40px rgba(61, 107, 82, 0.22);
+}
+
+.ios-widget-card[data-module="material"] {
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
+    linear-gradient(160deg, #34c759 0%, #248a3d 52%, #1e7a34 100%);
+  box-shadow: 0 16px 40px rgba(36, 138, 61, 0.22);
+}
+
+.ios-widget-card[data-module="vehicle"] {
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.22) 0%, transparent 55%),
+    linear-gradient(160deg, #98989d 0%, #636366 48%, #48484a 100%);
+  box-shadow: 0 16px 40px rgba(72, 72, 74, 0.28);
+}
+
+.ios-widget-card[data-module="canteen"] {
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.32) 0%, transparent 55%),
+    linear-gradient(160deg, #ff9f0a 0%, #ff9500 50%, #e68600 100%);
+  box-shadow: 0 16px 40px rgba(255, 149, 0, 0.24);
+}
+
+.ios-widget-card[data-module="reimburse"] {
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
+    linear-gradient(160deg, #da8fff 0%, #bf5af2 48%, #9d4edd 100%);
+  box-shadow: 0 16px 40px rgba(191, 90, 242, 0.22);
+}
+
+.ios-widget-balance {
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.02;
+}
+
+.ios-widget-kicker {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+.ios-widget-loading,
+.ios-widget-error,
+.hub-urgent-empty {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.ios-widget-card,
+.hub-card,
+.hub-urgent {
+  transition:
+    transform 0.32s var(--apple-ease-out),
+    box-shadow 0.32s var(--apple-ease-out),
+    border-color 0.24s ease,
+    filter 0.32s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* 豆沙绿 / 模块渐变数据卡（食堂、报销等） */
+  .ios-widget-card:not(.material-action-card):not(.is-skeleton):hover,
+  .ios-widget-card:not(.material-action-card):not(.is-skeleton).office-revealed:hover {
+    transform: translateY(-6px) scale(1.02);
+    filter: brightness(1.05);
+    box-shadow:
+      0 26px 56px rgba(80, 120, 86, 0.34),
+      inset 0 1px 0 rgba(255, 255, 255, 0.36);
+    z-index: 2;
+  }
+
+  .ios-widget-card:not(.material-action-card):not(.is-skeleton):hover .ios-widget-icon {
+    transform: scale(1.08);
+  }
+
+  /* 白底入口卡（物资、车辆等） */
+  .material-action-card.ios-widget-card:hover,
+  .material-action-card.ios-widget-card.office-revealed:hover,
+  .hub-card:hover,
+  .hub-card.office-revealed:hover {
+    transform: translateY(-6px) scale(1.022);
+    box-shadow: var(--apple-shadow-lift);
+    border-color: rgba(0, 102, 204, 0.28);
+    z-index: 2;
+  }
+
+  .material-action-card.ios-widget-card:hover .ios-widget-icon {
+    transform: scale(1.08);
+    background: rgba(0, 102, 204, 0.1);
+    color: var(--apple-link);
+  }
+
+  .hub-card:hover .id {
+    color: var(--apple-link);
+    transform: scale(1.06);
+  }
+
+  .hub-card:hover .hub-card-go {
+    transform: translateX(3px);
+    color: var(--apple-link);
+  }
+}
+
+.ios-widget-card:not(.is-skeleton):active,
+.hub-card:active {
+  transform: translateY(-2px) scale(1.008);
+  transition-duration: 0.12s;
+}
+
+.hub-card .id,
+.hub-card-go {
+  transition:
+    transform 0.28s var(--apple-ease-out),
+    color 0.2s ease;
+}
+
+.hub-urgent {
+  background: var(--apple-surface);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--apple-shadow-soft);
+  border-radius: 18px;
+}
+
+.hub-urgent-link {
+  border-radius: 14px;
+  background: var(--apple-bg);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.hub-urgent-text {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.hub-urgent-meta {
+  font-size: 0.8125rem;
+  color: var(--apple-muted-2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .office-reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.7s var(--apple-ease-out),
+      transform 0.8s var(--apple-ease-out),
+      box-shadow 0.32s var(--apple-ease-out),
+      border-color 0.24s ease,
+      filter 0.32s ease;
+    transition-delay: calc(var(--reveal-i, 0) * var(--reveal-delay));
+  }
+
+  .office-reveal.office-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 入场完成后，悬停用短过渡，避免 0.8s 拖慢 lift */
+  .office-reveal.office-revealed.ios-widget-card,
+  .office-reveal.office-revealed.hub-card {
+    transition:
+      transform 0.32s var(--apple-ease-out),
+      box-shadow 0.32s var(--apple-ease-out),
+      border-color 0.24s ease,
+      filter 0.32s ease,
+      opacity 0.7s var(--apple-ease-out);
+    transition-delay: 0s;
+  }
+}
+
+.hub-skeleton-line {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.09) 50%, rgba(0, 0, 0, 0.04) 100%);
+  background-size: 200% 100%;
+}
+
+.cockpit-widget-grid .ios-widget-card.is-skeleton {
+  background: linear-gradient(145deg, #ececee 0%, #d2d2d7 100%);
+  box-shadow: none;
+}
+
+.material-action-card.ios-widget-card,
+.hub-card {
+  color: var(--apple-ink);
+  background: var(--apple-surface);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--apple-shadow-soft);
+  border-radius: 18px;
+}
+
+.material-action-card .ios-widget-icon {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--apple-ink);
+}
+
+.material-action-card .ios-widget-foot {
+  color: var(--apple-muted);
+  background: rgba(0, 0, 0, 0.02);
+  border-top-color: rgba(0, 0, 0, 0.06);
+  justify-content: space-between;
+}
+
+.material-action-card .ios-widget-foot-label {
+  display: block;
+}
+
+.hub-card-go {
+  font-weight: 500;
+  color: var(--apple-link);
+}
+
+.hub-card h3 {
+  letter-spacing: -0.028em;
+}
+
+/* 报销 Hub：只留操作区 */
+.reimburse-hub-panel {
+  border-radius: 18px;
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: var(--apple-shadow-soft);
+}
+
+.reimburse-hub-panel-head h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 0 0 12px;
+}
+
+.reimburse-upload-zone {
+  border-radius: 14px;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.08);
+  background: var(--apple-bg);
+  padding: 28px 16px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--apple-muted);
+}
+
+.reimburse-upload-zone:hover,
+.reimburse-upload-zone.is-dragover {
+  border-color: var(--apple-link);
+  background: #fff;
+}
+
+.reimburse-hub-actions .ledger-btn {
+  border-radius: 980px;
+  font-weight: 600;
+  padding: 8px 18px;
+}
+
+.reimburse-status-bar {
+  font-size: 0.8125rem;
+  color: var(--apple-muted-2);
+}
+
+.workplan-page {
+  background-color: var(--bg) !important;
+  background-image: var(--office-page-bg-image) !important;
+}
+
+.workplan-page .hdr {
+  border-radius: 18px;
+  margin-bottom: clamp(12px, 1.6vw, 16px);
+  box-shadow: 0 10px 28px rgba(61, 107, 82, 0.22);
+}
+
+.workplan-page .hdr .hub-company {
+  font-size: clamp(1rem, 0.92rem + 0.45vw, 1.25rem);
+  color: #fff;
+}
+
+.workplan-page .card,
+.workplan-page .work-table-wrap,
+.workplan-page .filters,
+.workplan-page .period-bar,
+.workplan-page .cat-box {
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.workplan-page .tab.on {
+  box-shadow: 0 6px 18px rgba(61, 107, 82, 0.22);
+}
+
+.workplan-page .work-thead-row {
+  border-radius: 12px;
+}
+
+.workplan-page .work-card {
+  border-radius: 12px;
+}
+
+/* 登记 / 审批页 Apple 底 */
+body.approval-page,
+body.register-page {
+  background-color: var(--apple-bg) !important;
+  background-image: none !important;
+  color: var(--apple-ink);
+}
+
+body.register-page .brand {
+  color: var(--apple-muted);
+  font-weight: 600;
+}
+
+body.register-page h1,
+.approval-page .card h2 {
+  letter-spacing: -0.028em;
+  font-weight: 700;
+}
+
+body.register-page form,
+body.register-page .query-box,
+body.register-page .gate-card,
+body.register-page .user-bar,
+.approval-page .card {
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: var(--apple-shadow-soft);
+  border-radius: 18px;
+}
+
+body.register-page button.primary,
+.approval-page .side-btn.primary {
+  border-radius: 980px;
+  font-weight: 600;
+}
+
+.approval-page .layout .card {
+  background: var(--apple-surface);
+}
+
+/* 台账编辑区 */
+.ledger-editor-page .ledger-sheet {
+  border-color: rgba(0, 0, 0, 0.06);
+  box-shadow: var(--apple-shadow-soft);
+  border-radius: 18px;
+}
+
+.ledger-editor-page .ledger-sheet-title {
+  letter-spacing: -0.028em;
+  font-weight: 700;
+}
+
+.ledger-editor-page .ledger-table-scroll {
+  border-radius: 0 0 18px 18px;
+}
+
+/* 登记页 · 手机优先（出车登记 / 物资领用申请） */
+@media (max-width: 640px) {
+  body.register-page.with-chrome {
+    --chrome-nav-h: 0px;
+    --chrome-h: var(--chrome-bar-h);
+  }
+
+  body.register-page .office-module-nav {
+    display: none;
+  }
+
+  body.register-page .office-chrome-bar .chrome-save-lamp {
+    display: none;
+  }
+
+  body.register-page {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+
+  body.register-page .wrap {
+    max-width: none;
+  }
+
+  body.register-page header {
+    margin-bottom: 12px;
+    padding-top: 0;
+  }
+
+  body.register-page .brand {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  body.register-page h1 {
+    font-size: 22px;
+  }
+
+  body.register-page .user-bar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  body.register-page .user-bar .name {
+    flex: 1 1 100%;
+    font-size: 15px;
+  }
+
+  body.register-page .user-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  body.register-page .row2,
+  body.register-page .pick-row {
+    grid-template-columns: 1fr;
+  }
+
+  body.register-page .tabs {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  body.register-page .tabs button,
+  body.register-page .seg-tabs button {
+    min-height: 44px;
+    padding: 11px 10px;
+    font-size: 15px;
+  }
+
+  body.register-page .row3 {
+    grid-template-columns: 1fr;
+  }
+
+  body.register-page .items-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  body.register-page .items-head .btn-line {
+    width: 100%;
+    text-align: center;
+    min-height: 44px;
+    padding: 12px 14px;
+  }
+
+  body.register-page input,
+  body.register-page select,
+  body.register-page textarea {
+    min-height: 44px;
+  }
+
+  body.register-page .pick-btn {
+    min-height: 48px;
+    font-size: 15px;
+    padding: 14px 12px;
+  }
+
+  body.register-page .btn-line,
+  body.register-page .btn-logout,
+  body.register-page .btn-change-code,
+  body.register-page .btn-accent,
+  body.register-page .btn-muted {
+    min-height: 40px;
+  }
+
+  body.register-page .gate-card > .primary,
+  body.register-page .gate-card > button[type="button"] {
+    min-height: 48px;
+  }
+
+  body.register-page .qgrid div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  body.register-page .qgrid b {
+    font-size: 12px;
+  }
+
+  body.register-page .mine-item {
+    padding: 14px 12px;
+    min-height: 56px;
+  }
+
+  body.register-page .item-row {
+    padding: 12px;
+  }
+
+  body.register-page form:has(#btn:not([disabled])),
+  body.register-page form:has(#btnSubmit:not([disabled])) {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  body.register-page form > #btn,
+  body.register-page form > #btnSubmit {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 95;
+    margin: 0;
+    border-radius: 0 !important;
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  body.register-page form > #btnSubmit:disabled {
+    position: static;
+    box-shadow: none;
+    border-radius: 12px !important;
+    padding: 14px 16px;
+    margin-top: 0;
+  }
+
+  body.register-page form:has(#btnSubmit[disabled]) {
+    padding-bottom: 0;
+  }
+
+  body.register-page .code-mask {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  body.register-page .code-dialog {
+    max-width: none;
+    border-radius: 16px 16px 0 0;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+
+  body.register-page .notice-bar.is-visible {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  body.register-page .notice-actions {
+    width: 100%;
+  }
+
+  body.register-page .notice-actions .btn-accent,
+  body.register-page .notice-actions .btn-muted {
+    flex: 1;
+    text-align: center;
+    min-height: 40px;
+  }
+
+  body.register-page .change-banner .acts {
+    flex-direction: column;
+  }
+
+  body.register-page .change-banner .acts button {
+    width: 100%;
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 380px) {
+  body.register-page h1 {
+    font-size: 20px;
+  }
+
+  body.register-page .user-actions {
+    flex-direction: column;
+  }
+
+  body.register-page .user-actions button {
+    width: 100%;
+    text-align: center;
+  }
+}
