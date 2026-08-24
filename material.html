@@ -2,79 +2,131 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1f4e79" />
-  <title>物资领用申请</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <meta name="color-scheme" content="light" />
+  <meta name="description" content="十八局南方公司物资领用申请" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>十八局南方公司物资领用申请</title>
+  <link rel="stylesheet" href="/assets/office-ui-core.css" />
+  <link rel="stylesheet" href="/assets/office-ui-apple.css" />
+  <script src="/assets/office-icons.js" defer></script>
   <style>
     :root {
-      --bg: #f0f3f7;
+      --bg: #f5f5f7;
       --card: #fff;
-      --ink: #1a2332;
-      --muted: #5a6a7a;
-      --line: #d8e0ea;
-      --brand: #1f4e79;
-      --brand2: #2e6da4;
+      --ink: #1d1d1f;
+      --muted: #6e6e73;
+      --line: rgba(0, 0, 0, 0.08);
+      --brand: #0071e3;
+      --brand-hover: #0077ed;
       --ok: #1b7a4e;
       --danger: #b42318;
-      --radius: 14px;
+      --radius: 16px;
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
       color: var(--ink);
-      background: radial-gradient(1000px 400px at 0% -10%, #d9e8f7, transparent 55%), var(--bg);
+      background: var(--bg);
       min-height: 100vh;
-      padding: 20px 16px 40px;
+      min-height: 100dvh;
+      padding: 12px max(16px, env(safe-area-inset-right)) calc(48px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+      letter-spacing: -0.011em;
     }
-    .wrap { max-width: 480px; margin: 0 auto; }
-    header { text-align: center; margin-bottom: 16px; }
-    .brand { font-size: 13px; color: var(--brand); font-weight: 700; line-height: 1.45; }
-    h1 { margin: 6px 0 0; font-size: 22px; }
-    .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-    .tabs button {
-      flex: 1; border: 1px solid var(--line); background: #fff; border-radius: 999px;
-      padding: 10px; font-weight: 650; cursor: pointer;
+    .wrap { max-width: 520px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 20px; padding-top: 4px; }
+    .brand { font-size: 13px; color: var(--muted); font-weight: 600; line-height: 1.45; }
+    h1 { margin: 8px 0 0; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; }
+
+    .seg-tabs {
+      display: flex; gap: 0; margin-bottom: 16px; padding: 4px;
+      background: rgba(0, 0, 0, 0.06); border-radius: 12px;
     }
-    .tabs button.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .seg-tabs button {
+      flex: 1; border: 0; background: transparent; border-radius: 9px;
+      padding: 10px 12px; font-weight: 600; font-size: 14px; cursor: pointer;
+      color: var(--muted); transition: background 0.22s var(--ease), color 0.22s var(--ease), box-shadow 0.22s var(--ease);
+    }
+    .seg-tabs button.on {
+      background: #fff; color: var(--ink);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
     .panel { display: none; }
     .panel.show { display: block; }
     form, .query-box {
       background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-      padding: 16px; display: grid; gap: 12px;
-      box-shadow: 0 8px 28px rgba(31, 78, 121, 0.08);
+      padding: 18px 16px 20px; display: grid; gap: 16px;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    }
+    .form-section { display: grid; gap: 12px; }
+    .section-title {
+      font-size: 12px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em;
+      padding-bottom: 4px; border-bottom: 1px solid var(--line);
     }
     label { display: grid; gap: 6px; grid-template-rows: auto auto; font-size: 13px; color: var(--muted); font-weight: 600; }
     .field-label { line-height: 1.35; }
     .field-label.req::after { content: " *"; color: var(--danger); }
     input, select, textarea {
       width: 100%; border: 1px solid var(--line); border-radius: 10px;
-      padding: 12px; font-size: 16px; font-family: inherit; background: #fbfcfe;
+      padding: 12px; font-size: 16px; font-family: inherit; background: #fff;
+      transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+    }
+    input[readonly], select.is-readonly-bg + input[readonly] {
+      background: #f5f5f7; color: var(--ink); cursor: default;
+    }
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236e6e73' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
     }
     input.qty-over { border-color: var(--danger); background: #fff8f7; }
-    textarea { min-height: 64px; resize: vertical; }
+    textarea { min-height: 72px; resize: vertical; }
     .items-head {
-      font-size: 13px; font-weight: 700; color: var(--brand);
-      display: flex; justify-content: space-between; align-items: center;
+      font-size: 14px; font-weight: 700; color: var(--ink);
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
+    .items-head .hint-inline { font-size: 12px; font-weight: 500; color: var(--muted); }
     .item-row {
-      border: 1px dashed var(--line); border-radius: 12px; padding: 12px;
-      display: grid; gap: 10px; background: #f8fafc;
+      border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+      display: grid; gap: 12px; background: #fafafa;
     }
     .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .row3 { display: grid; grid-template-columns: 1.1fr 0.75fr 0.85fr; gap: 10px; align-items: start; }
     .qty-err { font-size: 12px; color: var(--danger); margin: 4px 0 0; line-height: 1.4; display: none; }
     .qty-err.show { display: block; }
+    .options-empty {
+      padding: 16px 14px; border-radius: 12px; border: 1px dashed var(--line);
+      background: #fff; font-size: 13px; color: var(--muted); line-height: 1.55; text-align: center;
+    }
+    .options-loading { font-size: 13px; color: var(--muted); text-align: center; padding: 12px; }
     .btn-line {
-      border: 1px solid var(--line); background: #f7f9fc; border-radius: 10px;
-      padding: 10px; font-weight: 650; cursor: pointer;
+      border: 1px solid var(--line); background: #fff; border-radius: 10px;
+      padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+      font-family: inherit; color: var(--ink); line-height: 1.2;
     }
-    .btn-del { color: var(--danger); font-size: 13px; justify-self: end; background: none; border: 0; cursor: pointer; }
+    .btn-line:hover { background: #f5f5f7; }
+    .btn-del { color: var(--danger); font-size: 13px; justify-self: end; background: none; border: 0; cursor: pointer; padding: 4px 0; font-family: inherit; }
     button.primary {
-      border: 0; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 700;
-      color: #fff; background: linear-gradient(135deg, var(--brand), var(--brand2)); cursor: pointer;
+      border: 0; border-radius: 12px; padding: 14px 16px; font-size: 16px; font-weight: 700;
+      color: #fff; background: var(--brand); cursor: pointer;
+      transition: background 0.2s var(--ease), transform 0.15s var(--ease);
+      font-family: inherit; line-height: 1.2;
     }
-    button.primary:disabled { opacity: 0.55; }
+    button.primary:hover:not(:disabled) { background: var(--brand-hover); }
+    button.primary:active:not(:disabled) { transform: scale(0.985); }
+    button.primary:disabled { opacity: 0.45; cursor: not-allowed; }
     .msg { padding: 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; display: none; }
     .msg.show { display: block; }
     .msg.ok { background: #e8f6ee; color: var(--ok); border: 1px solid #b7e0c7; }
@@ -84,40 +136,70 @@
       display: none; gap: 8px; font-size: 14px;
     }
     .ok-box.show { display: grid; }
-    .hint { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
+    .form-hint { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
     .status-card { font-size: 14px; line-height: 1.55; }
     .status-card strong { color: var(--brand); }
-    .gate-card {
+    .surface-card {
       background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    }
+    .gate-card {
       padding: 18px 16px 20px; display: grid; gap: 12px;
-      box-shadow: 0 8px 28px rgba(31, 78, 121, 0.08);
     }
     .user-bar {
-      display: none; align-items: center; justify-content: space-between; gap: 10px;
-      margin: 0 0 12px; padding: 10px 12px; background: var(--card);
-      border: 1px solid var(--line); border-radius: 12px;
-      box-shadow: 0 8px 28px rgba(31, 78, 121, 0.08); font-size: 14px;
+      display: none; align-items: center; justify-content: space-between; gap: 12px;
+      margin: 0 0 12px; padding: 12px 14px; font-size: 14px;
     }
     .user-bar.show { display: flex; }
-    .user-bar .name { font-weight: 700; color: var(--brand); }
-    .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .user-bar .name { font-weight: 600; color: var(--ink); }
+    .user-actions { display: flex; gap: 8px; flex-shrink: 0; }
     .btn-logout, .btn-change-code {
-      border: 1px solid var(--line); background: #fff; border-radius: 8px;
-      padding: 6px 12px; font-size: 13px; font-weight: 650; cursor: pointer; font-family: inherit;
+      border: 1px solid var(--line); background: #fff; border-radius: 10px;
+      padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+      line-height: 1.2; transition: background 0.2s var(--ease);
     }
     .btn-change-code { color: var(--brand); }
+    .btn-change-code:hover { background: rgba(0, 113, 227, 0.06); }
     .btn-logout { color: var(--muted); }
-    .change-banner {
-      display: none; margin: 0 0 12px; padding: 10px 12px; border-radius: 10px;
-      border: 1px solid #b7d4f0; background: #eef6fc; font-size: 13px; line-height: 1.5;
+    .btn-logout:hover { background: #f5f5f7; }
+
+    .notice-bar {
+      display: none; align-items: flex-start; justify-content: space-between; gap: 12px;
+      margin: 0 0 12px; padding: 12px 14px;
     }
-    .change-banner.show { display: grid; gap: 8px; }
-    .change-banner .acts { display: flex; gap: 8px; }
-    .change-banner .acts button {
-      flex: 1; border: 0; border-radius: 8px; padding: 8px; font-weight: 650; cursor: pointer; font-family: inherit;
+    .notice-bar.is-visible { display: flex; }
+    .notice-text {
+      margin: 0; flex: 1; font-size: 13px; line-height: 1.5; color: var(--muted); font-weight: 500;
     }
-    .change-banner .acts .primary { background: var(--brand); color: #fff; }
-    .change-banner .acts .ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+    .notice-actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
+    .btn-accent, .btn-muted {
+      border-radius: 10px; padding: 7px 14px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit; line-height: 1.2; white-space: nowrap;
+      transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+    }
+    .btn-accent {
+      border: 0; background: var(--brand); color: #fff;
+    }
+    .btn-accent:hover { background: var(--brand-hover); }
+    .btn-muted {
+      border: 1px solid var(--line); background: #fff; color: var(--ink);
+    }
+    .btn-muted:hover { background: #f5f5f7; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 22px; }
+      .brand { font-size: 12px; }
+      form, .query-box, .gate-card { padding: 16px 14px 18px; }
+      .row2 { grid-template-columns: 1fr; }
+      .notice-bar.is-visible { flex-direction: column; align-items: stretch; }
+      .notice-actions { width: 100%; }
+      .notice-actions .btn-accent,
+      .notice-actions .btn-muted { flex: 1; text-align: center; }
+      .row3 { grid-template-columns: 1fr; }
+      .items-head { flex-direction: column; align-items: stretch; gap: 10px; }
+      .items-head .btn-line { width: 100%; text-align: center; min-height: 44px; }
+    }
+
     .code-mask {
       display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45);
       z-index: 100; align-items: center; justify-content: center; padding: 16px;
@@ -132,8 +214,8 @@
     .code-dialog .acts button {
       flex: 1; border: 0; border-radius: 10px; padding: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
     }
-    .code-dialog .acts .primary { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; }
-    .code-dialog .acts .ghost { background: #eef2f6; color: var(--ink); }
+    .code-dialog .acts .primary { background: var(--brand); color: #fff; }
+    .code-dialog .acts .ghost { background: #f5f5f7; color: var(--ink); border: 1px solid var(--line); }
     .mine-toolbar {
       display: flex; justify-content: flex-end; margin-bottom: 8px;
     }
@@ -168,63 +250,94 @@
     }
     .record-detail.show { display: block; }
     .record-detail p { margin: 0 0 6px; }
+
+    /* 覆盖 office-ui-apple 登记页 pill 按钮与 change-banner 强制显示 */
+    body.register-page button.primary {
+      border-radius: 12px !important;
+      font-weight: 700 !important;
+      background: var(--brand) !important;
+    }
+    body.register-page form,
+    body.register-page .query-box,
+    body.register-page .gate-card,
+    body.register-page .user-bar,
+    body.register-page .notice-bar {
+      border-color: var(--line);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      border-radius: var(--radius);
+    }
+    body.register-page .user-bar,
+    body.register-page .notice-bar,
+    body.register-page .gate-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+    }
   </style>
 </head>
-<body>
+<body class="register-page">
   <div class="wrap">
     <header>
-      <div class="brand" id="company">中铁十八局集团南方工程有限公司</div>
-      <h1>物资领用申请</h1>
-      <p class="hint">填写要领用的物资，提交后由办公室审批。</p>
+      <h1>十八局南方公司物资领用申请</h1>
     </header>
 
-    <div class="gate-card" id="gateBox" style="display:none">
+    <div class="gate-card surface-card" id="gateBox" style="display:none">
       <label><span class="field-label req">登记口令</span>
-        <input id="accessCodeInput" type="text" autocomplete="off" spellcheck="false" placeholder="办公室发给你的个人口令" />
+        <input id="accessCodeInput" type="text" autocomplete="off" spellcheck="false" placeholder="个人口令" />
       </label>
       <button type="button" class="primary" id="btnUnlock">登录</button>
-      <p class="hint">输入办公室下发的个人口令登录，可提交领用申请并查询进度。与出车登记共用口令；链接可带 ?k=口令</p>
       <div class="msg" id="gateMsg"></div>
     </div>
 
     <div id="appMain" style="display:none">
-    <div class="user-bar" id="userBar">
+    <div class="user-bar surface-card" id="userBar">
       <span class="name" id="userGreeting">您好</span>
       <div class="user-actions">
         <button type="button" class="btn-change-code" id="btnChangeCode">修改口令</button>
         <button type="button" class="btn-logout" id="btnLogout">退出</button>
       </div>
     </div>
-    <div class="change-banner" id="changeBanner">
-      <div>建议尽快修改个人登记口令，仅自己知道更安全。</div>
-      <div class="acts">
-        <button type="button" class="primary" id="btnBannerChange">去修改</button>
-        <button type="button" class="ghost" id="btnBannerDismiss">知道了</button>
+    <div class="notice-bar surface-card" id="noticeBar">
+      <p class="notice-text">建议尽快修改个人登记口令，仅自己知道更安全。</p>
+      <div class="notice-actions">
+        <button type="button" class="btn-accent" id="btnBannerChange">去修改</button>
+        <button type="button" class="btn-muted" id="btnBannerDismiss">知道了</button>
       </div>
     </div>
 
-    <div class="tabs">
-      <button type="button" class="on" data-panel="submitPanel">提交申请</button>
-      <button type="button" data-panel="queryPanel">查询进度</button>
+    <div class="seg-tabs">
+      <button type="button" class="on" data-panel="submitPanel">填写申请</button>
+      <button type="button" data-panel="queryPanel">我的进度</button>
     </div>
 
     <div id="submitPanel" class="panel show">
       <form id="form">
-        <label>申请日期
-          <input id="applyDate" type="date" />
-        </label>
-        <div class="items-head">
-          <span>申请物资</span>
-          <button type="button" class="btn-line" id="btnAddRow">+ 加一行</button>
+        <div class="form-section">
+          <div class="section-title">基本信息</div>
+          <label>申请日期
+            <input id="applyDate" type="date" />
+          </label>
         </div>
-        <div id="itemsBox"></div>
-        <label>用途说明
-          <input id="purpose" type="text" maxlength="200" placeholder="如：办公使用、食堂采购" />
-        </label>
-        <label>备注
-          <textarea id="note" maxlength="300" placeholder="可选"></textarea>
-        </label>
-        <button type="submit" class="primary" id="btnSubmit">提交申请</button>
+
+        <div class="form-section">
+          <div class="items-head">
+            <span>申请物资</span>
+            <button type="button" class="btn-line" id="btnAddRow">+ 加一行</button>
+          </div>
+          <div id="optionsStatus" class="options-loading">正在加载可选物资…</div>
+          <div id="itemsBox"></div>
+        </div>
+
+        <div class="form-section">
+          <div class="section-title">补充说明</div>
+          <label>用途说明
+            <input id="purpose" type="text" maxlength="200" placeholder="如：办公使用、食堂采购" />
+          </label>
+          <label>备注
+            <textarea id="note" maxlength="300" placeholder="可选"></textarea>
+          </label>
+        </div>
+
+        <button type="submit" class="primary" id="btnSubmit" disabled>提交申请</button>
         <div class="msg" id="msg"></div>
         <div class="ok-box" id="okBox">
           <div>提交成功！申请编号：<strong id="okId"></strong></div>
@@ -232,7 +345,6 @@
             <button type="button" class="btn-line" id="btnCopyId">复制编号</button>
             <button type="button" class="btn-line" id="btnGotoQuery">查看进度</button>
           </div>
-          <p class="hint">可在「查询进度」查看本人全部申请记录</p>
         </div>
       </form>
     </div>
@@ -245,7 +357,6 @@
         <div class="msg" id="queryMsg"></div>
         <div class="mine-list" id="mineList"></div>
         <div class="record-detail" id="mineDetail"></div>
-        <p class="hint" style="margin-top:12px">显示本人全部申请；刚提交若暂无结果，请隔几秒点刷新。公网页仅显示近 72 小时内有状态回写的申请。</p>
       </div>
     </div>
     </div>
@@ -253,7 +364,6 @@
   <div class="code-mask" id="codeMask">
     <div class="code-dialog" role="dialog" aria-labelledby="codeDlgTitle">
       <h2 id="codeDlgTitle">修改登记口令</h2>
-      <p class="hint">新口令须为 6 位小写字母与数字，且同时包含字母和数字（不含 4）。</p>
       <label>新口令
         <input id="newCodeInput" type="text" autocomplete="new-password" maxlength="6" spellcheck="false" placeholder="如 abc123" />
       </label>
@@ -269,7 +379,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-24T10:29:07.477Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-24T14:40:59.790Z"};</script>
 
 
   <script>
@@ -287,6 +397,8 @@
     let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('material_request_code') || '').trim();
     let accessName = localStorage.getItem('material_request_name') || '';
     let needAccessCode = false;
+    /** @type {{ code: string, name: string, spec: string, unit: string, available: number }[]} */
+    let applyOptions = [];
 
     function esc(s) {
       return String(s ?? '').replace(/[&<>"']/g, (c) => (
@@ -294,33 +406,128 @@
       ));
     }
 
+    function optionLabel(opt) {
+      const specPart = opt.spec ? ` · ${opt.spec}` : '';
+      return `${opt.name}${specPart}`;
+    }
+
+    function buildPickOptions(selectedCode = '') {
+      const parts = ['<option value="">请选择物资</option>'];
+      for (const opt of applyOptions) {
+        const label = esc(optionLabel(opt));
+        const sel = selectedCode && opt.code === selectedCode ? ' selected' : '';
+        parts.push(
+          `<option value="${esc(opt.code)}"${sel}`
+          + ` data-name="${esc(opt.name)}"`
+          + ` data-spec="${esc(opt.spec)}"`
+          + ` data-unit="${esc(opt.unit)}"`
+          + ` data-available="${opt.available}">${label}</option>`,
+        );
+      }
+      return parts.join('');
+    }
+
     function itemTemplate(idx) {
       return `<div class="item-row" data-idx="${idx}">
         <label><span class="field-label req">物资名称</span>
-          <input data-f="name" maxlength="120" required placeholder="手填品名" />
+          <select data-f="pick" required>${buildPickOptions()}</select>
         </label>
         <div class="row3">
-          <label><span class="field-label">规格</span><input data-f="spec" maxlength="120" placeholder="选填" /></label>
-          <label><span class="field-label">单位</span><input data-f="unit" maxlength="20" placeholder="如：提、箱" /></label>
-          <label><span class="field-label req">数量</span><input data-f="qty" type="number" min="1" step="1" placeholder="整数" /></label>
+          <label><span class="field-label">规格</span><input data-f="spec" maxlength="120" readonly placeholder="选物资后自动带出" /></label>
+          <label><span class="field-label">单位</span><input data-f="unit" maxlength="20" readonly placeholder="自动" /></label>
+          <label><span class="field-label req">数量</span>
+            <input data-f="qty" type="number" min="1" step="1" inputmode="numeric" placeholder="整数" />
+            <span class="qty-err" data-qty-err></span>
+          </label>
         </div>
         ${idx > 0 ? '<button type="button" class="btn-del" data-del>删除本行</button>' : ''}
       </div>`;
     }
 
+    function getRowPick(row) {
+      return row.querySelector('[data-f="pick"]');
+    }
+
+    function syncRowFromPick(row) {
+      const pick = getRowPick(row);
+      const specEl = row.querySelector('[data-f="spec"]');
+      const unitEl = row.querySelector('[data-f="unit"]');
+      const qtyEl = row.querySelector('[data-f="qty"]');
+      const qtyErr = row.querySelector('[data-qty-err]');
+      const opt = pick?.selectedOptions?.[0];
+      const code = pick?.value || '';
+      if (!code || !opt) {
+        specEl.value = '';
+        unitEl.value = '';
+        row.dataset.available = '';
+        row.dataset.code = '';
+        row.dataset.name = '';
+        validateRowQty(row);
+        return;
+      }
+      const name = opt.dataset.name || '';
+      const spec = opt.dataset.spec || '';
+      const unit = opt.dataset.unit || '';
+      const available = Number(opt.dataset.available || 0);
+      specEl.value = spec;
+      unitEl.value = unit;
+      row.dataset.code = code;
+      row.dataset.name = name;
+      row.dataset.available = String(available);
+      if (qtyEl?.max) qtyEl.max = String(Math.max(1, available));
+      validateRowQty(row);
+    }
+
+    function validateRowQty(row) {
+      const qtyEl = row.querySelector('[data-f="qty"]');
+      const qtyErr = row.querySelector('[data-qty-err]');
+      const available = Number(row.dataset.available || 0);
+      const qty = Number(qtyEl?.value);
+      let bad = false;
+      if (row.dataset.code && qtyEl?.value !== '') {
+        if (!Number.isFinite(qty) || qty < 1) {
+          qtyErr.textContent = '请填写有效数量';
+          qtyErr.classList.add('show');
+          bad = true;
+        } else if (available > 0 && qty > available) {
+          qtyErr.textContent = '申请数量超出限制';
+          qtyErr.classList.add('show');
+          qtyEl.classList.add('qty-over');
+          bad = true;
+        } else {
+          qtyErr.textContent = '';
+          qtyErr.classList.remove('show');
+          qtyEl.classList.remove('qty-over');
+        }
+      } else {
+        qtyErr.textContent = '';
+        qtyErr.classList.remove('show');
+        qtyEl?.classList.remove('qty-over');
+      }
+      return !bad;
+    }
+
     function updateSubmitButton() {
       const rows = [...document.querySelectorAll('.item-row')];
-      const blocked = rows.some((row) => {
-        const name = row.querySelector('[data-f="name"]')?.value.trim();
+      const blocked = !applyOptions.length || rows.some((row) => {
+        const code = row.dataset.code || getRowPick(row)?.value;
         const qty = Number(row.querySelector('[data-f="qty"]')?.value);
-        return !name || !Number.isFinite(qty) || qty < 1;
+        if (!code || !Number.isFinite(qty) || qty < 1) return true;
+        const available = Number(row.dataset.available || 0);
+        if (available > 0 && qty > available) return true;
+        return false;
       });
       $('btnSubmit').disabled = blocked;
     }
 
     function bindItemRow(row) {
-      row.querySelectorAll('[data-f="name"], [data-f="qty"]').forEach((el) => {
-        el.addEventListener('input', updateSubmitButton);
+      getRowPick(row)?.addEventListener('change', () => {
+        syncRowFromPick(row);
+        updateSubmitButton();
+      });
+      row.querySelector('[data-f="qty"]')?.addEventListener('input', () => {
+        validateRowQty(row);
+        updateSubmitButton();
       });
       row.querySelector('[data-del]')?.addEventListener('click', () => {
         row.remove();
@@ -337,6 +544,46 @@
         bindItemRow(box.lastElementChild);
       }
       updateSubmitButton();
+    }
+
+    function setOptionsStatus(text, kind = 'loading') {
+      const el = $('optionsStatus');
+      if (!text) {
+        el.style.display = 'none';
+        el.textContent = '';
+        return;
+      }
+      el.style.display = 'block';
+      el.className = kind === 'empty' ? 'options-empty' : 'options-loading';
+      el.textContent = text;
+    }
+
+    async function loadApplyOptions() {
+      setOptionsStatus('正在加载可选物资…');
+      try {
+        if (IS_PUBLIC) {
+          applyOptions = (PUB.applyOptions || []).filter((o) => o && o.name);
+        } else {
+          const r = await fetch(`${API}/apply-options`);
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.error || '加载物资列表失败');
+          applyOptions = (data.items || []).filter((o) => o && o.name);
+        }
+        if (!applyOptions.length) {
+          setOptionsStatus('暂无可申请物资。请联系办公室在库存台账将物资标记为「可申请」。', 'empty');
+          $('btnAddRow').disabled = true;
+          $('itemsBox').innerHTML = '';
+          updateSubmitButton();
+          return;
+        }
+        setOptionsStatus('');
+        $('btnAddRow').disabled = false;
+        renderItems(Math.max(1, document.querySelectorAll('.item-row').length || 1));
+      } catch (e) {
+        setOptionsStatus(e.message || '加载物资列表失败', 'empty');
+        applyOptions = [];
+        updateSubmitButton();
+      }
     }
 
     function resolvePublicAccess(code) {
@@ -426,7 +673,8 @@
     function collectItems() {
       const rows = [...document.querySelectorAll('.item-row')];
       return rows.map((row) => ({
-        name: row.querySelector('[data-f="name"]').value.trim(),
+        code: row.dataset.code || getRowPick(row)?.value || '',
+        name: row.dataset.name || getRowPick(row)?.selectedOptions?.[0]?.dataset?.name || '',
         spec: row.querySelector('[data-f="spec"]').value.trim(),
         unit: row.querySelector('[data-f="unit"]').value.trim(),
         qty: row.querySelector('[data-f="qty"]').value.trim(),
@@ -465,9 +713,24 @@
       $('accessCodeInput').value = '';
       showGateMsg(true, '已退出，请重新登录');
     }
+    function openChangeCodeDialog() {
+      $('codeMask').classList.add('show');
+      $('newCodeInput').value = '';
+      $('newCodeConfirm').value = '';
+      $('changeCodeMsg').className = 'msg';
+    }
+    function dismissChangeBanner() {
+      sessionStorage.setItem('material_change_banner_dismissed', '1');
+      const el = $('noticeBar');
+      el.classList.remove('is-visible');
+      el.hidden = true;
+    }
     function maybeShowChangeBanner(should) {
       const dismissed = sessionStorage.getItem('material_change_banner_dismissed') === '1';
-      $('changeBanner').classList.toggle('show', !!should && !dismissed);
+      const visible = !!should && !dismissed;
+      const el = $('noticeBar');
+      el.hidden = !visible;
+      el.classList.toggle('is-visible', visible);
     }
     async function unlockWithCode(code) {
       const c = String(code || '').trim();
@@ -512,10 +775,9 @@
     async function loadMeta() {
       $('applyDate').value = new Date().toISOString().slice(0, 10);
       if (IS_PUBLIC) {
-        $('company').textContent = PUB.company || '';
         needAccessCode = !!PUB.needAccessCode;
         $('btnChangeCode').style.display = 'none';
-        $('changeBanner').style.display = 'none';
+        $('noticeBar').classList.remove('is-visible');
         if (needAccessCode) {
           if (accessCode) await unlockWithCode(accessCode);
           else {
@@ -531,7 +793,6 @@
       }
       const r = await fetch(`${API}/meta`);
       const data = await r.json();
-      $('company').textContent = data.company || '';
       needAccessCode = !!data.needAccessCode;
       if (needAccessCode) {
         if (accessCode) await unlockWithCode(accessCode);
@@ -551,17 +812,9 @@
       if (e.key === 'Enter') unlockWithCode($('accessCodeInput').value);
     });
     $('btnLogout').addEventListener('click', logout);
-    $('btnChangeCode').addEventListener('click', () => {
-      $('codeMask').classList.add('show');
-      $('newCodeInput').value = '';
-      $('newCodeConfirm').value = '';
-      $('changeCodeMsg').className = 'msg';
-    });
-    $('btnBannerChange').addEventListener('click', () => $('btnChangeCode').click());
-    $('btnBannerDismiss').addEventListener('click', () => {
-      sessionStorage.setItem('material_change_banner_dismissed', '1');
-      $('changeBanner').classList.remove('show');
-    });
+    $('btnChangeCode').addEventListener('click', openChangeCodeDialog);
+    $('btnBannerChange').addEventListener('click', openChangeCodeDialog);
+    $('btnBannerDismiss').addEventListener('click', dismissChangeBanner);
     $('btnChangeCancel').addEventListener('click', () => $('codeMask').classList.remove('show'));
     $('btnChangeSubmit').addEventListener('click', async () => {
       const newCode = $('newCodeInput').value.trim();
@@ -590,9 +843,9 @@
       }
     });
 
-    document.querySelectorAll('.tabs button').forEach((btn) => {
+    document.querySelectorAll('.seg-tabs button').forEach((btn) => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.tabs button').forEach((b) => b.classList.remove('on'));
+        document.querySelectorAll('.seg-tabs button').forEach((b) => b.classList.remove('on'));
         btn.classList.add('on');
         document.querySelectorAll('.panel').forEach((p) => p.classList.remove('show'));
         $(btn.dataset.panel).classList.add('show');
@@ -657,7 +910,7 @@
     }
     async function loadMyRecords() {
       $('btnRefreshMine').disabled = true;
-      show($('queryMsg'), '加载中…', true);
+      show($('queryMsg'), '…', true);
       try {
         let records = [];
         if (IS_PUBLIC) {
@@ -718,7 +971,7 @@
     }
     $('btnRefreshMine').addEventListener('click', loadMyRecords);
     $('btnGotoQuery').addEventListener('click', () => {
-      document.querySelectorAll('.tabs button').forEach((b) => b.classList.remove('on'));
+      document.querySelectorAll('.seg-tabs button').forEach((b) => b.classList.remove('on'));
       document.querySelector('[data-panel="queryPanel"]').classList.add('on');
       document.querySelectorAll('.panel').forEach((p) => p.classList.remove('show'));
       $('queryPanel').classList.add('show');
@@ -745,9 +998,11 @@
         }
         const items = collectItems();
         for (const it of items) {
-          if (!it.name) throw new Error('请填写物资名称');
+          if (!it.code || !it.name) throw new Error('请选择物资名称');
           const qty = Number(it.qty);
           if (!Number.isFinite(qty) || qty < 1) throw new Error('请填写有效数量');
+          const opt = applyOptions.find((o) => o.code === it.code);
+          if (opt && qty > opt.available) throw new Error(`${it.name} 申请数量超出限制`);
         }
         if (IS_PUBLIC) {
           if (!CLOUD && !NTFY?.topic) throw new Error('公网收件未配置，请联系办公室');
@@ -868,8 +1123,12 @@
       }
     });
 
-    renderItems(1);
-    loadMeta().catch((e) => show($('msg'), e.message, false));
+    async function boot() {
+      $('applyDate').value = new Date().toISOString().slice(0, 10);
+      await loadMeta();
+      await loadApplyOptions();
+    }
+    boot().catch((e) => show($('msg'), e.message, false));
   </script>
 </body>
 </html>
