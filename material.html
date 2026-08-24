@@ -269,7 +269,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":6,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"叶利辉","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-24T09:54:30.227Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-24T10:29:07.477Z"};</script>
 
 
   <script>
@@ -287,7 +287,6 @@
     let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('material_request_code') || '').trim();
     let accessName = localStorage.getItem('material_request_name') || '';
     let needAccessCode = false;
-    let applyOptions = [];
 
     function esc(s) {
       return String(s ?? '').replace(/[&<>"']/g, (c) => (
@@ -295,79 +294,34 @@
       ));
     }
 
-    function optionLabel(item) {
-      const spec = item.spec ? ` · ${item.spec}` : '';
-      return `${item.name}${spec}`;
-    }
-
-    function buildMaterialOptions(selectedCode = '') {
-      return ['<option value="">请选择物资</option>']
-        .concat(
-          applyOptions.map((item) => {
-            const label = optionLabel(item);
-            const sel = item.code === selectedCode ? ' selected' : '';
-            return `<option value="${esc(item.code)}"${sel}>${esc(label)}</option>`;
-          }),
-        )
-        .join('');
-    }
-
-    function itemTemplate(idx, selectedCode = '') {
+    function itemTemplate(idx) {
       return `<div class="item-row" data-idx="${idx}">
         <label><span class="field-label req">物资名称</span>
-          <select class="item-material" data-f="code" required>${buildMaterialOptions(selectedCode)}</select>
+          <input data-f="name" maxlength="120" required placeholder="手填品名" />
         </label>
         <div class="row3">
-          <label><span class="field-label">规格</span><input data-f="spec" maxlength="120" readonly placeholder="自动带出" /></label>
-          <label><span class="field-label">单位</span><input data-f="unit" maxlength="20" readonly placeholder="自动带出" /></label>
+          <label><span class="field-label">规格</span><input data-f="spec" maxlength="120" placeholder="选填" /></label>
+          <label><span class="field-label">单位</span><input data-f="unit" maxlength="20" placeholder="如：提、箱" /></label>
           <label><span class="field-label req">数量</span><input data-f="qty" type="number" min="1" step="1" placeholder="整数" /></label>
         </div>
-        <p class="qty-err">申请数量超过可领用库存，请调整数量</p>
         ${idx > 0 ? '<button type="button" class="btn-del" data-del>删除本行</button>' : ''}
       </div>`;
     }
 
-    function fillRowFromOption(row, code) {
-      const item = applyOptions.find((x) => x.code === code);
-      if (!item) {
-        row.querySelector('[data-f="spec"]').value = '';
-        row.querySelector('[data-f="unit"]').value = '';
-        updateRowQtyState(row);
-        return;
-      }
-      row.querySelector('[data-f="spec"]').value = item.spec || '';
-      row.querySelector('[data-f="unit"]').value = item.unit || '';
-      updateRowQtyState(row);
-    }
-
-    function updateRowQtyState(row) {
-      const code = row.querySelector('[data-f="code"]')?.value.trim() || '';
-      const item = applyOptions.find((x) => x.code === code);
-      const qtyInput = row.querySelector('[data-f="qty"]');
-      const err = row.querySelector('.qty-err');
-      if (!qtyInput) return;
-      const raw = qtyInput.value.trim();
-      let over = false;
-      if (item && raw) {
-        const qty = Number(raw);
-        over = Number.isFinite(qty) && qty > item.available;
-      }
-      qtyInput.classList.toggle('qty-over', over);
-      if (err) err.classList.toggle('show', over);
-      updateSubmitButton();
-    }
-
     function updateSubmitButton() {
       const rows = [...document.querySelectorAll('.item-row')];
-      const blocked = rows.some((row) => row.querySelector('.qty-err.show'));
+      const blocked = rows.some((row) => {
+        const name = row.querySelector('[data-f="name"]')?.value.trim();
+        const qty = Number(row.querySelector('[data-f="qty"]')?.value);
+        return !name || !Number.isFinite(qty) || qty < 1;
+      });
       $('btnSubmit').disabled = blocked;
     }
 
     function bindItemRow(row) {
-      const select = row.querySelector('.item-material');
-      select?.addEventListener('change', () => fillRowFromOption(row, select.value.trim()));
-      const qtyInput = row.querySelector('[data-f="qty"]');
-      qtyInput?.addEventListener('input', () => updateRowQtyState(row));
+      row.querySelectorAll('[data-f="name"], [data-f="qty"]').forEach((el) => {
+        el.addEventListener('input', updateSubmitButton);
+      });
       row.querySelector('[data-del]')?.addEventListener('click', () => {
         row.remove();
         if (!document.querySelector('.item-row')) renderItems(1);
@@ -382,50 +336,7 @@
         box.insertAdjacentHTML('beforeend', itemTemplate(i));
         bindItemRow(box.lastElementChild);
       }
-      refreshMaterialSelects();
-    }
-
-    function refreshMaterialSelects() {
-      document.querySelectorAll('.item-row').forEach((row) => {
-        const select = row.querySelector('.item-material');
-        if (!select) return;
-        const cur = select.value;
-        select.innerHTML = buildMaterialOptions(cur);
-        fillRowFromOption(row, select.value.trim());
-      });
-      const head = document.querySelector('.items-head span');
-      if (head) head.textContent = applyOptions.length ? `申请物资（${applyOptions.length} 种可选）` : '申请物资';
       updateSubmitButton();
-    }
-
-    async function loadApplyOptions() {
-      if (IS_PUBLIC) {
-        try {
-          const rel = PUB.optionsUrl || 'material-options.json';
-          const bust = encodeURIComponent(PUB.updatedAt || Date.now());
-          const r = await fetch(`${rel}?t=${bust}`);
-          if (r.ok) {
-            const data = await r.json();
-            applyOptions = data.items || [];
-          } else {
-            applyOptions = PUB.applyOptions || [];
-          }
-        } catch {
-          applyOptions = PUB.applyOptions || [];
-        }
-        refreshMaterialSelects();
-        return;
-      }
-      try {
-        const r = await fetch(`${API}/apply-options`);
-        const data = await r.json();
-        if (!r.ok) throw new Error(data.error || '加载物资选项失败');
-        applyOptions = data.items || [];
-      } catch (e) {
-        applyOptions = [];
-        show($('msg'), e.message || '物资选项加载失败', false);
-      }
-      refreshMaterialSelects();
     }
 
     function resolvePublicAccess(code) {
@@ -514,17 +425,12 @@
 
     function collectItems() {
       const rows = [...document.querySelectorAll('.item-row')];
-      return rows.map((row) => {
-        const code = row.querySelector('[data-f="code"]')?.value.trim() || '';
-        const item = applyOptions.find((x) => x.code === code);
-        return {
-          code,
-          name: item?.name || '',
-          spec: row.querySelector('[data-f="spec"]').value.trim(),
-          unit: row.querySelector('[data-f="unit"]').value.trim(),
-          qty: row.querySelector('[data-f="qty"]').value.trim(),
-        };
-      });
+      return rows.map((row) => ({
+        name: row.querySelector('[data-f="name"]').value.trim(),
+        spec: row.querySelector('[data-f="spec"]').value.trim(),
+        unit: row.querySelector('[data-f="unit"]').value.trim(),
+        qty: row.querySelector('[data-f="qty"]').value.trim(),
+      }));
     }
 
     function show(el, text, ok) {
@@ -547,7 +453,6 @@
       $('gateBox').style.display = 'none';
       $('appMain').style.display = 'block';
       updateUserBar();
-      loadApplyOptions();
     }
     function logout() {
       accessCode = '';
@@ -840,12 +745,9 @@
         }
         const items = collectItems();
         for (const it of items) {
-          if (!it.code) throw new Error('请选择物资');
-          const item = applyOptions.find((x) => x.code === it.code);
-          if (!item) throw new Error('所选物资已不可申请，请刷新后重选');
+          if (!it.name) throw new Error('请填写物资名称');
           const qty = Number(it.qty);
           if (!Number.isFinite(qty) || qty < 1) throw new Error('请填写有效数量');
-          if (qty > item.available) throw new Error(`${item.name} 申请数量超过可领用库存，请调整数量`);
         }
         if (IS_PUBLIC) {
           if (!CLOUD && !NTFY?.topic) throw new Error('公网收件未配置，请联系办公室');
