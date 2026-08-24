@@ -6,114 +6,607 @@
   <meta name="theme-color" content="#1f4e79" />
   <title>物资领用申请</title>
   <style>
-    :root { --bg:#f0f3f7; --card:#fff; --ink:#1a2332; --muted:#5a6a7a; --line:#d8e0ea; --brand:#1f4e79; --brand2:#2e6da4; --ok:#1b7a4e; --danger:#b42318; }
-    *{box-sizing:border-box} body{margin:0;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);background:radial-gradient(1000px 400px at 0% -10%,#d9e8f7,transparent 55%),var(--bg);min-height:100vh;padding:20px 16px 40px}
-    .wrap{max-width:480px;margin:0 auto} header{text-align:center;margin-bottom:16px}
-    .brand{font-size:13px;color:var(--brand);font-weight:700;line-height:1.45} h1{margin:6px 0 0;font-size:22px}
-    .tabs{display:flex;gap:8px;margin-bottom:12px} .tabs button{flex:1;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px;font-weight:650;cursor:pointer}
-    .tabs button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
-    .panel{display:none}.panel.show{display:block}
-    form,.query-box,.gate-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:12px;box-shadow:0 8px 28px rgba(31,78,121,.08)}
-    label{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600} .req::after{content:" *";color:var(--danger)}
-    input,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:16px;font-family:inherit;background:#fbfcfe}
-    textarea{min-height:64px;resize:vertical} .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .item-row{border:1px dashed var(--line);border-radius:12px;padding:12px;display:grid;gap:10px;background:#f8fafc}
-    .btn-line{border:1px solid var(--line);background:#f7f9fc;border-radius:10px;padding:10px;font-weight:650;cursor:pointer}
-    .btn-del{color:var(--danger);font-size:13px;justify-self:end;background:none;border:0;cursor:pointer}
-    button.primary{border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer}
-    button.primary:disabled{opacity:.55}
-    .msg{padding:12px;border-radius:12px;font-size:14px;line-height:1.5;display:none}.msg.show{display:block}
-    .msg.ok{background:#e8f6ee;color:var(--ok);border:1px solid #b7e0c7} .msg.err{background:#fdecec;color:var(--danger);border:1px solid #f3c1bd}
-    .ok-box{display:none;padding:12px;border-radius:12px;border:1px solid #b7e4c7;background:#edf9f1;font-size:13px;line-height:1.5;color:var(--ok)}.ok-box.show{display:grid;gap:8px}
-    .hint{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
-    .badge{display:inline-block;font-size:13px;font-weight:750;padding:4px 10px;border-radius:999px;margin-bottom:8px}
-    .badge.pending{background:#ffe6a8;color:#b45309}.badge.approved{background:#d8f3e4;color:var(--ok)}.badge.rejected,.badge.denied{background:#fde2e0;color:var(--danger)}
-    .query-result{display:none;margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#f8fafc;font-size:14px;line-height:1.55}.query-result.show{display:block}
+    :root {
+      --bg: #f0f3f7;
+      --card: #fff;
+      --ink: #1a2332;
+      --muted: #5a6a7a;
+      --line: #d8e0ea;
+      --brand: #1f4e79;
+      --brand2: #2e6da4;
+      --ok: #1b7a4e;
+      --danger: #b42318;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--ink);
+      background: radial-gradient(1000px 400px at 0% -10%, #d9e8f7, transparent 55%), var(--bg);
+      min-height: 100vh;
+      padding: 20px 16px 40px;
+    }
+    .wrap { max-width: 480px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 16px; }
+    .brand { font-size: 13px; color: var(--brand); font-weight: 700; line-height: 1.45; }
+    h1 { margin: 6px 0 0; font-size: 22px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+    .tabs button {
+      flex: 1; border: 1px solid var(--line); background: #fff; border-radius: 999px;
+      padding: 10px; font-weight: 650; cursor: pointer;
+    }
+    .tabs button.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .panel { display: none; }
+    .panel.show { display: block; }
+    form, .query-box {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 16px; display: grid; gap: 12px;
+      box-shadow: 0 8px 28px rgba(31, 78, 121, 0.08);
+    }
+    label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); font-weight: 600; }
+    .req::after { content: " *"; color: var(--danger); }
+    input, select, textarea {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px;
+      padding: 12px; font-size: 16px; font-family: inherit; background: #fbfcfe;
+    }
+    input.qty-over { border-color: var(--danger); background: #fff8f7; }
+    textarea { min-height: 64px; resize: vertical; }
+    .items-head {
+      font-size: 13px; font-weight: 700; color: var(--brand);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .item-row {
+      border: 1px dashed var(--line); border-radius: 12px; padding: 12px;
+      display: grid; gap: 10px; background: #f8fafc;
+    }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row3 { display: grid; grid-template-columns: 1.1fr 0.75fr 0.85fr; gap: 10px; align-items: end; }
+    .qty-err { font-size: 12px; color: var(--danger); margin: 4px 0 0; line-height: 1.4; display: none; }
+    .qty-err.show { display: block; }
+    .btn-line {
+      border: 1px solid var(--line); background: #f7f9fc; border-radius: 10px;
+      padding: 10px; font-weight: 650; cursor: pointer;
+    }
+    .btn-del { color: var(--danger); font-size: 13px; justify-self: end; background: none; border: 0; cursor: pointer; }
+    button.primary {
+      border: 0; border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 700;
+      color: #fff; background: linear-gradient(135deg, var(--brand), var(--brand2)); cursor: pointer;
+    }
+    button.primary:disabled { opacity: 0.55; }
+    .msg { padding: 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; display: none; }
+    .msg.show { display: block; }
+    .msg.ok { background: #e8f6ee; color: var(--ok); border: 1px solid #b7e0c7; }
+    .msg.err { background: #fdecec; color: var(--danger); border: 1px solid #f3c1bd; }
+    .ok-box {
+      background: #e8f6ee; border: 1px solid #b7e0c7; border-radius: 12px; padding: 14px;
+      display: none; gap: 8px; font-size: 14px;
+    }
+    .ok-box.show { display: grid; }
+    .hint { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
+    .status-card { font-size: 14px; line-height: 1.55; }
+    .status-card strong { color: var(--brand); }
+    .gate-card {
+      background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 18px 16px 20px; display: grid; gap: 12px;
+      box-shadow: 0 8px 28px rgba(31, 78, 121, 0.08);
+    }
+    .user-bar {
+      display: none; align-items: center; justify-content: space-between; gap: 10px;
+      margin: 0 0 12px; padding: 10px 12px; background: var(--card);
+      border: 1px solid var(--line); border-radius: 12px;
+      box-shadow: 0 8px 28px rgba(31, 78, 121, 0.08); font-size: 14px;
+    }
+    .user-bar.show { display: flex; }
+    .user-bar .name { font-weight: 700; color: var(--brand); }
+    .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .btn-logout, .btn-change-code {
+      border: 1px solid var(--line); background: #fff; border-radius: 8px;
+      padding: 6px 12px; font-size: 13px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .btn-change-code { color: var(--brand); }
+    .btn-logout { color: var(--muted); }
+    .change-banner {
+      display: none; margin: 0 0 12px; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid #b7d4f0; background: #eef6fc; font-size: 13px; line-height: 1.5;
+    }
+    .change-banner.show { display: grid; gap: 8px; }
+    .change-banner .acts { display: flex; gap: 8px; }
+    .change-banner .acts button {
+      flex: 1; border: 0; border-radius: 8px; padding: 8px; font-weight: 650; cursor: pointer; font-family: inherit;
+    }
+    .change-banner .acts .primary { background: var(--brand); color: #fff; }
+    .change-banner .acts .ghost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+    .code-mask {
+      display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45);
+      z-index: 100; align-items: center; justify-content: center; padding: 16px;
+    }
+    .code-mask.show { display: flex; }
+    .code-dialog {
+      width: 100%; max-width: 400px; background: #fff; border-radius: 14px;
+      padding: 18px 16px; display: grid; gap: 12px;
+    }
+    .code-dialog h2 { margin: 0; font-size: 18px; }
+    .code-dialog .acts { display: flex; gap: 8px; }
+    .code-dialog .acts button {
+      flex: 1; border: 0; border-radius: 10px; padding: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .code-dialog .acts .primary { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; }
+    .code-dialog .acts .ghost { background: #eef2f6; color: var(--ink); }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">中铁十八局集团南方工程有限公司</div>
+      <div class="brand" id="company">中铁十八局集团南方工程有限公司</div>
       <h1>物资领用申请</h1>
-      <p class="hint">提交后由办公室审批；通过后记入采购申请台账</p>
+      <p class="hint">填写要领用的物资，提交后由办公室审批。</p>
     </header>
-    <div class="gate-card" id="gateBox" style="display:grid">
-      <label class="req">登记口令<input id="accessCodeInput" autocomplete="off" placeholder="办公室下发的个人口令" /></label>
-      <button type="button" class="btn-line" id="btnUnlock">进入申请</button>
-      <p class="hint">与出车登记共用口令；链接可带 ?k=口令</p>
+
+    <div class="gate-card" id="gateBox" style="display:none">
+      <label class="req">登记口令
+        <input id="accessCodeInput" type="text" autocomplete="off" spellcheck="false" placeholder="办公室发给你的个人口令" />
+      </label>
+      <button type="button" class="primary" id="btnUnlock">登录</button>
+      <p class="hint">输入办公室下发的个人口令登录，可提交领用申请并查询进度。与出车登记共用口令；链接可带 ?k=口令</p>
       <div class="msg" id="gateMsg"></div>
     </div>
+
     <div id="appMain" style="display:none">
-      <div class="tabs">
-        <button type="button" class="on" data-panel="submitPanel">提交申请</button>
-        <button type="button" data-panel="queryPanel">查询进度</button>
+    <div class="user-bar" id="userBar">
+      <span class="name" id="userGreeting">您好</span>
+      <div class="user-actions">
+        <button type="button" class="btn-change-code" id="btnChangeCode">修改口令</button>
+        <button type="button" class="btn-logout" id="btnLogout">退出</button>
       </div>
-      <div id="submitPanel" class="panel show">
-        <form id="form">
-          <label>申请日期<input id="applyDate" type="date" /></label>
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:var(--brand)">
-            <span>申请物资</span><button type="button" class="btn-line" id="btnAddRow">+ 加一行</button>
-          </div>
-          <div id="itemsBox"></div>
-          <label>用途说明<input id="purpose" maxlength="200" placeholder="如：办公使用" /></label>
-          <label>备注<textarea id="note" maxlength="300"></textarea></label>
-          <button type="submit" class="primary" id="btnSubmit">提交申请</button>
-          <div class="msg" id="msg"></div>
-          <div class="ok-box" id="okBox">
-            <div>提交成功！申请编号：<strong id="okId"></strong></div>
-            <button type="button" class="btn-line" id="btnCopyId">复制编号</button>
-          </div>
-        </form>
+    </div>
+    <div class="change-banner" id="changeBanner">
+      <div>建议尽快修改个人登记口令，仅自己知道更安全。</div>
+      <div class="acts">
+        <button type="button" class="primary" id="btnBannerChange">去修改</button>
+        <button type="button" class="ghost" id="btnBannerDismiss">知道了</button>
       </div>
-      <div id="queryPanel" class="panel">
-        <div class="query-box">
-          <label>申请编号<input id="queryId" maxlength="10" placeholder="如 2026082201" /></label>
-          <button type="button" class="primary" id="btnQuery">查询</button>
-          <div class="msg" id="queryMsg"></div>
-          <div class="query-result" id="queryResult"></div>
+    </div>
+
+    <div class="tabs">
+      <button type="button" class="on" data-panel="submitPanel">提交申请</button>
+      <button type="button" data-panel="queryPanel">查询进度</button>
+    </div>
+
+    <div id="submitPanel" class="panel show">
+      <form id="form">
+        <label>申请日期
+          <input id="applyDate" type="date" />
+        </label>
+        <div class="items-head">
+          <span>申请物资</span>
+          <button type="button" class="btn-line" id="btnAddRow">+ 加一行</button>
         </div>
+        <div id="itemsBox"></div>
+        <label>用途说明
+          <input id="purpose" type="text" maxlength="200" placeholder="如：办公使用、食堂采购" />
+        </label>
+        <label>备注
+          <textarea id="note" maxlength="300" placeholder="可选"></textarea>
+        </label>
+        <button type="submit" class="primary" id="btnSubmit">提交申请</button>
+        <div class="msg" id="msg"></div>
+        <div class="ok-box" id="okBox">
+          <div>提交成功！申请编号：<strong id="okId"></strong></div>
+          <button type="button" class="btn-line" id="btnCopyId">复制编号</button>
+          <p class="hint">请保存编号，可在「查询进度」查看审批结果</p>
+        </div>
+      </form>
+    </div>
+
+    <div id="queryPanel" class="panel">
+      <div class="query-box">
+        <label>申请编号
+          <input id="queryId" type="text" maxlength="10" placeholder="如 2026082201" />
+        </label>
+        <button type="button" class="primary" id="btnQuery">查询</button>
+        <div class="msg" id="queryMsg"></div>
+        <div class="status-card" id="statusCard" style="display:none"></div>
+      </div>
+    </div>
+    </div>
+
+  <div class="code-mask" id="codeMask">
+    <div class="code-dialog" role="dialog" aria-labelledby="codeDlgTitle">
+      <h2 id="codeDlgTitle">修改登记口令</h2>
+      <p class="hint">新口令须为 6 位小写字母与数字，且同时包含字母和数字（不含 4）。</p>
+      <label>新口令
+        <input id="newCodeInput" type="text" autocomplete="new-password" maxlength="6" spellcheck="false" placeholder="如 abc123" />
+      </label>
+      <label>确认新口令
+        <input id="newCodeConfirm" type="text" autocomplete="new-password" maxlength="6" spellcheck="false" />
+      </label>
+      <div class="msg" id="changeCodeMsg"></div>
+      <div class="acts">
+        <button type="button" class="ghost" id="btnChangeCancel">取消</button>
+        <button type="button" class="primary" id="btnChangeSubmit">保存</button>
       </div>
     </div>
   </div>
-  <script>
-    const NTFY = "https://ntfy.sh";
-    const TOPIC = "yue-trip-lk56m7z8ray1fq293p4d";
-    const NEED_ACCESS = true;
-    const $ = (id) => document.getElementById(id);
-    let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('material_request_code') || '').trim();
 
-    function show(el, text, ok) { el.textContent = text; el.className = 'msg show ' + (ok ? 'ok' : 'err'); }
-    function itemTpl(idx) {
-      return '<div class="item-row"><label class="req">品名<input data-f="name" maxlength="120" /></label><div class="row2"><label>规格<input data-f="spec" maxlength="120" /></label><label>单位<input data-f="unit" maxlength="20" /></label></div><label class="req">数量<input data-f="qty" type="number" min="1" step="1" /></label>' + (idx > 0 ? '<button type="button" class="btn-del" data-del>删除本行</button>' : '') + '</div>';
+  </div>
+
+  <script>
+    const PUB = window.__MATERIAL_PUBLIC__ || null;
+    const IS_PUBLIC = !!PUB;
+    const API = IS_PUBLIC ? '' : '/api/material-request';
+    const NTFY = IS_PUBLIC
+      ? { server: String(PUB.ntfyServer || 'https://ntfy.sh').replace(/\/$/, ''), topic: String(PUB.ntfyTopic || '') }
+      : null;
+    const $ = (id) => document.getElementById(id);
+
+    let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('material_request_code') || '').trim();
+    let accessName = localStorage.getItem('material_request_name') || '';
+    let needAccessCode = false;
+    let applyOptions = [];
+
+    function esc(s) {
+      return String(s ?? '').replace(/[&<>"']/g, (c) => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+      ));
     }
-    function renderItems(n) {
-      const box = $('itemsBox'); box.innerHTML = '';
-      for (let i = 0; i < n; i++) box.insertAdjacentHTML('beforeend', itemTpl(i));
-      box.querySelectorAll('[data-del]').forEach((btn) => btn.addEventListener('click', () => {
-        btn.closest('.item-row').remove();
-        if (!box.querySelector('.item-row')) renderItems(1);
-      }));
+
+    function optionLabel(item) {
+      const spec = item.spec ? ` · ${item.spec}` : '';
+      return `${item.name}${spec}`;
     }
-    function collectItems() {
-      return [...document.querySelectorAll('.item-row')].map((row) => ({
-        name: row.querySelector('[data-f="name"]').value.trim(),
-        spec: row.querySelector('[data-f="spec"]').value.trim(),
-        unit: row.querySelector('[data-f="unit"]').value.trim(),
-        qty: row.querySelector('[data-f="qty"]').value.trim(),
-      }));
+
+    function buildMaterialOptions(selectedCode = '') {
+      return ['<option value="">请选择物资</option>']
+        .concat(
+          applyOptions.map((item) => {
+            const label = optionLabel(item);
+            const sel = item.code === selectedCode ? ' selected' : '';
+            return `<option value="${esc(item.code)}"${sel}>${esc(label)}</option>`;
+          }),
+        )
+        .join('');
     }
-    function enterApp() { $('gateBox').style.display = 'none'; $('appMain').style.display = 'block'; }
-    function unlock(code) {
+
+    function itemTemplate(idx, selectedCode = '') {
+      return `<div class="item-row" data-idx="${idx}">
+        <label class="req">物资名称
+          <select class="item-material" data-f="code" required>${buildMaterialOptions(selectedCode)}</select>
+        </label>
+        <div class="row3">
+          <label>规格<input data-f="spec" maxlength="120" readonly placeholder="自动带出" /></label>
+          <label>单位<input data-f="unit" maxlength="20" readonly placeholder="自动带出" /></label>
+          <label class="req">数量<input data-f="qty" type="number" min="1" step="1" placeholder="整数" /></label>
+        </div>
+        <p class="qty-err">申请数量超过可领用库存，请调整数量</p>
+        ${idx > 0 ? '<button type="button" class="btn-del" data-del>删除本行</button>' : ''}
+      </div>`;
+    }
+
+    function fillRowFromOption(row, code) {
+      const item = applyOptions.find((x) => x.code === code);
+      if (!item) {
+        row.querySelector('[data-f="spec"]').value = '';
+        row.querySelector('[data-f="unit"]').value = '';
+        updateRowQtyState(row);
+        return;
+      }
+      row.querySelector('[data-f="spec"]').value = item.spec || '';
+      row.querySelector('[data-f="unit"]').value = item.unit || '';
+      updateRowQtyState(row);
+    }
+
+    function updateRowQtyState(row) {
+      const code = row.querySelector('[data-f="code"]')?.value.trim() || '';
+      const item = applyOptions.find((x) => x.code === code);
+      const qtyInput = row.querySelector('[data-f="qty"]');
+      const err = row.querySelector('.qty-err');
+      if (!qtyInput) return;
+      const raw = qtyInput.value.trim();
+      let over = false;
+      if (item && raw) {
+        const qty = Number(raw);
+        over = Number.isFinite(qty) && qty > item.available;
+      }
+      qtyInput.classList.toggle('qty-over', over);
+      if (err) err.classList.toggle('show', over);
+      updateSubmitButton();
+    }
+
+    function updateSubmitButton() {
+      const rows = [...document.querySelectorAll('.item-row')];
+      const blocked = rows.some((row) => row.querySelector('.qty-err.show'));
+      $('btnSubmit').disabled = blocked;
+    }
+
+    function bindItemRow(row) {
+      const select = row.querySelector('.item-material');
+      select?.addEventListener('change', () => fillRowFromOption(row, select.value.trim()));
+      const qtyInput = row.querySelector('[data-f="qty"]');
+      qtyInput?.addEventListener('input', () => updateRowQtyState(row));
+      row.querySelector('[data-del]')?.addEventListener('click', () => {
+        row.remove();
+        if (!document.querySelector('.item-row')) renderItems(1);
+        updateSubmitButton();
+      });
+    }
+
+    function renderItems(count) {
+      const box = $('itemsBox');
+      box.innerHTML = '';
+      for (let i = 0; i < count; i++) {
+        box.insertAdjacentHTML('beforeend', itemTemplate(i));
+        bindItemRow(box.lastElementChild);
+      }
+      refreshMaterialSelects();
+    }
+
+    function refreshMaterialSelects() {
+      document.querySelectorAll('.item-row').forEach((row) => {
+        const select = row.querySelector('.item-material');
+        if (!select) return;
+        const cur = select.value;
+        select.innerHTML = buildMaterialOptions(cur);
+        fillRowFromOption(row, select.value.trim());
+      });
+      const head = document.querySelector('.items-head span');
+      if (head) head.textContent = applyOptions.length ? `申请物资（${applyOptions.length} 种可选）` : '申请物资';
+      updateSubmitButton();
+    }
+
+    async function loadApplyOptions() {
+      if (IS_PUBLIC) {
+        try {
+          const rel = PUB.optionsUrl || 'material-options.json';
+          const bust = encodeURIComponent(PUB.updatedAt || Date.now());
+          const r = await fetch(`${rel}?t=${bust}`);
+          if (r.ok) {
+            const data = await r.json();
+            applyOptions = data.items || [];
+          } else {
+            applyOptions = PUB.applyOptions || [];
+          }
+        } catch {
+          applyOptions = PUB.applyOptions || [];
+        }
+        refreshMaterialSelects();
+        return;
+      }
+      try {
+        const r = await fetch(`${API}/apply-options`);
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || '加载物资选项失败');
+        applyOptions = data.items || [];
+      } catch (e) {
+        applyOptions = [];
+        show($('msg'), e.message || '物资选项加载失败', false);
+      }
+      refreshMaterialSelects();
+    }
+
+    function resolvePublicAccess(code) {
       const c = String(code || '').trim();
-      if (!c) { show($('gateMsg'), '请填写登记口令', false); return false; }
-      accessCode = c; localStorage.setItem('material_request_code', c); enterApp(); return true;
+      if (!c) return null;
+      return (PUB.accessCodes || []).find((row) => String(row.code || '').trim() === c) || null;
     }
-    if (NEED_ACCESS) {
-      if (accessCode) unlock(accessCode);
-      else if (new URLSearchParams(location.search).get('k')) $('accessCodeInput').value = new URLSearchParams(location.search).get('k');
-      $('btnUnlock').addEventListener('click', () => unlock($('accessCodeInput').value));
-    } else enterApp();
+
+    async function fetchPublicStatusMessages() {
+      const url = `${NTFY.server}/${encodeURIComponent(NTFY.topic)}/json?poll=1&since=72h`;
+      const r = await fetch(url, { headers: { Accept: 'application/json' } });
+      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
+      const text = (await r.text()).trim();
+      if (!text) return [];
+      const out = [];
+      for (const line of text.split('\n')) {
+        if (!line.trim()) continue;
+        let msg;
+        try { msg = JSON.parse(line); } catch { continue; }
+        if (!msg || msg.event !== 'message') continue;
+        let body = {};
+        try { body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {}); } catch { continue; }
+        if (body.type !== 'material_status') continue;
+        out.push({ body, time: Number(msg.time) || 0 });
+      }
+      return out;
+    }
+
+    async function findPublicStatusByToken(token) {
+      const list = await fetchPublicStatusMessages();
+      let best = null;
+      for (const row of list) {
+        if (String(row.body.clientToken || '') !== String(token)) continue;
+        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
+      }
+      return best;
+    }
+
+    async function queryPublicById(id) {
+      const list = await fetchPublicStatusMessages();
+      let best = null;
+      for (const row of list) {
+        if (String(row.body.id || '') !== String(id)) continue;
+        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
+      }
+      if (!best) throw new Error('未找到该编号（请核对，或稍后再查）');
+      return best;
+    }
+
+    function publicStatusText(status) {
+      return ({ pending: '待审批', approved: '已通过', rejected: '已驳回', denied: '未受理' })[status] || status;
+    }
+
+    function collectItems() {
+      const rows = [...document.querySelectorAll('.item-row')];
+      return rows.map((row) => {
+        const code = row.querySelector('[data-f="code"]')?.value.trim() || '';
+        const item = applyOptions.find((x) => x.code === code);
+        return {
+          code,
+          name: item?.name || '',
+          spec: row.querySelector('[data-f="spec"]').value.trim(),
+          unit: row.querySelector('[data-f="unit"]').value.trim(),
+          qty: row.querySelector('[data-f="qty"]').value.trim(),
+        };
+      });
+    }
+
+    function show(el, text, ok) {
+      el.textContent = text;
+      el.className = 'msg show ' + (ok ? 'ok' : 'err');
+    }
+    function showGateMsg(ok, text) {
+      show($('gateMsg'), text, ok);
+    }
+    function updateUserBar() {
+      const bar = $('userBar');
+      if (!needAccessCode) {
+        bar.classList.remove('show');
+        return;
+      }
+      bar.classList.add('show');
+      $('userGreeting').textContent = accessName ? `您好，${accessName}` : '您好';
+    }
+    function enterApp() {
+      $('gateBox').style.display = 'none';
+      $('appMain').style.display = 'block';
+      updateUserBar();
+      loadApplyOptions();
+    }
+    function logout() {
+      accessCode = '';
+      accessName = '';
+      localStorage.removeItem('material_request_code');
+      localStorage.removeItem('material_request_name');
+      $('gateBox').style.display = 'grid';
+      $('appMain').style.display = 'none';
+      $('userBar').classList.remove('show');
+      $('accessCodeInput').value = '';
+      showGateMsg(true, '已退出，请重新登录');
+    }
+    function maybeShowChangeBanner(should) {
+      const dismissed = sessionStorage.getItem('material_change_banner_dismissed') === '1';
+      $('changeBanner').classList.toggle('show', !!should && !dismissed);
+    }
+    async function unlockWithCode(code) {
+      const c = String(code || '').trim();
+      if (!c) {
+        showGateMsg(false, '请填写登记口令');
+        return false;
+      }
+      const btn = $('btnUnlock');
+      btn.disabled = true;
+      showGateMsg(true, '正在验证…');
+      try {
+        if (IS_PUBLIC) {
+          const row = resolvePublicAccess(c);
+          if (!row) throw new Error('口令无效');
+          accessCode = c;
+          accessName = row.name || '';
+          localStorage.setItem('material_request_code', c);
+          if (accessName) localStorage.setItem('material_request_name', accessName);
+          enterApp();
+          return true;
+        }
+        const r = await fetch(`${API}/session?k=${encodeURIComponent(c)}`, {
+          headers: { 'X-Access-Code': c },
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || '口令无效');
+        accessCode = c;
+        accessName = data.name || '';
+        localStorage.setItem('material_request_code', c);
+        if (accessName) localStorage.setItem('material_request_name', accessName);
+        enterApp();
+        maybeShowChangeBanner(data.shouldPromptChangeCode);
+        return true;
+      } catch (e) {
+        showGateMsg(false, e.message || '口令无效');
+        return false;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function loadMeta() {
+      $('applyDate').value = new Date().toISOString().slice(0, 10);
+      if (IS_PUBLIC) {
+        $('company').textContent = PUB.company || '';
+        needAccessCode = !!PUB.needAccessCode;
+        $('btnChangeCode').style.display = 'none';
+        $('changeBanner').style.display = 'none';
+        if (needAccessCode) {
+          if (accessCode) await unlockWithCode(accessCode);
+          else {
+            $('gateBox').style.display = 'grid';
+            $('appMain').style.display = 'none';
+            const k = new URLSearchParams(location.search).get('k') || '';
+            if (k) $('accessCodeInput').value = k;
+          }
+        } else {
+          enterApp();
+        }
+        return;
+      }
+      const r = await fetch(`${API}/meta`);
+      const data = await r.json();
+      $('company').textContent = data.company || '';
+      needAccessCode = !!data.needAccessCode;
+      if (needAccessCode) {
+        if (accessCode) await unlockWithCode(accessCode);
+        else {
+          $('gateBox').style.display = 'grid';
+          $('appMain').style.display = 'none';
+          const k = new URLSearchParams(location.search).get('k') || '';
+          if (k) $('accessCodeInput').value = k;
+        }
+      } else {
+        enterApp();
+      }
+    }
+
+    $('btnUnlock').addEventListener('click', () => { unlockWithCode($('accessCodeInput').value); });
+    $('accessCodeInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') unlockWithCode($('accessCodeInput').value);
+    });
+    $('btnLogout').addEventListener('click', logout);
+    $('btnChangeCode').addEventListener('click', () => {
+      $('codeMask').classList.add('show');
+      $('newCodeInput').value = '';
+      $('newCodeConfirm').value = '';
+      $('changeCodeMsg').className = 'msg';
+    });
+    $('btnBannerChange').addEventListener('click', () => $('btnChangeCode').click());
+    $('btnBannerDismiss').addEventListener('click', () => {
+      sessionStorage.setItem('material_change_banner_dismissed', '1');
+      $('changeBanner').classList.remove('show');
+    });
+    $('btnChangeCancel').addEventListener('click', () => $('codeMask').classList.remove('show'));
+    $('btnChangeSubmit').addEventListener('click', async () => {
+      const newCode = $('newCodeInput').value.trim();
+      const confirm = $('newCodeConfirm').value.trim();
+      if (newCode !== confirm) {
+        show($('changeCodeMsg'), '两次输入不一致', false);
+        return;
+      }
+      try {
+        const r = await fetch(`${API}/change-access-code`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Access-Code': accessCode },
+          body: JSON.stringify({ accessCode, newCode }),
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || '修改失败');
+        accessCode = data.code || newCode;
+        accessName = data.name || accessName;
+        localStorage.setItem('material_request_code', accessCode);
+        if (accessName) localStorage.setItem('material_request_name', accessName);
+        $('codeMask').classList.remove('show');
+        updateUserBar();
+        show($('msg'), '口令已更新', true);
+      } catch (e) {
+        show($('changeCodeMsg'), e.message || String(e), false);
+      }
+    });
 
     document.querySelectorAll('.tabs button').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -124,133 +617,156 @@
       });
     });
 
-    $('applyDate').value = new Date().toISOString().slice(0, 10);
     $('btnAddRow').addEventListener('click', () => {
       const n = document.querySelectorAll('.item-row').length;
-      $('itemsBox').insertAdjacentHTML('beforeend', itemTpl(n));
-      const row = $('itemsBox').lastElementChild;
-      row.querySelector('[data-del]')?.addEventListener('click', () => {
-        row.remove(); if (!$('itemsBox').querySelector('.item-row')) renderItems(1);
-      });
+      $('itemsBox').insertAdjacentHTML('beforeend', itemTemplate(n));
+      bindItemRow($('itemsBox').lastElementChild);
     });
-
-    async function fetchStatusMessages() {
-      const url = NTFY + '/' + encodeURIComponent(TOPIC) + '/json?poll=1&since=72h';
-      const r = await fetch(url, { headers: { Accept: 'application/json' } });
-      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
-      const text = (await r.text()).trim();
-      if (!text) return [];
-      const out = [];
-      for (const line of text.split('\n')) {
-        if (!line.trim()) continue;
-        let msg; try { msg = JSON.parse(line); } catch { continue; }
-        if (!msg || msg.event !== 'message') continue;
-        let body = {};
-        try { body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {}); } catch { continue; }
-        if (body.type !== 'material_status') continue;
-        out.push({ body, time: Number(msg.time) || 0 });
-      }
-      return out;
-    }
-    async function findStatusByToken(token) {
-      const list = await fetchStatusMessages();
-      let best = null;
-      for (const row of list) {
-        if (String(row.body.clientToken || '') !== String(token)) continue;
-        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
-      }
-      return best;
-    }
-    async function queryById(id) {
-      const list = await fetchStatusMessages();
-      let best = null;
-      for (const row of list) {
-        if (String(row.body.id || '') !== String(id)) continue;
-        if (!best || row.time >= best._t) best = Object.assign({}, row.body, { _t: row.time });
-      }
-      if (!best) throw new Error('未找到该编号（请核对，或稍后再查）');
-      return best;
-    }
-    function statusLabel(s) {
-      return ({ pending: '待审批', approved: '已通过', rejected: '已驳回', denied: '未受理' })[s] || s;
-    }
-    function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = $('btnSubmit'); btn.disabled = true; $('okBox').classList.remove('show');
+      const btn = $('btnSubmit');
+      btn.disabled = true;
+      $('okBox').classList.remove('show');
       try {
-        const code = accessCode || $('accessCodeInput')?.value?.trim() || '';
-        if (code) localStorage.setItem('material_request_code', code);
-        const clientToken = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)).slice(0, 16);
-        const payload = {
-          type: 'material_request',
-          clientToken,
-          accessCode: code,
-          applyDate: $('applyDate').value,
-          purpose: $('purpose').value.trim(),
-          note: $('note').value.trim(),
-          items: collectItems(),
-          submittedAt: new Date().toISOString(),
-        };
-        if (!payload.accessCode && NEED_ACCESS) throw new Error('缺少登记口令');
-        show($('msg'), '正在提交…', true);
-        const r = await fetch(NTFY + '/' + TOPIC, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json; charset=utf-8', Title: 'Material request', Tags: 'material,office' },
-          body: JSON.stringify(payload),
-        });
-        if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
-        show($('msg'), '已送达，正在获取申请编号…', true);
-        let assignedId = '', deniedMsg = '';
-        const deadline = Date.now() + 20000;
-        while (Date.now() < deadline && !assignedId && !deniedMsg) {
-          try {
-            const found = await findStatusByToken(clientToken);
-            if (found && found.status === 'denied') deniedMsg = found.rejectReason || '申请被拒绝';
-            else if (found && found.id && found.status !== 'denied') assignedId = String(found.id);
-          } catch (_) {}
-          if (!assignedId && !deniedMsg) await new Promise((x) => setTimeout(x, 1500));
+        const code = accessCode;
+        if (!needAccessCode && !code) {
+          /* 未启用口令时允许匿名提交 */
+        } else if (needAccessCode && !code) {
+          throw new Error('请先登录');
         }
-        if (deniedMsg) show($('msg'), deniedMsg, false);
-        else if (assignedId) {
+        const items = collectItems();
+        for (const it of items) {
+          if (!it.code) throw new Error('请选择物资');
+          const item = applyOptions.find((x) => x.code === it.code);
+          if (!item) throw new Error('所选物资已不可申请，请刷新后重选');
+          const qty = Number(it.qty);
+          if (!Number.isFinite(qty) || qty < 1) throw new Error('请填写有效数量');
+          if (qty > item.available) throw new Error(`${item.name} 申请数量超过可领用库存，请调整数量`);
+        }
+        if (IS_PUBLIC) {
+          if (!NTFY?.topic) throw new Error('公网收件未配置，请联系办公室');
+          const clientToken = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)).slice(0, 16);
+          const payload = {
+            type: 'material_request',
+            clientToken,
+            accessCode: code,
+            applyDate: $('applyDate').value,
+            purpose: $('purpose').value.trim(),
+            note: $('note').value.trim(),
+            items,
+            submittedAt: new Date().toISOString(),
+          };
+          show($('msg'), '正在提交…', true);
+          const r = await fetch(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=utf-8', Title: 'Material request', Tags: 'material,office' },
+            body: JSON.stringify(payload),
+          });
+          if (!r.ok) throw new Error('提交失败 HTTP ' + r.status);
+          show($('msg'), '已送达，正在获取申请编号…', true);
+          let assignedId = '';
+          let deniedMsg = '';
+          const deadline = Date.now() + 20000;
+          while (Date.now() < deadline && !assignedId && !deniedMsg) {
+            try {
+              const found = await findPublicStatusByToken(clientToken);
+              if (found && found.status === 'denied') deniedMsg = found.rejectReason || '申请被拒绝';
+              else if (found && found.id && found.status !== 'denied') assignedId = String(found.id);
+            } catch (_) { /* retry */ }
+            if (!assignedId && !deniedMsg) await new Promise((x) => setTimeout(x, 1500));
+          }
+          if (deniedMsg) throw new Error(deniedMsg);
+          if (!assignedId) throw new Error('已提交，但暂未取到编号。请稍后在「查询进度」查询，或联系办公室。');
           localStorage.setItem('material_last_id', assignedId);
           $('okId').textContent = assignedId;
           $('okBox').classList.add('show');
-          $('queryId').value = assignedId;
           show($('msg'), '提交成功', true);
-        } else show($('msg'), '已提交，但暂未取到编号。请稍后在「查询进度」查询，或联系办公室。', false);
+          $('queryId').value = assignedId;
+          return;
+        }
+        const payload = {
+          accessCode: code,
+          k: code,
+          applyDate: $('applyDate').value,
+          purpose: $('purpose').value.trim(),
+          note: $('note').value.trim(),
+          items,
+        };
+        const r = await fetch(`${API}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || '提交失败');
+        $('okId').textContent = data.id || '';
+        $('okBox').classList.add('show');
+        show($('msg'), '提交成功', true);
+        if (data.id) $('queryId').value = data.id;
       } catch (err) {
         show($('msg'), err.message || String(err), false);
-      } finally { btn.disabled = false; }
+      } finally {
+        updateSubmitButton();
+      }
     });
 
     $('btnCopyId').addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText($('okId').textContent.trim()); show($('msg'), '编号已复制', true); }
-      catch { show($('msg'), '复制失败', false); }
+      try {
+        await navigator.clipboard.writeText($('okId').textContent.trim());
+        show($('msg'), '编号已复制', true);
+      } catch {
+        show($('msg'), '复制失败，请长按编号手动复制', false);
+      }
     });
 
     $('btnQuery').addEventListener('click', async () => {
       const id = $('queryId').value.trim();
-      if (!/^\d{10}$/.test(id)) { show($('queryMsg'), '请输入 10 位申请编号', false); return; }
-      $('btnQuery').disabled = true;
+      if (!/^\d{10}$/.test(id)) {
+        show($('queryMsg'), '请输入 10 位申请编号', false);
+        $('statusCard').style.display = 'none';
+        return;
+      }
+      function esc(s) {
+        return String(s ?? '').replace(/[&<>"']/g, (c) => (
+          { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+        ));
+      }
       try {
-        const info = await queryById(id);
-        $('queryResult').className = 'query-result show';
-        $('queryResult').innerHTML = '<span class="badge ' + info.status + '">' + statusLabel(info.status) + '</span>' +
-          '<p>申请人：' + esc(info.applicantName) + '</p>' +
-          '<p>物资：' + esc((info.items || []).map((i) => i.name + ' ×' + i.qty).join('；')) + '</p>' +
-          (info.rejectReason ? '<p>驳回：' + esc(info.rejectReason) + '</p>' : '');
+        let data;
+        if (IS_PUBLIC) {
+          const info = await queryPublicById(id);
+          data = {
+            statusText: publicStatusText(info.status),
+            applicantName: info.applicantName || '',
+            applyDate: info.applyDate || '',
+            items: info.items || [],
+            rejectReason: info.rejectReason || '',
+          };
+        } else {
+          const r = await fetch(`${API}/status?id=` + encodeURIComponent(id));
+          data = await r.json();
+          if (!r.ok) throw new Error(data.error || '查询失败');
+        }
+        $('statusCard').style.display = 'block';
+        const items = (data.items || []).map((i) =>
+          `${esc(i.name)} ${esc(i.spec || '')} ×${esc(i.qty)}${esc(i.unit || '')}`,
+        ).join('；');
+        $('statusCard').innerHTML = `
+          <p><strong>状态：</strong>${esc(data.statusText || '')}</p>
+          <p><strong>申请人：</strong>${esc(data.applicantName || '')}</p>
+          <p><strong>申请日期：</strong>${esc(data.applyDate || '')}</p>
+          <p><strong>物资：</strong>${items}</p>
+          ${data.rejectReason ? `<p><strong>驳回原因：</strong>${esc(data.rejectReason)}</p>` : ''}`;
         show($('queryMsg'), '查询成功', true);
-      } catch (e) {
-        $('queryResult').className = 'query-result';
-        show($('queryMsg'), e.message, false);
-      } finally { $('btnQuery').disabled = false; }
+      } catch (err) {
+        $('statusCard').style.display = 'none';
+        show($('queryMsg'), err.message || String(err), false);
+      }
     });
 
     renderItems(1);
-    const lastId = localStorage.getItem('material_last_id') || '';
-    if (lastId) $('queryId').value = lastId;
+    loadMeta().catch((e) => show($('msg'), e.message, false));
   </script>
 </body>
 </html>

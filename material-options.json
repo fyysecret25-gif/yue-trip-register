@@ -1,0 +1,25 @@
+{
+  "updatedAt": "2026-08-24T08:09:20.305Z",
+  "items": [
+    {
+      "code": "0612260824000601",
+      "name": "抽纸.得宝",
+      "spec": "88抽",
+      "unit": "提",
+      "available": 6,
+      "vendor": "山姆",
+      "location": "仓库",
+      "price": "59.90"
+    },
+    {
+      "code": "0408260822001001",
+      "name": "桶装水",
+      "spec": "19L",
+      "unit": "桶",
+      "available": 10,
+      "vendor": "叶利辉",
+      "location": "仓库",
+      "price": "20.00"
+    }
+  ]
+}
