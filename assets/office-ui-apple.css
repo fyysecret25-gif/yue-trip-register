@@ -1137,10 +1137,15 @@ body.register-page button.primary,
     gap: 8px;
   }
 
+  body.register-page .split-row,
   body.register-page .row2,
-  body.register-page .split-6-4,
   body.register-page .pick-row {
     grid-template-columns: 1fr;
+  }
+
+  body.register-page .split-row > label,
+  body.register-page .row2 > label {
+    grid-template-rows: auto auto;
   }
 
   body.register-page .tabs {
