@@ -104,13 +104,38 @@
     .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .basic-meta-row {
       display: grid;
-      grid-template-columns: minmax(0, 148px) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 132px) minmax(0, 1fr);
       gap: 10px;
-      align-items: start;
+      align-items: stretch;
     }
-    .basic-meta-row .field-date input[type="date"] {
+    .basic-meta-row label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+      margin: 0;
+    }
+    .basic-meta-row .field-label {
+      flex: 0 0 auto;
+      min-height: 18px;
+      line-height: 1.35;
+    }
+    .basic-meta-row input[type="date"],
+    .basic-meta-row select {
+      margin-top: auto;
+      width: 100%;
+      height: 48px;
+      min-height: 48px;
+      padding: 0 12px;
+      box-sizing: border-box;
+    }
+    .basic-meta-row input[type="date"] {
       padding-left: 10px;
-      padding-right: 10px;
+      padding-right: 8px;
+      font-size: 15px;
+    }
+    .basic-meta-row select {
+      padding-right: 36px;
     }
     .row3 { display: grid; grid-template-columns: 1.1fr 0.75fr 0.85fr; gap: 10px; align-items: start; }
     .qty-err { font-size: 12px; color: var(--danger); margin: 4px 0 0; line-height: 1.4; display: none; }
@@ -209,6 +234,16 @@
       .item-row .row3 { grid-template-columns: 1.1fr 0.65fr 0.75fr; gap: 6px; }
       .item-row .row3 input { padding: 10px 8px; font-size: 14px; }
       .item-row .row3 .field-label { font-size: 12px; }
+      .basic-meta-row {
+        grid-template-columns: minmax(0, 118px) minmax(0, 1fr);
+        gap: 8px;
+      }
+      .basic-meta-row input[type="date"],
+      .basic-meta-row select {
+        height: 44px;
+        min-height: 44px;
+        font-size: 15px;
+      }
     }
 
     .code-mask {
@@ -407,7 +442,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T08:19:46.466Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T08:23:41.436Z"};</script>
 
 
   <script>
