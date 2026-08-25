@@ -1139,6 +1139,7 @@ body.register-page button.primary,
 
   body.register-page .split-row,
   body.register-page .row2,
+  body.register-page .photo-row,
   body.register-page .pick-row {
     grid-template-columns: 1fr;
   }

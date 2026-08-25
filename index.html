@@ -130,6 +130,58 @@
       padding: 10px 12px;
       box-sizing: border-box;
     }
+    .split-row.mileage-row-short {
+      grid-template-columns: 1fr;
+    }
+    .field-inline {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 10px;
+      align-items: center;
+      min-width: 0;
+    }
+    .inline-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      line-height: 20px;
+      flex-shrink: 0;
+    }
+    .field-inline input {
+      height: 44px;
+      min-height: 44px;
+      padding: 10px 12px;
+      box-sizing: border-box;
+      min-width: 0;
+    }
+    .photo-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+    .photo-field {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+    .photo-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .photo-row .pick-row {
+      gap: 6px;
+    }
+    .photo-row .pick-btn {
+      padding: 10px 6px;
+      font-size: 13px;
+    }
+    .photo-row .preview {
+      max-height: 110px;
+    }
     button {
       appearance: none;
       border: 0;
@@ -494,6 +546,10 @@
       .row2 > label {
         grid-template-rows: auto auto;
       }
+      .photo-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
     }
   </style>
 </head>
@@ -579,43 +635,43 @@
           </select>
         </label>
       </div>
-      <label><span class="req">事由</span>
-        <select name="purpose" id="purpose" required>
-          <option value="">请选择</option>
-          <option value="短程出车">短程出车</option>
-          <option value="接送客人">接送客人</option>
-          <option value="公务出行">公务出行</option>
-          <option value="其他">其他</option>
-        </select>
-      </label>
-      <label id="purposeOtherWrap" style="display:none"><span class="req">其他事由</span>
-        <input id="purposeOther" maxlength="200" placeholder="请填写具体事由" />
-      </label>
-      <label><span class="req">出发地</span>
+      <div class="field-inline">
+        <span class="inline-label req">事由</span>
+        <input type="text" name="purpose" id="purpose" required list="purposeOptions" maxlength="200" placeholder="选择或填写" autocomplete="off" />
+      </div>
+      <datalist id="purposeOptions">
+        <option value="短程出车"></option>
+        <option value="接送客人"></option>
+        <option value="公务出行"></option>
+      </datalist>
+      <div class="field-inline">
+        <span class="inline-label req">出发地</span>
         <input name="origin" id="origin" required maxlength="200" placeholder="如：公司" />
-      </label>
-      <label id="destWrap"><span class="req" id="destReq">目的地</span>
+      </div>
+      <div class="field-inline" id="destWrap">
+        <span class="inline-label req" id="destReq">目的地</span>
         <input name="destination" id="destination" required maxlength="200" placeholder="如：机场；短程可不填" />
-      </label>
-      <label class="photo-field" id="photoBlock"><span class="req" id="photoReq">出发表显照片</span>
-        <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
-        <div class="pick-row">
-          <button type="button" class="pick-btn" data-for="photoDepart" data-mode="album">从相册选择</button>
-          <button type="button" class="pick-btn" data-for="photoDepart" data-mode="camera">拍照</button>
+      </div>
+      <div class="photo-row" id="photoRow">
+        <div class="photo-field" id="photoBlock">
+          <span class="photo-title req" id="photoReq">出发表显照片</span>
+          <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
+          <div class="pick-row">
+            <button type="button" class="pick-btn" data-for="photoDepart" data-mode="album">相册</button>
+            <button type="button" class="pick-btn" data-for="photoDepart" data-mode="camera">拍照</button>
+          </div>
+          <img class="preview" id="previewDepart" alt="出发表显预览" />
         </div>
-        <img class="preview" id="previewDepart" alt="出发表显预览" />
-      </label>
-      <label class="photo-field" id="photoBlock2"><span class="req" id="photoReq2">返程表显照片</span>
-        <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
-        <div class="pick-row">
-          <button type="button" class="pick-btn" data-for="photoReturn" data-mode="album">从相册选择</button>
-          <button type="button" class="pick-btn" data-for="photoReturn" data-mode="camera">拍照</button>
+        <div class="photo-field" id="photoBlock2">
+          <span class="photo-title req" id="photoReq2">返程表显照片</span>
+          <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
+          <div class="pick-row">
+            <button type="button" class="pick-btn" data-for="photoReturn" data-mode="album">相册</button>
+            <button type="button" class="pick-btn" data-for="photoReturn" data-mode="camera">拍照</button>
+          </div>
+          <img class="preview" id="previewReturn" alt="返程表显预览" />
         </div>
-        <img class="preview" id="previewReturn" alt="返程表显预览" />
-      </label>
-      <label>备注
-        <input name="remark" id="remark" maxlength="300" placeholder="可选" />
-      </label>
+      </div>
       <button type="submit" id="btn">提交登记申请</button>
     </form>
     <div class="msg" id="msg"></div>
@@ -659,7 +715,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T13:28:44.388Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T13:33:37.125Z"};</script>
 
 
   <script>
@@ -1081,27 +1137,30 @@
     });
 
     function resolvePurpose() {
-      const v = $('purpose').value;
-      if (v === '其他') return ($('purposeOther').value || '').trim();
-      return v;
+      return ($('purpose').value || '').trim();
     }
     function applyPurposeRules() {
-      const short = $('purpose').value === '短程出车';
-      const other = $('purpose').value === '其他';
-      $('purposeOtherWrap').style.display = other ? 'grid' : 'none';
-      $('purposeOther').required = other;
+      const short = resolvePurpose() === '短程出车';
       $('destination').required = !short;
       $('destReq').classList.toggle('req', !short);
       $('returnOdometer').required = !short;
       $('returnOdoReq').classList.toggle('req', !short);
       $('returnOdoWrap').style.opacity = short ? '0.55' : '1';
-      $('mileageWrap').style.display = short ? 'none' : 'grid';
+      const mileageRow = $('mileageWrap').closest('.split-row');
+      if (short) {
+        $('mileageWrap').style.display = 'none';
+        mileageRow.classList.add('mileage-row-short');
+      } else {
+        $('mileageWrap').style.display = '';
+        mileageRow.classList.remove('mileage-row-short');
+      }
       if (short) $('returnOdometer').value = '';
       $('photoDepart').required = !short;
       $('photoReturn').required = !short;
       $('photoReq').classList.toggle('req', !short);
       $('photoReq2').classList.toggle('req', !short);
     }
+    $('purpose').addEventListener('input', applyPurposeRules);
     $('purpose').addEventListener('change', applyPurposeRules);
     applyPurposeRules();
 
@@ -1120,7 +1179,7 @@
       recalcDuration();
       const purpose = resolvePurpose();
       if (!purpose) {
-        show('err', $('purpose').value === '其他' ? '请填写其他事由' : '请选择事由');
+        show('err', '请填写事由');
         btn.disabled = false;
         return;
       }
@@ -1185,7 +1244,6 @@
             departOdometer: $('departOdometer').value,
             returnOdometer: $('returnOdometer').value,
             mileage: $('mileage').value,
-            remark: $('remark').value.trim(),
             submittedAt: new Date().toISOString(),
           };
           if (!payload.accessCode && needAccessCode) throw new Error('缺少登记口令，请返回重新登录');
@@ -1290,7 +1348,6 @@
           departOdometer: $('departOdometer').value,
           returnOdometer: $('returnOdometer').value,
           mileage: $('mileage').value,
-          remark: $('remark').value.trim(),
           k: accessCode || new URLSearchParams(location.search).get('k') || '',
         };
         if (photoDepart) payload.photoDepart = photoDepart;
@@ -1319,7 +1376,6 @@
         show('ok', '提交成功');
         }
         $('purpose').value = '';
-        $('purposeOther').value = '';
         $('origin').value = '';
         $('destination').value = '';
         $('departTime').value = '';
@@ -1328,7 +1384,6 @@
         $('departOdometer').value = '';
         $('returnOdometer').value = '';
         $('mileage').value = '';
-        $('remark').value = '';
         $('photoDepart').value = '';
         $('photoReturn').value = '';
         $('previewDepart').classList.remove('show');
