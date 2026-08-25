@@ -27,6 +27,7 @@
       --danger: #b42318;
       --radius: 14px;
       --shadow: 0 8px 28px rgba(31, 78, 121, 0.08);
+      --inline-input-h: 44px;
     }
     * { box-sizing: border-box; }
     body {
@@ -149,8 +150,8 @@
       flex-shrink: 0;
     }
     .field-inline input {
-      height: 44px;
-      min-height: 44px;
+      height: var(--inline-input-h);
+      min-height: var(--inline-input-h);
       padding: 10px 12px;
       box-sizing: border-box;
       min-width: 0;
@@ -162,8 +163,6 @@
       align-items: start;
     }
     .photo-field {
-      display: grid;
-      gap: 6px;
       min-width: 0;
     }
     .photo-title {
@@ -171,15 +170,16 @@
       font-weight: 600;
       color: var(--muted);
       line-height: 1.35;
+      text-align: center;
     }
     .photo-add-wrap {
       position: relative;
       width: 100%;
-      max-width: 148px;
     }
     .photo-add-box {
       width: 100%;
-      aspect-ratio: 1;
+      height: calc(var(--inline-input-h) * 2);
+      min-height: calc(var(--inline-input-h) * 2);
       border: 1px dashed rgba(0, 0, 0, 0.14);
       border-radius: 10px;
       background: #f8fafc;
@@ -190,12 +190,23 @@
       cursor: pointer;
       position: relative;
       overflow: hidden;
-      padding: 0;
+      padding: 8px 10px;
       margin: 0;
       font-family: inherit;
       font-weight: 600;
+      box-sizing: border-box;
     }
     .photo-add-box:active { background: #eef3f8; }
+    .photo-box-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      z-index: 1;
+      pointer-events: none;
+      max-width: 100%;
+    }
     .photo-add-box .preview {
       position: absolute;
       inset: 0;
@@ -207,9 +218,9 @@
       border-radius: 10px;
       margin: 0;
     }
-    .photo-add-box.has-photo .photo-add-text { display: none; }
+    .photo-add-box.has-photo .photo-box-inner { display: none; }
     .photo-add-text {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--muted);
       font-weight: 600;
       pointer-events: none;
@@ -718,12 +729,14 @@
       </div>
       <div class="photo-row" id="photoRow">
         <div class="photo-field" id="photoBlock">
-          <span class="photo-title req" id="photoReq">出发表显照片</span>
           <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
           <div class="photo-add-wrap">
             <button type="button" class="photo-add-box" id="photoDepartBox" aria-label="添加出发表显照片">
               <img class="preview" id="previewDepart" alt="出发表显预览" />
-              <span class="photo-add-text">添加照片</span>
+              <span class="photo-box-inner">
+                <span class="photo-title req" id="photoReq">出发表显照片</span>
+                <span class="photo-add-text">添加照片</span>
+              </span>
             </button>
             <div class="photo-menu" id="photoDepartMenu" role="menu">
               <button type="button" class="photo-menu-btn" data-for="photoDepart" data-mode="album" role="menuitem">从相册选择</button>
@@ -732,12 +745,14 @@
           </div>
         </div>
         <div class="photo-field" id="photoBlock2">
-          <span class="photo-title req" id="photoReq2">返程表显照片</span>
           <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
           <div class="photo-add-wrap">
             <button type="button" class="photo-add-box" id="photoReturnBox" aria-label="添加返程表显照片">
               <img class="preview" id="previewReturn" alt="返程表显预览" />
-              <span class="photo-add-text">添加照片</span>
+              <span class="photo-box-inner">
+                <span class="photo-title req" id="photoReq2">返程表显照片</span>
+                <span class="photo-add-text">添加照片</span>
+              </span>
             </button>
             <div class="photo-menu" id="photoReturnMenu" role="menu">
               <button type="button" class="photo-menu-btn" data-for="photoReturn" data-mode="album" role="menuitem">从相册选择</button>
@@ -789,7 +804,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T13:38:45.531Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T13:42:50.732Z"};</script>
 
 
   <script>
