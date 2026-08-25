@@ -102,6 +102,16 @@
       display: grid; gap: 12px; background: #fafafa;
     }
     .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .basic-meta-row {
+      display: grid;
+      grid-template-columns: minmax(0, 148px) minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+    .basic-meta-row .field-date input[type="date"] {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
     .row3 { display: grid; grid-template-columns: 1.1fr 0.75fr 0.85fr; gap: 10px; align-items: start; }
     .qty-err { font-size: 12px; color: var(--danger); margin: 4px 0 0; line-height: 1.4; display: none; }
     .qty-err.show { display: block; }
@@ -324,9 +334,20 @@
       <form id="form">
         <div class="form-section">
           <div class="section-title">基本信息</div>
-          <label>申请日期
-            <input id="applyDate" type="date" />
-          </label>
+          <div class="basic-meta-row">
+            <label class="field-date"><span class="field-label req">申请日期</span>
+              <input id="applyDate" type="date" required />
+            </label>
+            <label class="field-dept"><span class="field-label req">申请部门</span>
+              <select id="applyDept" required>
+                <option value="">请选择</option>
+                <option value="领导人员">领导人员</option>
+                <option value="经营部">经营部</option>
+                <option value="财务部">财务部</option>
+                <option value="综合办公室">综合办公室</option>
+              </select>
+            </label>
+          </div>
         </div>
 
         <div class="form-section">
@@ -386,7 +407,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T07:54:15.013Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T08:14:51.485Z"};</script>
 
 
   <script>
@@ -514,9 +535,13 @@
       return !bad;
     }
 
+    function getApplyDeptValue() {
+      return String($('applyDept')?.value || '').trim();
+    }
+
     function updateSubmitButton() {
       const rows = [...document.querySelectorAll('.item-row')];
-      const blocked = !applyOptions.length || rows.some((row) => {
+      const blocked = !getApplyDeptValue() || !applyOptions.length || rows.some((row) => {
         const code = row.dataset.code || getRowPick(row)?.value;
         const qty = Number(row.querySelector('[data-f="qty"]')?.value);
         if (!code || !Number.isFinite(qty) || qty < 1) return true;
@@ -698,6 +723,7 @@
       list.unshift({
         id: String(id),
         applyDate: meta.applyDate || '',
+        applyDept: meta.applyDept || '',
         purpose: meta.purpose || '',
         items: meta.items || [],
         submittedAt: meta.submittedAt || new Date().toISOString(),
@@ -919,6 +945,7 @@
         <p><span class="badge ${esc(info.status)}">${esc(materialStatusLabel(info.status))}</span></p>
         <p><strong>编号：</strong>${esc(info.id)}</p>
         <p><strong>申请日期：</strong>${esc(info.applyDate || '—')}</p>
+        <p><strong>申请部门：</strong>${esc(info.applyDept || '—')}</p>
         <p><strong>物资：</strong>${esc(itemsSummary(info.items))}</p>
         ${info.purpose ? `<p><strong>用途：</strong>${esc(info.purpose)}</p>` : ''}
         ${info.rejectReason ? `<p><strong>驳回原因：</strong>${esc(info.rejectReason)}</p>` : ''}
@@ -938,7 +965,7 @@
             <span>${esc(r.id)}</span>
             <span class="badge ${esc(r.status)}">${esc(materialStatusLabel(r.status))}</span>
           </div>
-          <div class="row2">${esc(r.applyDate || '—')} · ${esc(itemsSummary(r.items).slice(0, 48))}${itemsSummary(r.items).length > 48 ? '…' : ''}</div>
+          <div class="row2">${esc(r.applyDate || '—')}${r.applyDept ? ` · ${esc(r.applyDept)}` : ''} · ${esc(itemsSummary(r.items).slice(0, 48))}${itemsSummary(r.items).length > 48 ? '…' : ''}</div>
         </button>`).join('');
       box.querySelectorAll('.mine-item').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -977,6 +1004,7 @@
                 id: s.id,
                 status: 'pending',
                 applyDate: s.applyDate,
+                applyDept: s.applyDept,
                 purpose: s.purpose,
                 items: s.items,
                 submittedAt: s.submittedAt,
@@ -1036,6 +1064,8 @@
         } else if (needAccessCode && !code) {
           throw new Error('请先登录');
         }
+        const applyDept = getApplyDeptValue();
+        if (!applyDept) throw new Error('请选择申请部门');
         const items = collectItems();
         for (const it of items) {
           if (!it.code || !it.name) throw new Error('请选择物资名称');
@@ -1053,6 +1083,7 @@
             accessCode: code,
             accessName: accessName || resolvePublicAccess(code)?.name || '',
             applyDate: $('applyDate').value,
+            applyDept,
             purpose: $('purpose').value.trim(),
             note: '',
             items,
@@ -1111,6 +1142,7 @@
           }
           addMyId(assignedId, {
             applyDate: $('applyDate').value,
+            applyDept,
             purpose: $('purpose').value.trim(),
             items,
             submittedAt: new Date().toISOString(),
@@ -1125,6 +1157,7 @@
           accessCode: code,
           k: code,
           applyDate: $('applyDate').value,
+          applyDept,
           purpose: $('purpose').value.trim(),
           note: '',
           items,
@@ -1142,6 +1175,7 @@
         if (data.id) {
           addMyId(data.id, {
             applyDate: $('applyDate').value,
+            applyDept,
             purpose: $('purpose').value.trim(),
             items,
             submittedAt: new Date().toISOString(),
@@ -1163,10 +1197,13 @@
       }
     });
 
+    $('applyDept')?.addEventListener('change', updateSubmitButton);
+
     async function boot() {
       $('applyDate').value = new Date().toISOString().slice(0, 10);
       await loadMeta();
       await loadApplyOptions();
+      updateSubmitButton();
     }
     boot().catch((e) => show($('msg'), e.message, false));
   </script>
