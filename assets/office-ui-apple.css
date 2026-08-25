@@ -1138,14 +1138,9 @@ body.register-page button.primary,
   }
 
   body.register-page .row2,
-  body.register-page .row-date-plate,
-  body.register-page .row-time-odo,
+  body.register-page .split-6-4,
   body.register-page .pick-row {
     grid-template-columns: 1fr;
-  }
-
-  body.register-page .row-date-plate {
-    gap: 12px;
   }
 
   body.register-page .tabs {
