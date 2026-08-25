@@ -135,7 +135,7 @@
     }
     .field-inline {
       display: grid;
-      grid-template-columns: auto 1fr;
+      grid-template-columns: 3.5em 1fr;
       gap: 8px 10px;
       align-items: center;
       min-width: 0;
@@ -172,15 +172,79 @@
       color: var(--muted);
       line-height: 1.35;
     }
-    .photo-row .pick-row {
-      gap: 6px;
+    .photo-add-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 148px;
     }
-    .photo-row .pick-btn {
-      padding: 10px 6px;
+    .photo-add-box {
+      width: 100%;
+      aspect-ratio: 1;
+      border: 1px dashed rgba(0, 0, 0, 0.14);
+      border-radius: 10px;
+      background: #f8fafc;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    .photo-add-box:active { background: #eef3f8; }
+    .photo-add-box .preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      max-height: none;
+      object-fit: cover;
+      border: 0;
+      border-radius: 10px;
+      margin: 0;
+    }
+    .photo-add-box.has-photo .photo-add-text { display: none; }
+    .photo-add-text {
       font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+      pointer-events: none;
     }
-    .photo-row .preview {
-      max-height: 110px;
+    .photo-menu {
+      display: none;
+      position: absolute;
+      left: 0;
+      top: calc(100% + 4px);
+      z-index: 12;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      min-width: 100%;
+      overflow: hidden;
+    }
+    .photo-menu.show { display: grid; }
+    .photo-menu-btn {
+      appearance: none;
+      border: 0;
+      background: #fff;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+    }
+    .photo-menu-btn:active { background: #eef3f8; }
+    .photo-menu-btn + .photo-menu-btn {
+      border-top: 1px solid var(--line);
     }
     button {
       appearance: none;
@@ -636,7 +700,7 @@
         </label>
       </div>
       <div class="field-inline">
-        <span class="inline-label req">事由</span>
+        <span class="inline-label req">事&nbsp;&nbsp;由</span>
         <input type="text" name="purpose" id="purpose" required list="purposeOptions" maxlength="200" placeholder="选择或填写" autocomplete="off" />
       </div>
       <datalist id="purposeOptions">
@@ -656,20 +720,30 @@
         <div class="photo-field" id="photoBlock">
           <span class="photo-title req" id="photoReq">出发表显照片</span>
           <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
-          <div class="pick-row">
-            <button type="button" class="pick-btn" data-for="photoDepart" data-mode="album">相册</button>
-            <button type="button" class="pick-btn" data-for="photoDepart" data-mode="camera">拍照</button>
+          <div class="photo-add-wrap">
+            <button type="button" class="photo-add-box" id="photoDepartBox" aria-label="添加出发表显照片">
+              <img class="preview" id="previewDepart" alt="出发表显预览" />
+              <span class="photo-add-text">添加照片</span>
+            </button>
+            <div class="photo-menu" id="photoDepartMenu" role="menu">
+              <button type="button" class="photo-menu-btn" data-for="photoDepart" data-mode="album" role="menuitem">从相册选择</button>
+              <button type="button" class="photo-menu-btn" data-for="photoDepart" data-mode="camera" role="menuitem">拍照</button>
+            </div>
           </div>
-          <img class="preview" id="previewDepart" alt="出发表显预览" />
         </div>
         <div class="photo-field" id="photoBlock2">
           <span class="photo-title req" id="photoReq2">返程表显照片</span>
           <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
-          <div class="pick-row">
-            <button type="button" class="pick-btn" data-for="photoReturn" data-mode="album">相册</button>
-            <button type="button" class="pick-btn" data-for="photoReturn" data-mode="camera">拍照</button>
+          <div class="photo-add-wrap">
+            <button type="button" class="photo-add-box" id="photoReturnBox" aria-label="添加返程表显照片">
+              <img class="preview" id="previewReturn" alt="返程表显预览" />
+              <span class="photo-add-text">添加照片</span>
+            </button>
+            <div class="photo-menu" id="photoReturnMenu" role="menu">
+              <button type="button" class="photo-menu-btn" data-for="photoReturn" data-mode="album" role="menuitem">从相册选择</button>
+              <button type="button" class="photo-menu-btn" data-for="photoReturn" data-mode="camera" role="menuitem">拍照</button>
+            </div>
           </div>
-          <img class="preview" id="previewReturn" alt="返程表显预览" />
         </div>
       </div>
       <button type="submit" id="btn">提交登记申请</button>
@@ -715,7 +789,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T13:33:37.125Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T13:38:45.531Z"};</script>
 
 
   <script>
@@ -1113,26 +1187,53 @@
         fr.readAsDataURL(blob);
       });
     }
-    function bindPhotoPreview(inputId, previewId) {
+    function bindPhotoPreview(inputId, previewId, boxId) {
+      const box = $(boxId);
       $(inputId).addEventListener('change', () => {
         $(inputId).removeAttribute('capture');
         const f = $(inputId).files && $(inputId).files[0];
         const img = $(previewId);
-        if (!f) { img.classList.remove('show'); img.removeAttribute('src'); return; }
+        if (!f) {
+          img.classList.remove('show');
+          img.removeAttribute('src');
+          box.classList.remove('has-photo');
+          return;
+        }
         img.src = URL.createObjectURL(f);
         img.classList.add('show');
+        box.classList.add('has-photo');
       });
     }
-    bindPhotoPreview('photoDepart', 'previewDepart');
-    bindPhotoPreview('photoReturn', 'previewReturn');
+    bindPhotoPreview('photoDepart', 'previewDepart', 'photoDepartBox');
+    bindPhotoPreview('photoReturn', 'previewReturn', 'photoReturnBox');
 
-    document.querySelectorAll('.pick-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
+    function closePhotoMenus(except) {
+      document.querySelectorAll('.photo-menu.show').forEach((menu) => {
+        if (menu !== except) menu.classList.remove('show');
+      });
+    }
+    function bindPhotoPicker(boxId, menuId) {
+      $(boxId).addEventListener('click', (e) => {
+        e.stopPropagation();
+        const menu = $(menuId);
+        const open = menu.classList.contains('show');
+        closePhotoMenus();
+        if (!open) menu.classList.add('show');
+      });
+    }
+    bindPhotoPicker('photoDepartBox', 'photoDepartMenu');
+    bindPhotoPicker('photoReturnBox', 'photoReturnMenu');
+    document.addEventListener('click', () => closePhotoMenus());
+
+    document.querySelectorAll('.photo-menu-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const el = $(btn.dataset.for);
         if (!el) return;
         if (btn.dataset.mode === 'camera') el.setAttribute('capture', 'environment');
         else el.removeAttribute('capture');
         el.click();
+        btn.closest('.photo-menu').classList.remove('show');
       });
     });
 
@@ -1388,6 +1489,9 @@
         $('photoReturn').value = '';
         $('previewDepart').classList.remove('show');
         $('previewReturn').classList.remove('show');
+        $('photoDepartBox').classList.remove('has-photo');
+        $('photoReturnBox').classList.remove('has-photo');
+        closePhotoMenus();
         applyPurposeRules();
       } catch (err) {
         show('err', err.message || String(err));

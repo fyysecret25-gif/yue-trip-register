@@ -1190,6 +1190,15 @@ body.register-page button.primary,
     padding: 14px 12px;
   }
 
+  body.register-page .photo-menu-btn {
+    min-height: 44px;
+    padding: 12px 14px;
+  }
+
+  body.register-page .photo-add-box {
+    max-width: none;
+  }
+
   body.register-page .btn-line,
   body.register-page .btn-logout,
   body.register-page .btn-change-code,
