@@ -1,4 +1,35 @@
 {
-  "updatedAt": "2026-08-24T14:53:15.412Z",
-  "items": []
+  "updatedAt": "2026-08-25T06:24:21.411Z",
+  "items": [
+    {
+      "code": "0612260824000601",
+      "name": "抽纸.得宝",
+      "spec": "88抽",
+      "unit": "提",
+      "available": 5,
+      "vendor": "山姆",
+      "location": "仓库",
+      "price": "59.90"
+    },
+    {
+      "code": "0612260824000901",
+      "name": "抽纸.MM",
+      "spec": "100抽*24包",
+      "unit": "提",
+      "available": 9,
+      "vendor": "山姆",
+      "location": "仓库",
+      "price": "39.90"
+    },
+    {
+      "code": "0408260822001001",
+      "name": "桶装水",
+      "spec": "19L",
+      "unit": "桶",
+      "available": 10,
+      "vendor": "",
+      "location": "仓库",
+      "price": "20.00"
+    }
+  ]
 }
