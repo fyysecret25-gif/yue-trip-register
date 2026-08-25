@@ -117,6 +117,7 @@
       font-family: inherit; color: var(--ink); line-height: 1.2;
     }
     .btn-line:hover { background: #f5f5f7; }
+    .btn-add-row { width: 100%; text-align: center; min-height: 40px; margin-top: 2px; }
     .btn-del { color: var(--danger); font-size: 13px; justify-self: end; background: none; border: 0; cursor: pointer; padding: 4px 0; font-family: inherit; }
     button.primary {
       border: 0; border-radius: 12px; padding: 14px 16px; font-size: 16px; font-weight: 700;
@@ -147,12 +148,12 @@
       padding: 18px 16px 20px; display: grid; gap: 12px;
     }
     .user-bar {
-      display: none; align-items: center; justify-content: space-between; gap: 12px;
-      margin: 0 0 12px; padding: 12px 14px; font-size: 14px;
+      display: none; align-items: center; justify-content: space-between; gap: 10px;
+      margin: 0 0 12px; padding: 12px 14px; font-size: 14px; flex-wrap: nowrap;
     }
     .user-bar.show { display: flex; }
-    .user-bar .name { font-weight: 600; color: var(--ink); }
-    .user-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .user-bar .name { font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
     .btn-logout, .btn-change-code {
       border: 1px solid var(--line); background: #fff; border-radius: 10px;
       padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
@@ -195,9 +196,9 @@
       .notice-actions { width: 100%; }
       .notice-actions .btn-accent,
       .notice-actions .btn-muted { flex: 1; text-align: center; }
-      .row3 { grid-template-columns: 1fr; }
-      .items-head { flex-direction: column; align-items: stretch; gap: 10px; }
-      .items-head .btn-line { width: 100%; text-align: center; min-height: 44px; }
+      .item-row .row3 { grid-template-columns: 1.1fr 0.65fr 0.75fr; gap: 6px; }
+      .item-row .row3 input { padding: 10px 8px; font-size: 14px; }
+      .item-row .row3 .field-label { font-size: 12px; }
     }
 
     .code-mask {
@@ -291,10 +292,8 @@
     <div id="appMain" style="display:none">
     <div class="user-bar surface-card" id="userBar">
       <span class="name" id="userGreeting">您好</span>
-      <div class="user-actions">
-        <button type="button" class="btn-change-code" id="btnChangeCode">修改口令</button>
-        <button type="button" class="btn-logout" id="btnLogout">退出</button>
-      </div>
+      <button type="button" class="btn-change-code" id="btnChangeCode">修改口令</button>
+      <button type="button" class="btn-logout" id="btnLogout">退出</button>
     </div>
     <div class="notice-bar surface-card" id="noticeBar">
       <p class="notice-text">建议尽快修改个人登记口令，仅自己知道更安全。</p>
@@ -321,19 +320,15 @@
         <div class="form-section">
           <div class="items-head">
             <span>申请物资</span>
-            <button type="button" class="btn-line" id="btnAddRow">+ 加一行</button>
           </div>
           <div id="optionsStatus" class="options-loading">正在加载可选物资…</div>
           <div id="itemsBox"></div>
+          <button type="button" class="btn-line btn-add-row" id="btnAddRow">+ 加一行</button>
         </div>
 
         <div class="form-section">
-          <div class="section-title">补充说明</div>
           <label>用途说明
             <input id="purpose" type="text" maxlength="200" placeholder="如：办公使用、食堂采购" />
-          </label>
-          <label>备注
-            <textarea id="note" maxlength="300" placeholder="可选"></textarea>
           </label>
         </div>
 
@@ -379,7 +374,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T07:27:37.084Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T07:38:33.597Z"};</script>
 
 
   <script>
@@ -536,6 +531,12 @@
       });
     }
 
+    function placeAddRowButton() {
+      const btn = $('btnAddRow');
+      const firstRow = document.querySelector('.item-row');
+      if (btn && firstRow) firstRow.insertAdjacentElement('afterend', btn);
+    }
+
     function renderItems(count) {
       const box = $('itemsBox');
       box.innerHTML = '';
@@ -543,6 +544,7 @@
         box.insertAdjacentHTML('beforeend', itemTemplate(i));
         bindItemRow(box.lastElementChild);
       }
+      placeAddRowButton();
       updateSubmitButton();
     }
 
@@ -1001,6 +1003,7 @@
       const n = document.querySelectorAll('.item-row').length;
       $('itemsBox').insertAdjacentHTML('beforeend', itemTemplate(n));
       bindItemRow($('itemsBox').lastElementChild);
+      placeAddRowButton();
     });
 
     $('form').addEventListener('submit', async (e) => {
@@ -1033,7 +1036,7 @@
             accessName: accessName || resolvePublicAccess(code)?.name || '',
             applyDate: $('applyDate').value,
             purpose: $('purpose').value.trim(),
-            note: $('note').value.trim(),
+            note: '',
             items,
             submittedAt: new Date().toISOString(),
           };
