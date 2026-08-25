@@ -932,7 +932,7 @@ html.office-soft-nav-loading main {
   letter-spacing: -0.028em;
 }
 
-/* 报销 Hub：只留操作区 */
+/* 报销 Hub：只留操作区（食堂 Hub 顶行共用） */
 .reimburse-hub-panel {
   border-radius: 22px;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -942,6 +942,10 @@ html.office-soft-nav-loading main {
     0 8px 24px rgba(0, 0, 0, 0.05);
   padding: clamp(18px, 2vw, 24px);
   margin-bottom: clamp(20px, 2.5vw, 28px);
+}
+
+.canteen-hub-top-row > .reimburse-hub-panel {
+  margin-bottom: 0;
 }
 
 .reimburse-hub-panel-head h2 {
