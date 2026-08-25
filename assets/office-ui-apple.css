@@ -114,10 +114,6 @@ body.register-page.with-chrome .wrap > header {
   color: var(--apple-ink);
 }
 
-.hub-inbox.is-empty {
-  display: none;
-}
-
 .hub-urgent.is-empty {
   display: none;
 }
@@ -1319,12 +1315,10 @@ body.register-page button.primary,
   margin-bottom: 0;
 }
 
-.hub-page--cockpit .hub-alerts-stack .hub-inbox,
 .hub-page--cockpit .hub-alerts-stack .hub-urgent {
   margin-bottom: 0;
 }
 
-.hub-page--cockpit .hub-inbox,
 .hub-page--cockpit .hub-urgent {
   padding: clamp(14px, 1.8vw, 20px) clamp(16px, 2vw, 22px);
   background: var(--apple-surface);
@@ -1333,12 +1327,10 @@ body.register-page button.primary,
   border-radius: 18px;
 }
 
-.hub-page--cockpit .hub-inbox-head,
 .hub-page--cockpit .hub-urgent-head {
   margin-bottom: 10px;
 }
 
-.hub-page--cockpit .hub-inbox h2,
 .hub-page--cockpit .hub-urgent h2 {
   font-size: 1.125rem;
   font-weight: 600;
@@ -1346,24 +1338,6 @@ body.register-page button.primary,
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-
-.hub-page--cockpit .hub-inbox-head .office-icon svg {
-  width: 18px;
-  height: 18px;
-  color: var(--apple-link);
-}
-
-.hub-page--cockpit .hub-inbox-item {
-  border-radius: 14px;
-  background: var(--apple-bg);
-  border-color: rgba(0, 0, 0, 0.06);
-}
-
-.hub-page--cockpit .hub-inbox-title {
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.35;
 }
 
 .hub-page--cockpit .hub-modules {
@@ -1424,9 +1398,7 @@ body.register-page button.primary,
     border-color: rgba(255, 255, 255, 0.08);
   }
 
-  :root:not([data-office-theme="light"]) .hub-inbox,
   :root:not([data-office-theme="light"]) .hub-urgent,
-  :root[data-office-theme="dark"] .hub-inbox,
   :root[data-office-theme="dark"] .hub-urgent {
     background: var(--surface);
     border-color: var(--glass-border);
