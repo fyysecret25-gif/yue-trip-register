@@ -114,6 +114,10 @@ body.register-page.with-chrome .wrap > header {
   color: var(--apple-ink);
 }
 
+.hub-inbox.is-empty {
+  display: none;
+}
+
 .hub-urgent.is-empty {
   display: none;
 }
@@ -207,6 +211,24 @@ body.register-page.with-chrome .wrap > header {
   background: rgba(0, 102, 204, 0.16);
 }
 
+.office-mod-link.is-nav-pending {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.hub-card.is-nav-pending,
+.ios-widget-card.is-nav-pending {
+  opacity: 0.65;
+  pointer-events: none;
+  transform: scale(0.98);
+}
+
+html.office-soft-nav-loading main {
+  opacity: 0.72;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
 .chrome-back-icon svg {
   width: 13px;
   height: 13px;
@@ -225,6 +247,11 @@ body.register-page.with-chrome .wrap > header {
 }
 
 .ios-widget-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
   width: 36px;
   height: 36px;
   border-radius: 10px;
@@ -238,9 +265,32 @@ body.register-page.with-chrome .wrap > header {
     box-shadow 0.24s ease;
 }
 
+.ios-widget-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.office-icon-hub {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.office-icon-hub svg,
 .ios-widget-icon .office-icon-module svg {
   width: 20px;
   height: 20px;
+  display: block;
 }
 
 .hub-urgent-all {
@@ -281,6 +331,10 @@ body.register-page.with-chrome .wrap > header {
 
 .cockpit-module-widget .ios-widget-foot-label {
   display: none;
+}
+
+.cockpit-module-widget .ios-widget-foot {
+  padding: 12px clamp(18px, 1.8vw, 24px) 18px;
 }
 
 .ios-widget-foot-action {
@@ -378,8 +432,8 @@ body.register-page.with-chrome .wrap > header {
 
 @media (hover: hover) and (pointer: fine) {
   /* 豆沙绿 / 模块渐变数据卡（食堂、报销等） */
-  .ios-widget-card:not(.material-action-card):not(.is-skeleton):hover,
-  .ios-widget-card:not(.material-action-card):not(.is-skeleton).office-revealed:hover {
+  .ios-widget-card:not(.material-action-card):not(.is-skeleton):not(.hub-overview-panel):hover,
+  .ios-widget-card:not(.material-action-card):not(.is-skeleton):not(.hub-overview-panel).office-revealed:hover {
     transform: translateY(-6px) scale(1.02);
     filter: brightness(1.05);
     box-shadow:
@@ -392,18 +446,44 @@ body.register-page.with-chrome .wrap > header {
     transform: scale(1.08);
   }
 
-  /* 白底入口卡（物资、车辆等） */
-  .material-action-card.ios-widget-card:hover,
-  .material-action-card.ios-widget-card.office-revealed:hover,
+  /* 白底 iOS 中等小组件（子模块入口） */
+  .ios-widget-module.material-action-card.ios-widget-card:hover,
+  .ios-widget-module.material-action-card.ios-widget-card.office-revealed:hover {
+    transform: translateY(-8px) scale(1.016);
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.04),
+      0 12px 28px rgba(0, 0, 0, 0.09),
+      0 28px 56px rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.08);
+    z-index: 3;
+  }
+
+  .ios-widget-module.material-action-card.ios-widget-card:hover .ios-widget-foot::after {
+    transform: translateX(4px);
+  }
+
+  .material-action-card.ios-widget-card:not(.ios-widget-module):hover,
+  .material-action-card.ios-widget-card:not(.ios-widget-module).office-revealed:hover,
   .hub-card:hover,
   .hub-card.office-revealed:hover {
-    transform: translateY(-6px) scale(1.022);
+    transform: translateY(-6px) scale(1.018);
     box-shadow: var(--apple-shadow-lift);
-    border-color: rgba(0, 102, 204, 0.28);
+    border-color: rgba(0, 102, 204, 0.22);
     z-index: 2;
   }
 
-  .material-action-card.ios-widget-card:hover .ios-widget-icon {
+  .hub-overview-panel.ios-widget-card:hover,
+  .hub-overview-panel.ios-widget-card.office-revealed:hover {
+    transform: none;
+    filter: none;
+    z-index: auto;
+  }
+
+  .ios-widget-module.material-action-card.ios-widget-card:hover .ios-widget-icon {
+    transform: scale(1.06);
+  }
+
+  .material-action-card.ios-widget-card:not(.ios-widget-module):hover .ios-widget-icon {
     transform: scale(1.08);
     background: rgba(0, 102, 204, 0.1);
     color: var(--apple-link);
@@ -507,6 +587,306 @@ body.register-page.with-chrome .wrap > header {
   border-radius: 18px;
 }
 
+/* ── Hub 模块页 · Apple 精修 ── */
+/* iOS 中等小组件（子模块入口） */
+.ios-widget-module.material-action-card.ios-widget-card {
+  aspect-ratio: auto;
+  min-height: clamp(236px, 28vw, 276px) !important;
+  border-radius: 22px;
+  color: var(--widget-sub-ink, #1d1d1f);
+  background: var(--widget-sub-bg, linear-gradient(160deg, #fff9e6 0%, #fff3cd 52%, #fff8e1 100%));
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-top: 3px solid var(--widget-sub-accent, #c9a227);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 8px 26px color-mix(in srgb, var(--widget-accent, #007aff) 14%, rgba(0, 0, 0, 0.08)),
+    inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.ios-widget-module.material-action-card.ios-widget-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 52%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 子模块入口：统一淡黄色底（图标仍可按类型区分） */
+.ios-widget-module[data-widget] {
+  --widget-accent: var(--widget-sub-accent, #c9a227);
+  --widget-bg: var(--widget-sub-bg);
+}
+
+.ios-widget-module .ios-widget-inner {
+  flex: 1 1 auto;
+  padding: clamp(16px, 1.6vw, 20px) clamp(16px, 1.6vw, 20px) 6px;
+  justify-content: flex-start;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ios-widget-module .ios-widget-head {
+  align-items: center;
+  gap: 10px;
+}
+
+.ios-widget-module .ios-widget-meta {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.ios-widget-module .ios-widget-kicker {
+  font-size: var(--widget-kicker-size, 0.875rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--widget-sub-ink, #1d1d1f);
+}
+
+.ios-widget-module .ios-widget-pill {
+  font-size: var(--widget-pill-size, 0.625rem);
+  padding: 2px 8px;
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.06);
+  color: var(--apple-muted-2, #86868b);
+  backdrop-filter: none;
+}
+
+.ios-widget-module .ios-widget-pill.warn {
+  background: rgba(255, 149, 0, 0.14);
+  border-color: rgba(255, 149, 0, 0.22);
+  color: #c93400;
+}
+
+.ios-widget-module .ios-widget-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--widget-accent, #007aff) 20%, #ffffff);
+  color: var(--widget-accent, #007aff);
+  box-shadow:
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.92),
+    0 2px 6px color-mix(in srgb, var(--widget-accent, #007aff) 18%, rgba(0, 0, 0, 0.08));
+}
+
+.ios-widget-module .office-icon-hub svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ios-widget-module .ios-widget-balance {
+  font-size: var(--widget-balance-size, clamp(1.75rem, 1.35rem + 1.4vw, 2.25rem));
+  font-weight: 700;
+  letter-spacing: -0.044em;
+  color: var(--widget-sub-ink, #1d1d1f);
+  line-height: 1.06;
+  margin-top: 4px;
+}
+
+.ios-widget-module .ios-widget-unit {
+  font-size: 0.46em;
+  font-weight: 700;
+  opacity: 0.72;
+  margin-left: 0.12em;
+}
+
+.ios-widget-module.is-entry .ios-widget-balance,
+.ios-widget-module.is-metric-hidden .ios-widget-balance {
+  display: none;
+}
+
+.ios-widget-module .ios-widget-sub {
+  margin: 0;
+  font-size: var(--widget-sub-text-size, 0.75rem);
+  font-weight: 500;
+  color: var(--apple-muted, #6e6e73);
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.ios-widget-module .ios-widget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 6px 0 0;
+  padding: 0;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ios-widget-module .ios-widget-item {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  font-size: var(--widget-sub-text-size, 0.75rem);
+  line-height: 1.35;
+  color: var(--apple-muted, #6e6e73);
+}
+
+.ios-widget-module .ios-widget-item-title {
+  font-size: var(--widget-item-title-size, 0.8125rem);
+  font-weight: 600;
+  color: var(--widget-sub-ink, #1d1d1f);
+  min-width: 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ios-widget-module .ios-widget-item-meta {
+  flex-shrink: 0;
+  align-self: flex-end;
+  font-size: var(--widget-item-meta-size, 0.6875rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--apple-muted-2, #86868b);
+  white-space: nowrap;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.ios-widget-module .ios-widget-item.is-stale {
+  background: rgba(255, 149, 0, 0.1);
+  border-color: rgba(255, 149, 0, 0.22);
+}
+
+.ios-widget-module .ios-widget-item.is-stale .ios-widget-item-title {
+  color: #c93400;
+}
+
+.ios-widget-module .ios-widget-item.is-stale .ios-widget-item-meta {
+  color: #c93400;
+  background: rgba(255, 149, 0, 0.12);
+  border-color: rgba(255, 149, 0, 0.2);
+}
+
+.ios-widget-module .ios-widget-item.muted .ios-widget-item-title {
+  opacity: 0.72;
+}
+
+.ios-widget-module .ios-widget-list .ios-widget-item:nth-child(n + 4) {
+  display: none;
+}
+
+.ios-widget-module .ios-widget-foot {
+  flex-shrink: 0;
+  color: var(--widget-sub-accent, var(--apple-link));
+  background: rgba(255, 255, 255, 0.42);
+  border-top: 1px solid rgba(201, 162, 39, 0.18);
+  font-weight: 600;
+  padding: 11px clamp(16px, 1.6vw, 20px) 14px;
+}
+
+.reimburse-hub-page .reimburse-hub-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 2vw, 24px);
+}
+
+@media (max-width: 640px) {
+  .reimburse-hub-page .reimburse-hub-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ios-widget-module.material-action-out {
+  border-style: dashed;
+  border-color: rgba(0, 0, 0, 0.1);
+  background: linear-gradient(180deg, #fcfcfd 0%, #f5f5f7 100%);
+}
+
+.ios-widget-module.material-action-card.ios-widget-card:active {
+  transform: translateY(-4px) scale(1.008);
+  transition-duration: 0.12s;
+}
+
+.hub-overview-panel.ios-widget-card {
+  color: var(--widget-overview-ink, #f7faf7);
+  background: var(--widget-overview-bg);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  box-shadow:
+    0 18px 44px rgba(80, 120, 86, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.hub-overview-panel.ios-widget-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 70% 55% at 100% 0%, rgba(255, 255, 255, 0.28) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 40% at 0% 100%, rgba(0, 0, 0, 0.12) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.hub-overview-panel .ios-widget-inner {
+  position: relative;
+  z-index: 1;
+  padding: clamp(22px, 2.2vw, 30px) clamp(22px, 2.2vw, 30px) 18px;
+}
+
+.hub-overview-panel .ios-widget-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.24);
+  color: #fff;
+}
+
+.hub-overview-panel .office-icon-hub svg {
+  width: 22px;
+  height: 22px;
+}
+
+.hub-overview-panel .ios-widget-kicker,
+.hub-overview-panel .ios-widget-balance,
+.hub-overview-panel .ios-widget-sub,
+.hub-overview-panel .ios-widget-item-title,
+.hub-overview-panel .ios-widget-item-meta,
+.hub-overview-panel .stock-widget-summary {
+  color: var(--widget-overview-ink, #f7faf7);
+}
+
+.hub-overview-panel .ios-widget-pill {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--widget-overview-ink, #f7faf7);
+}
+
+.hub-overview-panel .ios-widget-item {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: var(--widget-overview-ink, #f7faf7);
+}
+
 .material-action-card .ios-widget-icon {
   background: rgba(0, 0, 0, 0.05);
   color: var(--apple-ink);
@@ -517,6 +897,30 @@ body.register-page.with-chrome .wrap > header {
   background: rgba(0, 0, 0, 0.02);
   border-top-color: rgba(0, 0, 0, 0.06);
   justify-content: space-between;
+}
+
+.ios-widget-module.material-action-card .ios-widget-foot {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  padding: 10px clamp(16px, 1.6vw, 20px) clamp(14px, 1.4vw, 18px);
+  margin-top: auto;
+  font-size: var(--widget-foot-size, 0.75rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--widget-sub-accent, #a67c00);
+  background: transparent;
+  border-top: 1px solid rgba(201, 162, 39, 0.16);
+  justify-content: flex-start;
+  opacity: 0.92;
+}
+
+.ios-widget-module.material-action-card .ios-widget-foot::after {
+  content: "›";
+  margin-left: 3px;
+  font-size: 1.05em;
+  font-weight: 500;
+  transition: transform 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .material-action-card .ios-widget-foot-label {
@@ -534,9 +938,14 @@ body.register-page.with-chrome .wrap > header {
 
 /* 报销 Hub：只留操作区 */
 .reimburse-hub-panel {
-  border-radius: 18px;
-  border-color: rgba(0, 0, 0, 0.06);
-  box-shadow: var(--apple-shadow-soft);
+  border-radius: 22px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 8px 24px rgba(0, 0, 0, 0.05);
+  padding: clamp(18px, 2vw, 24px);
+  margin-bottom: clamp(20px, 2.5vw, 28px);
 }
 
 .reimburse-hub-panel-head h2 {
@@ -547,20 +956,26 @@ body.register-page.with-chrome .wrap > header {
 }
 
 .reimburse-upload-zone {
-  border-radius: 14px;
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  border: 1.5px dashed rgba(0, 0, 0, 0.1);
   background: var(--apple-bg);
-  padding: 28px 16px;
+  padding: 32px 16px;
   font-size: 0.9375rem;
   font-weight: 500;
+  letter-spacing: -0.015em;
   color: var(--apple-muted);
+  transition:
+    border-color 0.28s var(--apple-ease),
+    background 0.28s var(--apple-ease),
+    box-shadow 0.28s var(--apple-ease);
 }
 
 .reimburse-upload-zone:hover,
 .reimburse-upload-zone.is-dragover {
   border-color: var(--apple-link);
+  border-style: solid;
   background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
 }
 
 .reimburse-hub-actions .ledger-btn {
@@ -881,5 +1296,139 @@ body.register-page button.primary,
   body.register-page .user-actions button {
     width: 100%;
     text-align: center;
+  }
+}
+
+/* ── 驾驶舱首页 · 无页眉紧凑布局（用户已确认 2026-08-25）── */
+.hub-page--cockpit {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: clamp(8px, 1.2vw, 14px);
+}
+
+.hub-alerts-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.2vw, 14px);
+  margin-bottom: clamp(16px, 1.8vw, 22px);
+}
+
+.hub-alerts-stack.is-empty {
+  display: none;
+  margin-bottom: 0;
+}
+
+.hub-page--cockpit .hub-alerts-stack .hub-inbox,
+.hub-page--cockpit .hub-alerts-stack .hub-urgent {
+  margin-bottom: 0;
+}
+
+.hub-page--cockpit .hub-inbox,
+.hub-page--cockpit .hub-urgent {
+  padding: clamp(14px, 1.8vw, 20px) clamp(16px, 2vw, 22px);
+  background: var(--apple-surface);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--apple-shadow-soft);
+  border-radius: 18px;
+}
+
+.hub-page--cockpit .hub-inbox-head,
+.hub-page--cockpit .hub-urgent-head {
+  margin-bottom: 10px;
+}
+
+.hub-page--cockpit .hub-inbox h2,
+.hub-page--cockpit .hub-urgent h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.028em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hub-page--cockpit .hub-inbox-head .office-icon svg {
+  width: 18px;
+  height: 18px;
+  color: var(--apple-link);
+}
+
+.hub-page--cockpit .hub-inbox-item {
+  border-radius: 14px;
+  background: var(--apple-bg);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+.hub-page--cockpit .hub-inbox-title {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.hub-page--cockpit .hub-modules {
+  flex: 1;
+  min-width: 0;
+}
+
+.hub-page--cockpit .cockpit-widget-grid.is-hub-syncing {
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .hub-page--cockpit {
+    padding-top: clamp(6px, 1vw, 10px);
+  }
+
+  .hub-alerts-stack {
+    margin-bottom: clamp(12px, 1.6vw, 18px);
+  }
+
+  .cockpit-widget-grid .ios-widget-card,
+  .cockpit-widget-grid .cockpit-module-widget {
+    min-height: clamp(320px, 52vw, 400px);
+  }
+}
+
+/* 暗色 · Apple 风组件覆写 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-office-theme="light"]) {
+    --apple-ink: #f2f2f7;
+    --apple-muted: #aeaeb2;
+    --apple-surface: #242428;
+  }
+}
+
+:root[data-office-theme="dark"] {
+  --apple-ink: #f2f2f7;
+  --apple-muted: #aeaeb2;
+  --apple-surface: #242428;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-office-theme="light"]) .office-chrome-shell,
+  :root[data-office-theme="dark"] .office-chrome-shell {
+    background: rgba(36, 36, 40, 0.92);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  :root:not([data-office-theme="light"]) .office-module-nav,
+  :root[data-office-theme="dark"] .office-module-nav {
+    background: rgba(28, 28, 30, 0.65);
+  }
+
+  :root:not([data-office-theme="light"]) .ios-widget-card,
+  :root[data-office-theme="dark"] .ios-widget-card {
+    background: linear-gradient(165deg, rgba(44, 44, 48, 0.98) 0%, rgba(36, 36, 40, 0.98) 100%);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  :root:not([data-office-theme="light"]) .hub-inbox,
+  :root:not([data-office-theme="light"]) .hub-urgent,
+  :root[data-office-theme="dark"] .hub-inbox,
+  :root[data-office-theme="dark"] .hub-urgent {
+    background: var(--surface);
+    border-color: var(--glass-border);
   }
 }
