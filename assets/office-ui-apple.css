@@ -1231,6 +1231,22 @@ body.register-page button.primary,
     padding: 12px;
   }
 
+  body.register-page .item-row .item-cat-name,
+  body.register-page .item-row .row3 {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.75fr) minmax(0, 0.85fr);
+    column-gap: 10px;
+  }
+
+  body.register-page .item-row .item-cat-name > .item-name-field {
+    grid-column: 2 / -1;
+  }
+
+  body.register-page .item-row .item-cat-name > label {
+    min-width: 0;
+    overflow: hidden;
+  }
+
   body.register-page form:has(#btn:not([disabled])),
   body.register-page form:has(#btnSubmit:not([disabled])) {
     padding-bottom: calc(76px + env(safe-area-inset-bottom));

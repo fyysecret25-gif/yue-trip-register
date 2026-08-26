@@ -100,6 +100,7 @@
     }
     input.qty-over { border-color: var(--danger); background: #fff8f7; }
     textarea { min-height: 72px; resize: vertical; }
+    select:disabled { opacity: 0.55; cursor: not-allowed; background: #ececf0; color: var(--muted); }
     .items-head {
       font-size: 14px; font-weight: 700; color: var(--ink);
       display: flex; justify-content: space-between; align-items: center; gap: 8px;
@@ -108,6 +109,46 @@
     .item-row {
       border: 1px solid var(--line); border-radius: 14px; padding: 14px;
       display: grid; gap: 12px; background: var(--field-bg);
+      --item-cols: minmax(0, 1.1fr) minmax(0, 0.75fr) minmax(0, 0.85fr);
+      --item-col-gap: 10px;
+    }
+    .item-row input,
+    .item-row select {
+      text-align: center;
+      text-align-last: center;
+    }
+    .item-row input::placeholder {
+      text-align: center;
+    }
+    .item-row select {
+      padding-left: 28px;
+      padding-right: 28px;
+    }
+    .item-cat-name,
+    .item-row .row3 {
+      display: grid;
+      grid-template-columns: var(--item-cols);
+      column-gap: var(--item-col-gap);
+      row-gap: 0;
+      align-items: start;
+    }
+    .item-cat-name > .item-name-field {
+      grid-column: 2 / -1;
+    }
+    .item-cat-name > label {
+      display: grid;
+      grid-template-rows: auto 48px;
+      gap: 6px;
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+    .item-cat-name select {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      height: 48px;
+      box-sizing: border-box;
     }
     .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .split-row {
@@ -145,7 +186,7 @@
     .split-row > label > select {
       padding-right: 36px;
     }
-    .row3 { display: grid; grid-template-columns: 1.1fr 0.75fr 0.85fr; gap: 10px; align-items: start; }
+    .row3 { align-items: start; }
     .qty-err { font-size: 12px; color: var(--danger); margin: 4px 0 0; line-height: 1.4; display: none; }
     .qty-err.show { display: block; }
     .options-empty {
@@ -235,11 +276,14 @@
       .brand { font-size: 12px; }
       form, .query-box, .gate-card { padding: 16px 14px 18px; }
       .row2 { grid-template-columns: 1fr; }
+      .item-cat-name > label { grid-template-rows: auto 44px; }
+      .item-cat-name select { height: 44px; min-height: 44px; font-size: 15px; }
       .notice-bar.is-visible { flex-direction: column; align-items: stretch; }
       .notice-actions { width: 100%; }
       .notice-actions .btn-accent,
       .notice-actions .btn-muted { flex: 1; text-align: center; }
-      .item-row .row3 { grid-template-columns: 1.1fr 0.65fr 0.75fr; gap: 6px; }
+      .item-row .row3 { gap: 6px; }
+      .item-row { --item-col-gap: 6px; }
       .item-row .row3 input { padding: 10px 8px; font-size: 14px; }
       .item-row .row3 .field-label { font-size: 12px; }
       .split-row > label {
@@ -333,9 +377,24 @@
       flex: 1 1 auto !important;
       min-width: 0;
     }
-    body.register-page .item-row .row3 {
-      grid-template-columns: 1.1fr 0.75fr 0.85fr !important;
+    body.register-page .item-row .row3,
+    body.register-page .item-row .item-cat-name {
+      display: grid !important;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.75fr) minmax(0, 0.85fr) !important;
+      column-gap: 10px !important;
       align-items: start;
+    }
+    body.register-page .item-row .item-cat-name > .item-name-field {
+      grid-column: 2 / -1 !important;
+    }
+    body.register-page .item-row .item-cat-name > label {
+      min-width: 0 !important;
+      overflow: hidden;
+    }
+    body.register-page .item-row input,
+    body.register-page .item-row select {
+      text-align: center;
+      text-align-last: center;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -480,7 +539,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽*20包","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","available":9,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"叶利辉","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-26T02:13:34.677Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","category":"其他","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0612260826000601","name":"固体胶","spec":"晨光","unit":"个","category":"其他","available":6,"vendor":"交接","location":"仓库","price":"0.00"},{"code":"0612260826001101","name":"胶带","spec":"大号","unit":"卷","category":"其他","available":11,"vendor":"交接","location":"仓库","price":"0.00"},{"code":"0612260826001201","name":"胶带","spec":"小号","unit":"卷","category":"其他","available":12,"vendor":"交接","location":"仓库","price":"0.00"},{"code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","category":"其他","available":8,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"code":"0612260826002801","name":"雨伞","spec":"长柄","unit":"把","category":"其他","available":28,"vendor":"交接","location":"仓库","price":"0.00"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","category":"水饮","available":9,"vendor":"叶利辉","location":"仓库","price":"20.00"},{"code":"0509260826000301","name":"硒鼓","spec":"爱斯达","unit":"个","category":"物料消耗","available":5,"vendor":"交接","location":"仓库","price":"0.00"},{"code":"0509260826000302","name":"硒鼓","spec":"237","unit":"个","category":"物料消耗","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽*20包","unit":"提","category":"纸品","available":5,"vendor":"山姆","location":"仓库","price":"59.90"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-26T10:24:07.795Z"};</script>
 
 
   <script>
@@ -500,6 +559,7 @@
     let needAccessCode = false;
     /** @type {{ code: string, name: string, spec: string, unit: string, available: number }[]} */
     let applyOptions = [];
+    const CATEGORY_ORDER = ['固定资产', '低值易耗品', '办公用品', '烟', '酒', '茶叶', '食品', '水饮', '物料消耗', '职工福利', '劳保', '其他'];
 
     function esc(s) {
       return String(s ?? '').replace(/[&<>"']/g, (c) => (
@@ -507,14 +567,38 @@
       ));
     }
 
+    function itemCategory(opt) {
+      return String(opt?.category || '').trim() || '其他';
+    }
+
+    function uniqueCategories() {
+      const present = new Set(applyOptions.map(itemCategory));
+      const ordered = CATEGORY_ORDER.filter((c) => present.has(c));
+      for (const c of present) {
+        if (!ordered.includes(c)) ordered.push(c);
+      }
+      return ordered;
+    }
+
     function optionLabel(opt) {
       const specPart = opt.spec ? ` · ${opt.spec}` : '';
       return `${opt.name}${specPart}`;
     }
 
-    function buildPickOptions(selectedCode = '') {
+    function buildCategoryOptions(selected = '') {
+      const parts = ['<option value="">请选择品类</option>'];
+      for (const cat of uniqueCategories()) {
+        const sel = cat === selected ? ' selected' : '';
+        parts.push(`<option value="${esc(cat)}"${sel}>${esc(cat)}</option>`);
+      }
+      return parts.join('');
+    }
+
+    function buildPickOptions(category = '', selectedCode = '') {
+      if (!category) return '<option value="">请先选择品类</option>';
       const parts = ['<option value="">请选择物资</option>'];
       for (const opt of applyOptions) {
+        if (itemCategory(opt) !== category) continue;
         const label = esc(optionLabel(opt));
         const sel = selectedCode && opt.code === selectedCode ? ' selected' : '';
         parts.push(
@@ -522,6 +606,7 @@
           + ` data-name="${esc(opt.name)}"`
           + ` data-spec="${esc(opt.spec)}"`
           + ` data-unit="${esc(opt.unit)}"`
+          + ` data-category="${esc(itemCategory(opt))}"`
           + ` data-available="${opt.available}">${label}</option>`,
         );
       }
@@ -530,9 +615,14 @@
 
     function itemTemplate(idx) {
       return `<div class="item-row" data-idx="${idx}">
-        <label><span class="field-label req">物资名称</span>
-          <select data-f="pick" required>${buildPickOptions()}</select>
-        </label>
+        <div class="item-cat-name">
+          <label><span class="field-label req">品类</span>
+            <select data-f="category" required>${buildCategoryOptions()}</select>
+          </label>
+          <label class="item-name-field"><span class="field-label req">物资名称</span>
+            <select data-f="pick" required disabled>${buildPickOptions()}</select>
+          </label>
+        </div>
         <div class="row3">
           <label><span class="field-label">规格</span><input data-f="spec" maxlength="120" readonly placeholder="选物资后自动带出" /></label>
           <label><span class="field-label">单位</span><input data-f="unit" maxlength="20" readonly placeholder="自动" /></label>
@@ -615,9 +705,10 @@
     function updateSubmitButton() {
       const rows = [...document.querySelectorAll('.item-row')];
       const blocked = !getApplyDeptValue() || !applyOptions.length || rows.some((row) => {
+        const cat = String(row.querySelector('[data-f="category"]')?.value || '').trim();
         const code = row.dataset.code || getRowPick(row)?.value;
         const qty = Number(row.querySelector('[data-f="qty"]')?.value);
-        if (!code || !Number.isFinite(qty) || qty < 1) return true;
+        if (!cat || !code || !Number.isFinite(qty) || qty < 1) return true;
         const available = Number(row.dataset.available || 0);
         if (available > 0 && qty > available) return true;
         return false;
@@ -626,6 +717,16 @@
     }
 
     function bindItemRow(row) {
+      row.querySelector('[data-f="category"]')?.addEventListener('change', () => {
+        const cat = String(row.querySelector('[data-f="category"]')?.value || '').trim();
+        const pick = getRowPick(row);
+        if (pick) {
+          pick.innerHTML = buildPickOptions(cat);
+          pick.disabled = !cat;
+        }
+        syncRowFromPick(row);
+        updateSubmitButton();
+      });
       getRowPick(row)?.addEventListener('change', () => {
         syncRowFromPick(row);
         updateSubmitButton();
@@ -815,6 +916,7 @@
       return rows.map((row) => ({
         code: row.dataset.code || getRowPick(row)?.value || '',
         name: row.dataset.name || getRowPick(row)?.selectedOptions?.[0]?.dataset?.name || '',
+        category: row.querySelector('[data-f="category"]')?.value || getRowPick(row)?.selectedOptions?.[0]?.dataset?.category || '',
         spec: row.querySelector('[data-f="spec"]').value.trim(),
         unit: row.querySelector('[data-f="unit"]').value.trim(),
         qty: row.querySelector('[data-f="qty"]').value.trim(),
@@ -1015,7 +1117,7 @@
     }
     function itemsSummary(items) {
       return (items || [])
-        .map((i) => `${i.name || ''}${i.spec ? ` ${i.spec}` : ''} ×${i.qty || ''}${i.unit || ''}`)
+        .map((i) => `${i.category ? `${i.category} · ` : ''}${i.name || ''}${i.spec ? ` ${i.spec}` : ''} ×${i.qty || ''}${i.unit || ''}`)
         .filter(Boolean)
         .join('；') || '—';
     }
@@ -1131,6 +1233,7 @@
       $('itemsBox').insertAdjacentHTML('beforeend', itemTemplate(n));
       bindItemRow($('itemsBox').lastElementChild);
       placeAddRowButton();
+      updateSubmitButton();
     });
 
     $('form').addEventListener('submit', async (e) => {
@@ -1149,6 +1252,7 @@
         if (!applyDept) throw new Error('请选择申请部门');
         const items = collectItems();
         for (const it of items) {
+          if (!it.category) throw new Error('请先选择品类');
           if (!it.code || !it.name) throw new Error('请选择物资名称');
           const qty = Number(it.qty);
           if (!Number.isFinite(qty) || qty < 1) throw new Error('请填写有效数量');
