@@ -378,7 +378,7 @@
       <h1>十八局南方公司物资领用申请</h1>
     </header>
 
-    <div class="gate-card surface-card" id="gateBox" style="display:none">
+    <div class="gate-card surface-card" id="gateBox">
       <label><span class="field-label req">登记口令</span>
         <input id="accessCodeInput" type="text" autocomplete="off" spellcheck="false" placeholder="个人口令" />
       </label>
@@ -482,7 +482,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽*20包","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","available":10,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"叶利辉","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-26T01:45:33.961Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽*20包","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","available":10,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"叶利辉","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-26T02:03:29.951Z"};</script>
 
 
   <script>
@@ -914,39 +914,45 @@
       }
     }
 
+    function showGate(prefillCode = '') {
+      $('gateBox').style.display = 'grid';
+      $('appMain').style.display = 'none';
+      const input = $('accessCodeInput');
+      if (input && prefillCode) input.value = prefillCode;
+    }
+
+    async function ensureAccessGate() {
+      const urlCode = new URLSearchParams(location.search).get('k') || '';
+      if (!needAccessCode) {
+        enterApp();
+        return;
+      }
+      if (!accessCode) {
+        showGate(urlCode);
+        return;
+      }
+      const ok = await unlockWithCode(accessCode);
+      if (!ok) {
+        accessCode = '';
+        accessName = '';
+        localStorage.removeItem('material_request_code');
+        localStorage.removeItem('material_request_name');
+        showGate(urlCode);
+      }
+    }
+
     async function loadMeta() {
-      $('applyDate').value = new Date().toISOString().slice(0, 10);
       if (IS_PUBLIC) {
         needAccessCode = !!PUB.needAccessCode;
         $('btnChangeCode').style.display = 'none';
         $('noticeBar').classList.remove('is-visible');
-        if (needAccessCode) {
-          if (accessCode) await unlockWithCode(accessCode);
-          else {
-            $('gateBox').style.display = 'grid';
-            $('appMain').style.display = 'none';
-            const k = new URLSearchParams(location.search).get('k') || '';
-            if (k) $('accessCodeInput').value = k;
-          }
-        } else {
-          enterApp();
-        }
+        await ensureAccessGate();
         return;
       }
       const r = await fetch(`${API}/meta`);
       const data = await r.json();
       needAccessCode = !!data.needAccessCode;
-      if (needAccessCode) {
-        if (accessCode) await unlockWithCode(accessCode);
-        else {
-          $('gateBox').style.display = 'grid';
-          $('appMain').style.display = 'none';
-          const k = new URLSearchParams(location.search).get('k') || '';
-          if (k) $('accessCodeInput').value = k;
-        }
-      } else {
-        enterApp();
-      }
+      await ensureAccessGate();
     }
 
     $('btnUnlock').addEventListener('click', () => { unlockWithCode($('accessCodeInput').value); });
@@ -1277,12 +1283,16 @@
     $('applyDept')?.addEventListener('change', updateSubmitButton);
 
     async function boot() {
-      $('applyDate').value = new Date().toISOString().slice(0, 10);
+      const applyDateEl = $('applyDate');
+      if (applyDateEl) applyDateEl.value = new Date().toISOString().slice(0, 10);
       await loadMeta();
       await loadApplyOptions();
       updateSubmitButton();
     }
-    boot().catch((e) => show($('msg'), e.message, false));
+    boot().catch((e) => {
+      showGate();
+      showGateMsg(false, e.message || '页面加载失败，请刷新重试');
+    });
   </script>
 </body>
 </html>
