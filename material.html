@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#f5f5f7" />
+  <meta name="theme-color" content="#e8e8ed" />
   <meta name="color-scheme" content="light dark" />
   <meta name="description" content="十八局南方公司物资领用申请" />
   <meta name="robots" content="noindex, nofollow" />
@@ -13,21 +13,24 @@
   <script src="./assets/office-icons.js" defer></script>
   <style>
     :root {
-      --bg: #f5f5f7;
-      --card: #fff;
-      --ink: #1d1d1f;
-      --muted: #6e6e73;
-      --line: rgba(0, 0, 0, 0.08);
+      --bg: #e8e8ed;
+      --card: #ffffff;
+      --field-bg: #fafafc;
+      --ink: #1c1c1e;
+      --muted: #3a3a3c;
+      --line: #c6c6cc;
+      --line-soft: #d8d8de;
       --brand: #0071e3;
       --brand-hover: #0077ed;
       --ok: #1b7a4e;
       --danger: #b42318;
       --radius: 16px;
       --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
-      --seg-track: rgba(0, 0, 0, 0.06);
+      --seg-track: rgba(60, 60, 67, 0.12);
       --seg-pill: #fff;
-      --seg-pill-ink: #1d1d1f;
-      --seg-pill-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      --seg-pill-ink: #1c1c1e;
+      --seg-pill-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     }
     * { box-sizing: border-box; }
     body {
@@ -43,7 +46,7 @@
     .wrap { max-width: 520px; margin: 0 auto; }
     header { text-align: center; margin-bottom: 20px; padding-top: 4px; }
     .brand { font-size: 13px; color: var(--muted); font-weight: 600; line-height: 1.45; }
-    h1 { margin: 8px 0 0; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; }
+    h1 { margin: 8px 0 0; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
 
     .seg-tabs {
       display: flex; gap: 0; margin-bottom: 16px; padding: 4px;
@@ -64,20 +67,20 @@
     form, .query-box {
       background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
       padding: 18px 16px 20px; display: grid; gap: 16px;
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--card-shadow);
     }
     .form-section { display: grid; gap: 12px; }
     .section-title {
       font-size: 12px; font-weight: 700; color: var(--muted);
       text-transform: uppercase; letter-spacing: 0.04em;
-      padding-bottom: 4px; border-bottom: 1px solid var(--line);
+      padding-bottom: 4px; border-bottom: 1px solid var(--line-soft);
     }
     label { display: grid; gap: 6px; grid-template-rows: auto auto; font-size: 13px; color: var(--muted); font-weight: 600; }
-    .field-label { line-height: 1.35; }
+    .field-label { line-height: 1.35; color: var(--muted); }
     .field-label.req::after { content: " *"; color: var(--danger); }
     input, select, textarea {
       width: 100%; border: 1px solid var(--line); border-radius: 10px;
-      padding: 12px; font-size: 16px; font-family: inherit; background: #fff;
+      padding: 12px; font-size: 16px; font-family: inherit; background: var(--field-bg); color: var(--ink);
       transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
     }
     input:focus, select:focus, textarea:focus {
@@ -85,11 +88,12 @@
       box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
     }
     input[readonly], select.is-readonly-bg + input[readonly] {
-      background: #f5f5f7; color: var(--ink); cursor: default;
+      background: #ececf0; color: var(--ink); cursor: default;
     }
     select {
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236e6e73' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-color: var(--field-bg);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%233a3a3c' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 12px center;
       padding-right: 36px;
@@ -103,7 +107,7 @@
     .items-head .hint-inline { font-size: 12px; font-weight: 500; color: var(--muted); }
     .item-row {
       border: 1px solid var(--line); border-radius: 14px; padding: 14px;
-      display: grid; gap: 12px; background: #fafafa;
+      display: grid; gap: 12px; background: var(--field-bg);
     }
     .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .basic-meta-row {
@@ -147,16 +151,16 @@
     .qty-err.show { display: block; }
     .options-empty {
       padding: 16px 14px; border-radius: 12px; border: 1px dashed var(--line);
-      background: #fff; font-size: 13px; color: var(--muted); line-height: 1.55; text-align: center;
+      background: var(--field-bg); font-size: 13px; color: var(--muted); line-height: 1.55; text-align: center;
     }
     .options-loading { font-size: 13px; color: var(--muted); text-align: center; padding: 12px; }
     .btn-line {
-      border: 1px solid var(--line); background: #fff; border-radius: 10px;
+      border: 1px solid var(--line); background: var(--card); border-radius: 10px;
       padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
       transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
       font-family: inherit; color: var(--ink); line-height: 1.2;
     }
-    .btn-line:hover { background: #f5f5f7; }
+    .btn-line:hover { background: #ececf0; }
     .btn-add-row { width: 100%; text-align: center; min-height: 40px; margin-top: 2px; }
     .btn-del { color: var(--danger); font-size: 13px; justify-self: end; background: none; border: 0; cursor: pointer; padding: 4px 0; font-family: inherit; }
     button.primary {
@@ -182,7 +186,7 @@
     .status-card strong { color: var(--brand); }
     .surface-card {
       background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--card-shadow);
     }
     .gate-card {
       padding: 18px 16px 20px; display: grid; gap: 12px;
@@ -195,14 +199,14 @@
     .user-bar .name { font-weight: 600; color: var(--ink); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .user-actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
     .btn-logout, .btn-change-code {
-      border: 1px solid var(--line); background: #fff; border-radius: 10px;
+      border: 1px solid var(--line); background: var(--card); border-radius: 10px;
       padding: 7px 12px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
       line-height: 1.2; transition: background 0.2s var(--ease);
     }
     .btn-change-code { color: var(--brand); }
     .btn-change-code:hover { background: rgba(0, 113, 227, 0.06); }
     .btn-logout { color: var(--muted); }
-    .btn-logout:hover { background: #f5f5f7; }
+    .btn-logout:hover { background: #ececf0; }
 
     .notice-bar {
       display: none; align-items: flex-start; justify-content: space-between; gap: 12px;
@@ -223,9 +227,9 @@
     }
     .btn-accent:hover { background: var(--brand-hover); }
     .btn-muted {
-      border: 1px solid var(--line); background: #fff; color: var(--ink);
+      border: 1px solid var(--line); background: var(--card); color: var(--ink);
     }
-    .btn-muted:hover { background: #f5f5f7; }
+    .btn-muted:hover { background: #ececf0; }
 
     @media (max-width: 640px) {
       h1 { font-size: 22px; }
@@ -257,7 +261,7 @@
     }
     .code-mask.show { display: flex; }
     .code-dialog {
-      width: 100%; max-width: 400px; background: #fff; border-radius: 14px;
+      width: 100%; max-width: 400px; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
       padding: 18px 16px; display: grid; gap: 12px;
     }
     .code-dialog h2 { margin: 0; font-size: 18px; }
@@ -266,21 +270,21 @@
       flex: 1; border: 0; border-radius: 10px; padding: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
     }
     .code-dialog .acts .primary { background: var(--brand); color: #fff; }
-    .code-dialog .acts .ghost { background: #f5f5f7; color: var(--ink); border: 1px solid var(--line); }
+    .code-dialog .acts .ghost { background: #ececf0; color: var(--ink); border: 1px solid var(--line); }
     .mine-toolbar {
       display: flex; justify-content: flex-end; margin-bottom: 8px;
     }
     .mine-toolbar button {
-      border: 1px solid var(--line); background: #fff; border-radius: 8px;
-      padding: 8px 12px; font-size: 13px; font-weight: 650; cursor: pointer;
+      border: 1px solid var(--line); background: var(--card); border-radius: 8px;
+      padding: 8px 12px; font-size: 13px; font-weight: 650; cursor: pointer; color: var(--ink);
     }
     .mine-list { display: grid; gap: 8px; }
     .mine-item {
       display: grid; gap: 4px; width: 100%; text-align: left;
       border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
-      background: #fbfcfe; cursor: pointer; font-family: inherit;
+      background: var(--field-bg); cursor: pointer; font-family: inherit;
     }
-    .mine-item:active { background: #eef3f8; }
+    .mine-item:active { background: #e4e4ea; }
     .mine-item .row1 {
       display: flex; justify-content: space-between; align-items: center;
       font-size: 13px; font-weight: 700; color: var(--brand);
@@ -296,8 +300,8 @@
     .badge.rejected, .badge.denied { background: #fdecec; color: var(--danger); }
     .record-detail {
       display: none; margin-top: 12px; padding: 12px;
-      border: 1px solid var(--line); border-radius: 12px; background: #f8fafc;
-      font-size: 14px; line-height: 1.55;
+      border: 1px solid var(--line); border-radius: 12px; background: var(--field-bg);
+      font-size: 14px; line-height: 1.55; color: var(--ink);
     }
     .record-detail.show { display: block; }
     .record-detail p { margin: 0 0 6px; }
@@ -314,7 +318,7 @@
     body.register-page .user-bar,
     body.register-page .notice-bar {
       border-color: var(--line);
-      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      box-shadow: var(--card-shadow);
       border-radius: var(--radius);
     }
     body.register-page .user-bar,
@@ -338,6 +342,14 @@
 
     @media (prefers-color-scheme: dark) {
       :root:not([data-office-theme="light"]) {
+        --bg: #141416;
+        --card: #242428;
+        --field-bg: #2c2c31;
+        --ink: #f2f2f7;
+        --muted: #aeaeb2;
+        --line: rgba(255, 255, 255, 0.16);
+        --line-soft: rgba(255, 255, 255, 0.1);
+        --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
         --seg-track: rgba(118, 118, 128, 0.28);
         --seg-pill: #636366;
         --seg-pill-ink: #fff;
@@ -345,6 +357,14 @@
       }
     }
     :root[data-office-theme="dark"] {
+      --bg: #141416;
+      --card: #242428;
+      --field-bg: #2c2c31;
+      --ink: #f2f2f7;
+      --muted: #aeaeb2;
+      --line: rgba(255, 255, 255, 0.16);
+      --line-soft: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
       --seg-track: rgba(118, 118, 128, 0.28);
       --seg-pill: #636366;
       --seg-pill-ink: #fff;
@@ -462,7 +482,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","available":12,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"叶利辉","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0395","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-25T12:36:56.125Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"code":"0612260824000601","name":"抽纸.得宝","spec":"88抽*20包","unit":"提","available":5,"vendor":"山姆","location":"仓库","price":"59.90"},{"code":"0612260824000901","name":"抽纸.MM","spec":"100抽*24包","unit":"提","available":9,"vendor":"山姆","location":"仓库","price":"39.90"},{"code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","available":10,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"code":"0408260822001001","name":"桶装水","spec":"19L","unit":"桶","available":10,"vendor":"叶利辉","location":"仓库","price":"20.00"}],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-26T01:45:33.961Z"};</script>
 
 
   <script>
@@ -706,9 +726,11 @@
     }
 
     function resolvePublicAccess(code) {
-      const c = String(code || '').trim();
+      const c = String(code || '').trim().toLowerCase();
       if (!c) return null;
-      return (PUB.accessCodes || []).find((row) => String(row.code || '').trim() === c) || null;
+      return (PUB.accessCodes || []).find(
+        (row) => String(row.code || '').trim().toLowerCase() === c,
+      ) || null;
     }
 
     async function fetchPublicStatusMessages() {
