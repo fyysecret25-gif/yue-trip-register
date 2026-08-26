@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T02:13:34.677Z",
+  "updatedAt": "2026-08-26T02:13:55.143Z",
   "items": [
     {
       "code": "0612260824000601",
@@ -36,7 +36,7 @@
       "name": "桶装水",
       "spec": "19L",
       "unit": "桶",
-      "available": 10,
+      "available": 9,
       "vendor": "叶利辉",
       "location": "仓库",
       "price": "20.00"
