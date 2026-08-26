@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T03:11:21.852Z",
+  "updatedAt": "2026-08-26T03:11:44.633Z",
   "items": [
     {
       "code": "0612260824000601",
@@ -20,6 +20,26 @@
       "vendor": "山姆",
       "location": "仓库",
       "price": "39.90"
+    },
+    {
+      "code": "0612260826001101",
+      "name": "胶带",
+      "spec": "大号",
+      "unit": "卷",
+      "available": 11,
+      "vendor": "",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "code": "0612260826001201",
+      "name": "胶带",
+      "spec": "小号",
+      "unit": "卷",
+      "available": 12,
+      "vendor": "",
+      "location": "仓库",
+      "price": "0.00"
     },
     {
       "code": "0612260825001201",
@@ -48,6 +68,16 @@
       "unit": "个",
       "available": 5,
       "vendor": "交接",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "code": "0509260826000302",
+      "name": "硒鼓",
+      "spec": "237",
+      "unit": "个",
+      "available": 3,
+      "vendor": "",
       "location": "仓库",
       "price": "0.00"
     },
