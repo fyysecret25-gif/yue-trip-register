@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T03:09:54.450Z",
+  "updatedAt": "2026-08-26T03:11:21.852Z",
   "items": [
     {
       "code": "0612260824000601",
@@ -47,6 +47,16 @@
       "spec": "爱斯达",
       "unit": "个",
       "available": 5,
+      "vendor": "交接",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "code": "0612260826002801",
+      "name": "雨伞",
+      "spec": "长柄",
+      "unit": "把",
+      "available": 28,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
