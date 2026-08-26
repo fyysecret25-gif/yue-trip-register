@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T09:28:15.661Z",
+  "updatedAt": "2026-08-26T09:28:48.588Z",
   "items": [
     {
       "code": "0612260824000601",
@@ -27,7 +27,7 @@
       "spec": "大号",
       "unit": "卷",
       "available": 11,
-      "vendor": "",
+      "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
     },
@@ -37,7 +37,7 @@
       "spec": "小号",
       "unit": "卷",
       "available": 12,
-      "vendor": "",
+      "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
     },
