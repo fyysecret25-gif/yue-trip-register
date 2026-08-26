@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-26T03:09:46.081Z",
+  "updatedAt": "2026-08-26T03:09:54.450Z",
   "items": [
     {
       "code": "0612260824000601",
@@ -26,7 +26,7 @@
       "name": "瓶装水",
       "spec": "农夫山泉",
       "unit": "箱",
-      "available": 9,
+      "available": 8,
       "vendor": "叶利辉",
       "location": "仓库",
       "price": "35.00"
