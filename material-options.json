@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T10:07:42.384Z",
+  "updatedAt": "2026-08-27T10:08:04.646Z",
   "items": [
     {
       "code": "0203260827001001",
@@ -63,17 +63,6 @@
       "unit": "盒",
       "category": "办公用品",
       "available": 3,
-      "vendor": "交接",
-      "location": "仓库",
-      "price": "0.00"
-    },
-    {
-      "code": "0612260827000101",
-      "name": "计算器",
-      "spec": "计算器",
-      "unit": "个",
-      "category": "办公用品",
-      "available": 1,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
