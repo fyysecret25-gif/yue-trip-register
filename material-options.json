@@ -1,17 +1,6 @@
 {
-  "updatedAt": "2026-08-26T10:24:07.791Z",
+  "updatedAt": "2026-08-27T02:08:57.106Z",
   "items": [
-    {
-      "code": "0612260824000901",
-      "name": "抽纸.MM",
-      "spec": "100抽*24包",
-      "unit": "提",
-      "category": "其他",
-      "available": 9,
-      "vendor": "山姆",
-      "location": "仓库",
-      "price": "39.90"
-    },
     {
       "code": "0612260826000601",
       "name": "固体胶",
@@ -110,6 +99,17 @@
       "vendor": "山姆",
       "location": "仓库",
       "price": "59.90"
+    },
+    {
+      "code": "0612260824000901",
+      "name": "抽纸.MM",
+      "spec": "100抽*24包",
+      "unit": "提",
+      "category": "纸品",
+      "available": 9,
+      "vendor": "山姆",
+      "location": "仓库",
+      "price": "39.90"
     }
   ]
 }
