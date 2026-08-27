@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T08:57:23.816Z",
+  "updatedAt": "2026-08-27T08:58:35.327Z",
   "items": [
     {
       "code": "0203260827001001",
@@ -330,6 +330,17 @@
       "vendor": "山姆",
       "location": "仓库",
       "price": "39.90"
+    },
+    {
+      "code": "0213260827001201",
+      "name": "湿巾",
+      "spec": "维达",
+      "unit": "包",
+      "category": "纸品",
+      "available": 12,
+      "vendor": "",
+      "location": "仓库",
+      "price": "0.00"
     }
   ],
   "categories": [
