@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T10:34:43.800Z",
+  "updatedAt": "2026-08-27T10:46:48.253Z",
   "items": [
     {
       "code": "0203260827001001",
@@ -270,7 +270,7 @@
       "name": "雨伞",
       "spec": "长柄",
       "unit": "把",
-      "category": "其他",
+      "category": "生活用品",
       "available": 27,
       "vendor": "交接",
       "location": "仓库",
