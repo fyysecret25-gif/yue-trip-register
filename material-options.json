@@ -1,12 +1,12 @@
 {
-  "updatedAt": "2026-08-27T02:58:08.962Z",
+  "updatedAt": "2026-08-27T02:58:32.640Z",
   "items": [
     {
       "code": "0612260826000601",
       "name": "固体胶",
       "spec": "晨光",
       "unit": "个",
-      "category": "其他",
+      "category": "办公用品",
       "available": 6,
       "vendor": "交接",
       "location": "仓库",
@@ -17,7 +17,7 @@
       "name": "胶带",
       "spec": "大号",
       "unit": "卷",
-      "category": "其他",
+      "category": "办公用品",
       "available": 11,
       "vendor": "交接",
       "location": "仓库",
@@ -28,8 +28,30 @@
       "name": "胶带",
       "spec": "小号",
       "unit": "卷",
-      "category": "其他",
+      "category": "办公用品",
       "available": 12,
+      "vendor": "交接",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "code": "0509260826000301",
+      "name": "硒鼓",
+      "spec": "爱斯达",
+      "unit": "个",
+      "category": "办公用品",
+      "available": 5,
+      "vendor": "交接",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "code": "0509260826000302",
+      "name": "硒鼓",
+      "spec": "237",
+      "unit": "个",
+      "category": "办公用品",
+      "available": 3,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -66,28 +88,6 @@
       "vendor": "叶利辉",
       "location": "仓库",
       "price": "20.00"
-    },
-    {
-      "code": "0509260826000301",
-      "name": "硒鼓",
-      "spec": "爱斯达",
-      "unit": "个",
-      "category": "易耗品",
-      "available": 5,
-      "vendor": "交接",
-      "location": "仓库",
-      "price": "0.00"
-    },
-    {
-      "code": "0509260826000302",
-      "name": "硒鼓",
-      "spec": "237",
-      "unit": "个",
-      "category": "易耗品",
-      "available": 3,
-      "vendor": "交接",
-      "location": "仓库",
-      "price": "0.00"
     },
     {
       "code": "0612260824000601",
