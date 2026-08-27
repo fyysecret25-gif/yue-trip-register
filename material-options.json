@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T02:22:04.238Z",
+  "updatedAt": "2026-08-27T02:26:57.089Z",
   "items": [
     {
       "code": "0612260826000601",
@@ -72,7 +72,7 @@
       "name": "硒鼓",
       "spec": "爱斯达",
       "unit": "个",
-      "category": "物料消耗",
+      "category": "易耗品",
       "available": 5,
       "vendor": "交接",
       "location": "仓库",
@@ -83,7 +83,7 @@
       "name": "硒鼓",
       "spec": "237",
       "unit": "个",
-      "category": "物料消耗",
+      "category": "易耗品",
       "available": 3,
       "vendor": "交接",
       "location": "仓库",
