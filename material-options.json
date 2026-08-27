@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T08:57:08.621Z",
+  "updatedAt": "2026-08-27T08:57:23.816Z",
   "items": [
     {
       "code": "0203260827001001",
@@ -118,6 +118,17 @@
       "unit": "本",
       "category": "办公用品",
       "available": 5,
+      "vendor": "交接",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "code": "0203260827000403",
+      "name": "平板电脑充电器",
+      "spec": "华为",
+      "unit": "个",
+      "category": "办公用品",
+      "available": 4,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
