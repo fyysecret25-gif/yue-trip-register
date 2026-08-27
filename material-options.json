@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T10:48:09.770Z",
+  "updatedAt": "2026-08-27T10:48:55.934Z",
   "items": [
     {
       "code": "0203260827001001",
@@ -327,7 +327,7 @@
       "unit": "包",
       "category": "纸品",
       "available": 12,
-      "vendor": "",
+      "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
     }
