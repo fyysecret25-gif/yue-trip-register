@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T02:09:39.015Z",
+  "updatedAt": "2026-08-27T02:10:21.622Z",
   "items": [
     {
       "code": "0612260826000601",
@@ -44,6 +44,17 @@
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
+    },
+    {
+      "code": "0612260825001201",
+      "name": "瓶装水",
+      "spec": "农夫山泉",
+      "unit": "箱",
+      "category": "水饮",
+      "available": 8,
+      "vendor": "叶利辉",
+      "location": "仓库",
+      "price": "35.00"
     },
     {
       "code": "0408260822001001",
@@ -99,17 +110,6 @@
       "vendor": "山姆",
       "location": "仓库",
       "price": "39.90"
-    },
-    {
-      "code": "0612260825001201",
-      "name": "瓶装水",
-      "spec": "农夫山泉",
-      "unit": "箱",
-      "category": "shuiyin",
-      "available": 8,
-      "vendor": "叶利辉",
-      "location": "仓库",
-      "price": "35.00"
     }
   ]
 }
