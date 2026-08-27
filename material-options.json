@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T10:46:48.253Z",
+  "updatedAt": "2026-08-27T10:48:09.770Z",
   "items": [
     {
       "code": "0203260827001001",
@@ -271,7 +271,7 @@
       "spec": "长柄",
       "unit": "把",
       "category": "生活用品",
-      "available": 27,
+      "available": 25,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -282,7 +282,7 @@
       "spec": "农夫山泉",
       "unit": "箱",
       "category": "水饮",
-      "available": 7,
+      "available": 6,
       "vendor": "叶利辉",
       "location": "仓库",
       "price": "35.00"
