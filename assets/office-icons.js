@@ -33,13 +33,14 @@
     inbound: mk('<path d="M12 3v14"/><path d="m8 11 4 4 4-4"/><path d="M4 21h16"/>', 20, 1.7),
     outbound: mk('<path d="M12 21V7"/><path d="m8 11 4-4 4 4"/><path d="M4 3h16"/>', 20, 1.7),
     catalog: mk('<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>', 20, 1.7),
+    winetea: mk('<path d="M8 3h8l-1 8a5 5 0 0 1-10 0L8 3z"/><path d="M12 16v5M8 21h8"/>', 20, 1.7),
     request: mk('<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-1.42-1.42a2 2 0 0 1 2.83-2.83l.79.79"/>', 20, 1.55),
   };
 
   const MODULE_KEYS = new Set(['workplan', 'material', 'vehicle', 'canteen', 'reimburse']);
   const HUB_KEYS = new Set([
     'overview', 'approval', 'register', 'archive', 'staff', 'host', 'utility', 'repair',
-    'invoice', 'advance', 'stock', 'plan', 'inbound', 'outbound', 'catalog', 'request',
+    'invoice', 'advance', 'stock', 'plan', 'inbound', 'outbound', 'catalog', 'winetea', 'request',
   ]);
 
   window.OfficeIcons = {
