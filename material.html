@@ -2,16 +2,17 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="form-version" content="2026-08-31T09:09:54.339Z" />
+  <meta name="form-version" content="2026-08-31T09:14:34.172Z" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#e8e8ed" />
   <meta name="color-scheme" content="light dark" />
   <meta name="description" content="十八局南方公司物资领用申请" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司物资领用申请</title>
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=202608310909" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=202608310909" />
-  <script src="./assets/office-icons.js?v=202608310909" defer></script>
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=202608310914" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=202608310914" />
+  <script src="./assets/office-icons.js?v=202608310914" defer></script>
+  <script src="./assets/office-date.js?v=202608310914"></script>
   <style>
     :root {
       --bg: #e8e8ed;
@@ -176,7 +177,7 @@
       overflow: hidden;
       border-radius: 10px;
     }
-    .split-row .ctrl-box > input,
+    .split-row .ctrl-box > input:not(.form-date-picker),
     .split-row .ctrl-box > select {
       display: block;
       width: 100%;
@@ -192,25 +193,70 @@
       line-height: 48px;
       border-radius: 10px;
     }
-    .split-row .ctrl-box > input[type="date"] {
-      padding-left: 10px;
-      padding-right: 6px;
-      font-size: 14px;
-      line-height: normal;
-    }
-    .split-row .ctrl-box > input[type="date"]::-webkit-datetime-edit,
-    .split-row .ctrl-box > input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-      min-width: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    .split-row .ctrl-box > input[type="date"]::-webkit-calendar-picker-indicator {
-      width: 16px;
-      height: 16px;
-      margin: 0 0 0 2px;
-      padding: 0;
+    .split-row .ctrl-box.form-date-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      background-color: var(--field-bg);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233a3a3c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px 16px;
       cursor: pointer;
-      flex-shrink: 0;
+      transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease), background-color 0.2s var(--ease);
+    }
+    .split-row .ctrl-box.form-date-wrap:hover {
+      background-color: #f0f7ff;
+    }
+    .split-row .ctrl-box.form-date-wrap:focus-within {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+    }
+    .split-row .form-date-text {
+      pointer-events: none;
+      user-select: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      padding: 0 28px 0 12px;
+      line-height: 1.2;
+    }
+    .split-row .form-date-text.is-placeholder {
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .split-row .form-date-picker {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 10px;
+      opacity: 0;
+      cursor: pointer;
+      background: transparent;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .split-row .form-date-picker::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .split-row .form-date-picker:focus {
+      outline: none;
+      border: 0;
+      box-shadow: none;
     }
     .split-row .ctrl-box > select {
       padding-right: 32px;
@@ -322,7 +368,7 @@
         grid-template-rows: 18px 44px;
       }
       .split-row .ctrl-box,
-      .split-row .ctrl-box > input,
+      .split-row .ctrl-box > input:not(.form-date-picker),
       .split-row .ctrl-box > select {
         height: 44px;
         min-height: 44px;
@@ -331,6 +377,9 @@
       }
       .split-row .ctrl-box > select {
         line-height: 44px;
+      }
+      .split-row .form-date-text {
+        font-size: 14px;
       }
     }
 
@@ -429,7 +478,7 @@
       gap: 6px !important;
     }
     body.register-page .split-row.keep-split .ctrl-box,
-    body.register-page .split-row.keep-split .ctrl-box > input,
+    body.register-page .split-row.keep-split .ctrl-box > input:not(.form-date-picker),
     body.register-page .split-row.keep-split .ctrl-box > select {
       height: 48px !important;
       min-height: 48px !important;
@@ -446,7 +495,7 @@
         grid-template-rows: 18px 44px !important;
       }
       body.register-page .split-row.keep-split .ctrl-box,
-      body.register-page .split-row.keep-split .ctrl-box > input,
+      body.register-page .split-row.keep-split .ctrl-box > input:not(.form-date-picker),
       body.register-page .split-row.keep-split .ctrl-box > select {
         height: 44px !important;
         min-height: 44px !important;
@@ -504,6 +553,20 @@
       --seg-pill-ink: #fff;
       --seg-pill-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     }
+    :root[data-office-theme="dark"] .split-row .ctrl-box.form-date-wrap {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23aeaeb2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E");
+    }
+    :root[data-office-theme="dark"] .split-row .ctrl-box.form-date-wrap:hover {
+      background-color: #35353c;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-office-theme="light"]) .split-row .ctrl-box.form-date-wrap {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23aeaeb2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E");
+      }
+      :root:not([data-office-theme="light"]) .split-row .ctrl-box.form-date-wrap:hover {
+        background-color: #35353c;
+      }
+    }
   </style>
 </head>
 <body class="register-page">
@@ -545,8 +608,9 @@
           <div class="section-title">基本信息</div>
           <div class="split-row keep-split">
             <label><span class="field-label req">申请日期</span>
-              <span class="ctrl-box">
-                <input id="applyDate" type="date" required lang="en-CA" />
+              <span class="ctrl-box form-date-wrap" title="点击选择日期">
+                <span class="form-date-text" id="applyDateText"></span>
+                <input id="applyDate" class="form-date-picker" type="date" required aria-label="申请日期" />
               </span>
             </label>
             <label><span class="field-label req">申请部门</span>
@@ -620,7 +684,7 @@
   </div>
 
   </div>
-  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"skuKey":"安全防护用品:::手持干粉灭火器:::4KG","code":"0699260831000901","name":"手持干粉灭火器","spec":"4KG","unit":"个","category":"安全防护用品","available":9,"vendor":"京东","location":"仓库","price":"61.78"},{"skuKey":"办公用品:::笔记本:::小型","code":"0203260827001001","name":"笔记本","spec":"小型","unit":"本","category":"办公用品","available":10,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::便签:::便签","code":"0203260827004001","name":"便签","spec":"便签","unit":"包","category":"办公用品","available":40,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::电池:::5号","code":"0203260827000801","name":"电池","spec":"5号","unit":"节","category":"办公用品","available":8,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::订书针:::订书针","code":"0203260826000901","name":"订书针","spec":"订书针","unit":"盒","category":"办公用品","available":9,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::固体胶:::晨光","code":"0612260826000601","name":"固体胶","spec":"晨光","unit":"个","category":"办公用品","available":6,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::回形针:::回形针","code":"0203260827000302","name":"回形针","spec":"回形针","unit":"盒","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::胶带:::大号","code":"0612260826001101","name":"胶带","spec":"大号","unit":"卷","category":"办公用品","available":10,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::胶带:::小号","code":"0612260826001201","name":"胶带","spec":"小号","unit":"卷","category":"办公用品","available":12,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::快干印台:::快干印台","code":"0203260827000101","name":"快干印台","spec":"快干印台","unit":"盒","category":"办公用品","available":1,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::皮质笔记本:::皮质","code":"0203260827000501","name":"皮质笔记本","spec":"皮质","unit":"本","category":"办公用品","available":5,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::平板电脑充电器:::华为","code":"0203260827000403","name":"平板电脑充电器","spec":"华为","unit":"个","category":"办公用品","available":4,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::起钉器:::起钉器","code":"0203260827000301","name":"起钉器","spec":"起钉器","unit":"个","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::双面胶:::双面胶","code":"0612260827001801","name":"双面胶","spec":"双面胶","unit":"卷","category":"办公用品","available":18,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::文件夹:::塑料","code":"0203260827001801","name":"文件夹","spec":"塑料","unit":"个","category":"办公用品","available":18,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::硒鼓:::237","code":"0509260826000302","name":"硒鼓","spec":"237","unit":"个","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::硒鼓:::爱斯达","code":"0509260826000301","name":"硒鼓","spec":"爱斯达","unit":"个","category":"办公用品","available":5,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::橡皮:::橡皮","code":"0203260826000902","name":"橡皮","spec":"橡皮","unit":"块","category":"办公用品","available":9,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::长尾夹.大:::大号","code":"0612260827001501","name":"长尾夹.大","spec":"大号","unit":"个","category":"办公用品","available":15,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::长尾夹.小:::小号","code":"0612260827000501","name":"长尾夹.小","spec":"小号","unit":"个","category":"办公用品","available":5,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::长尾夹.中:::中号","code":"0612260827000701","name":"长尾夹.中","spec":"中号","unit":"个","category":"办公用品","available":7,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中心组学习本:::中心组学习本","code":"0203260827002401","name":"中心组学习本","spec":"中心组学习本","unit":"本","category":"办公用品","available":24,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中性笔:::黑","code":"0203260827000401","name":"中性笔","spec":"黑","unit":"支","category":"办公用品","available":4,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中性笔:::红","code":"0203260827000402","name":"中性笔","spec":"红","unit":"支","category":"办公用品","available":4,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中性笔笔芯:::黑","code":"0203260827000303","name":"中性笔笔芯","spec":"黑","unit":"盒","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"固资:::奥克斯（AUX）商用消毒柜智能定时紫外线烘:::XDG-SY810-B26","code":"0101260830000101","name":"奥克斯（AUX）商用消毒柜智能定时紫外线烘","spec":"XDG-SY810-B26","unit":"台","category":"固资","available":1,"vendor":"肇庆京东盛甲贸易","location":"仓库","price":"1751.33"},{"skuKey":"固资:::得力（deli）保险柜家用型保险箱指纹密码办公财务:::AE631-Z","code":"0101260830000201","name":"得力（deli）保险柜家用型保险箱指纹密码办公财务","spec":"AE631-Z","unit":"台","category":"固资","available":2,"vendor":"北京京东世纪信息技术","location":"仓库","price":"423.89"},{"skuKey":"生活用品:::安利优生活浓缩:::1L","code":"0612260828000601","name":"安利优生活浓缩","spec":"1L","unit":"瓶","category":"生活用品","available":2,"vendor":"安利中国日用品","location":"仓库","price":"42.00"},{"skuKey":"生活用品:::抽水器:::电动","code":"0699260828001001","name":"抽水器","spec":"电动","unit":"个","category":"生活用品","available":7,"vendor":"京东","location":"仓库","price":"29.44"},{"skuKey":"生活用品:::杀蟑饵剂:::拜灭士","code":"0612260828001001","name":"杀蟑饵剂","spec":"拜灭士","unit":"盒","category":"生活用品","available":10,"vendor":"广州沃尔玛百货","location":"仓库","price":"39.90"},{"skuKey":"生活用品:::雨伞:::长柄","code":"0612260826002801","name":"雨伞","spec":"长柄","unit":"把","category":"生活用品","available":25,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"水饮:::瓶装水:::农夫山泉","code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","category":"水饮","available":3,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"skuKey":"水饮:::桶装水:::19L","code":"0408260827000801","name":"桶装水","spec":"19L","unit":"桶","category":"水饮","available":7,"vendor":"叶利辉","location":"仓库","price":"0.00"},{"skuKey":"纸品:::抽纸.MM:::100抽","code":"0612260824000901","name":"抽纸.MM","spec":"100抽","unit":"包","category":"纸品","available":192,"vendor":"山姆","location":"仓库","price":"1.67"},{"skuKey":"纸品:::湿巾:::维达","code":"0213260827001201","name":"湿巾","spec":"维达","unit":"包","category":"纸品","available":12,"vendor":"交接","location":"仓库","price":"0.00"}],"categories":["水饮","纸品","办公用品","固资","其他","电脑配件","生活用品","安全防护用品"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json?v=202608310909","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-31T09:09:54.339Z"};</script>
+  <script>window.__MATERIAL_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"applyOptions":[{"skuKey":"安全防护用品:::手持干粉灭火器:::4KG","code":"0699260831000901","name":"手持干粉灭火器","spec":"4KG","unit":"个","category":"安全防护用品","available":9,"vendor":"京东","location":"仓库","price":"61.78"},{"skuKey":"办公用品:::笔记本:::小型","code":"0203260827001001","name":"笔记本","spec":"小型","unit":"本","category":"办公用品","available":10,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::便签:::便签","code":"0203260827004001","name":"便签","spec":"便签","unit":"包","category":"办公用品","available":40,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::电池:::5号","code":"0203260827000801","name":"电池","spec":"5号","unit":"节","category":"办公用品","available":8,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::订书针:::订书针","code":"0203260826000901","name":"订书针","spec":"订书针","unit":"盒","category":"办公用品","available":9,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::固体胶:::晨光","code":"0612260826000601","name":"固体胶","spec":"晨光","unit":"个","category":"办公用品","available":6,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::回形针:::回形针","code":"0203260827000302","name":"回形针","spec":"回形针","unit":"盒","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::胶带:::大号","code":"0612260826001101","name":"胶带","spec":"大号","unit":"卷","category":"办公用品","available":10,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::胶带:::小号","code":"0612260826001201","name":"胶带","spec":"小号","unit":"卷","category":"办公用品","available":12,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::快干印台:::快干印台","code":"0203260827000101","name":"快干印台","spec":"快干印台","unit":"盒","category":"办公用品","available":1,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::皮质笔记本:::皮质","code":"0203260827000501","name":"皮质笔记本","spec":"皮质","unit":"本","category":"办公用品","available":5,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::平板电脑充电器:::华为","code":"0203260827000403","name":"平板电脑充电器","spec":"华为","unit":"个","category":"办公用品","available":4,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::起钉器:::起钉器","code":"0203260827000301","name":"起钉器","spec":"起钉器","unit":"个","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::双面胶:::双面胶","code":"0612260827001801","name":"双面胶","spec":"双面胶","unit":"卷","category":"办公用品","available":18,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::文件夹:::塑料","code":"0203260827001801","name":"文件夹","spec":"塑料","unit":"个","category":"办公用品","available":18,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::硒鼓:::237","code":"0509260826000302","name":"硒鼓","spec":"237","unit":"个","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::硒鼓:::爱斯达","code":"0509260826000301","name":"硒鼓","spec":"爱斯达","unit":"个","category":"办公用品","available":5,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::橡皮:::橡皮","code":"0203260826000902","name":"橡皮","spec":"橡皮","unit":"块","category":"办公用品","available":9,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::长尾夹.大:::大号","code":"0612260827001501","name":"长尾夹.大","spec":"大号","unit":"个","category":"办公用品","available":15,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::长尾夹.小:::小号","code":"0612260827000501","name":"长尾夹.小","spec":"小号","unit":"个","category":"办公用品","available":5,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::长尾夹.中:::中号","code":"0612260827000701","name":"长尾夹.中","spec":"中号","unit":"个","category":"办公用品","available":7,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中心组学习本:::中心组学习本","code":"0203260827002401","name":"中心组学习本","spec":"中心组学习本","unit":"本","category":"办公用品","available":24,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中性笔:::黑","code":"0203260827000401","name":"中性笔","spec":"黑","unit":"支","category":"办公用品","available":4,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中性笔:::红","code":"0203260827000402","name":"中性笔","spec":"红","unit":"支","category":"办公用品","available":4,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"办公用品:::中性笔笔芯:::黑","code":"0203260827000303","name":"中性笔笔芯","spec":"黑","unit":"盒","category":"办公用品","available":3,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"固资:::奥克斯（AUX）商用消毒柜智能定时紫外线烘:::XDG-SY810-B26","code":"0101260830000101","name":"奥克斯（AUX）商用消毒柜智能定时紫外线烘","spec":"XDG-SY810-B26","unit":"台","category":"固资","available":1,"vendor":"肇庆京东盛甲贸易","location":"仓库","price":"1751.33"},{"skuKey":"固资:::得力（deli）保险柜家用型保险箱指纹密码办公财务:::AE631-Z","code":"0101260830000201","name":"得力（deli）保险柜家用型保险箱指纹密码办公财务","spec":"AE631-Z","unit":"台","category":"固资","available":2,"vendor":"北京京东世纪信息技术","location":"仓库","price":"423.89"},{"skuKey":"生活用品:::安利优生活浓缩:::1L","code":"0612260828000601","name":"安利优生活浓缩","spec":"1L","unit":"瓶","category":"生活用品","available":2,"vendor":"安利中国日用品","location":"仓库","price":"42.00"},{"skuKey":"生活用品:::抽水器:::电动","code":"0699260828001001","name":"抽水器","spec":"电动","unit":"个","category":"生活用品","available":7,"vendor":"京东","location":"仓库","price":"29.44"},{"skuKey":"生活用品:::杀蟑饵剂:::拜灭士","code":"0612260828001001","name":"杀蟑饵剂","spec":"拜灭士","unit":"盒","category":"生活用品","available":10,"vendor":"广州沃尔玛百货","location":"仓库","price":"39.90"},{"skuKey":"生活用品:::雨伞:::长柄","code":"0612260826002801","name":"雨伞","spec":"长柄","unit":"把","category":"生活用品","available":25,"vendor":"交接","location":"仓库","price":"0.00"},{"skuKey":"水饮:::瓶装水:::农夫山泉","code":"0612260825001201","name":"瓶装水","spec":"农夫山泉","unit":"箱","category":"水饮","available":3,"vendor":"叶利辉","location":"仓库","price":"35.00"},{"skuKey":"水饮:::桶装水:::19L","code":"0408260827000801","name":"桶装水","spec":"19L","unit":"桶","category":"水饮","available":7,"vendor":"叶利辉","location":"仓库","price":"0.00"},{"skuKey":"纸品:::抽纸.MM:::100抽","code":"0612260824000901","name":"抽纸.MM","spec":"100抽","unit":"包","category":"纸品","available":192,"vendor":"山姆","location":"仓库","price":"1.67"},{"skuKey":"纸品:::湿巾:::维达","code":"0213260827001201","name":"湿巾","spec":"维达","unit":"包","category":"纸品","available":12,"vendor":"交接","location":"仓库","price":"0.00"}],"categories":["水饮","纸品","办公用品","固资","其他","电脑配件","生活用品","安全防护用品"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"}],"optionsUrl":"material-options.json?v=202608310914","cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-08-31T09:14:34.172Z"};</script>
 
 
   <script>
@@ -634,6 +698,49 @@
       ? { baseUrl: String(PUB.cloudQueue.baseUrl).replace(/\/$/, '') }
       : null;
     const $ = (id) => document.getElementById(id);
+
+    function todayIso() {
+      if (typeof window.officeToIsoDate === 'function') return window.officeToIsoDate(new Date());
+      const d = new Date();
+      const p = (n) => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+    }
+    function fmtDateZh(v) {
+      if (!v) return '—';
+      if (typeof window.officeFormatDateZh === 'function') {
+        const s = window.officeFormatDateZh(v);
+        return s || '—';
+      }
+      const m = String(v).match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (!m) return String(v);
+      return `${m[1]}年${Number(m[2])}月${Number(m[3])}日`;
+    }
+    function syncApplyDateText() {
+      const input = $('applyDate');
+      const text = $('applyDateText');
+      if (!input || !text) return;
+      const iso = String(input.value || '').trim();
+      text.textContent = iso ? fmtDateZh(iso) : '请选择日期';
+      text.classList.toggle('is-placeholder', !iso);
+    }
+    function bindApplyDatePicker() {
+      const input = $('applyDate');
+      const wrap = input?.closest('.form-date-wrap');
+      if (!input) return;
+      if (!input.value) input.value = todayIso();
+      syncApplyDateText();
+      input.addEventListener('change', syncApplyDateText);
+      input.addEventListener('input', syncApplyDateText);
+      wrap?.addEventListener('click', (ev) => {
+        if (ev.target === input) return;
+        try {
+          if (typeof input.showPicker === 'function') input.showPicker();
+          else input.focus();
+        } catch {
+          input.focus();
+        }
+      });
+    }
 
     let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('material_request_code') || '').trim();
     let accessName = localStorage.getItem('material_request_name') || '';
@@ -1258,7 +1365,7 @@
       el.innerHTML = `
         <p><span class="badge ${esc(info.status)}">${esc(materialStatusLabel(info.status))}</span></p>
         <p><strong>编号：</strong>${esc(info.id)}</p>
-        <p><strong>申请日期：</strong>${esc(info.applyDate || '—')}</p>
+        <p><strong>申请日期：</strong>${esc(fmtDateZh(info.applyDate))}</p>
         <p><strong>申请部门：</strong>${esc(info.applyDept || '—')}</p>
         <p><strong>物资：</strong>${esc(itemsSummary(info.items))}</p>
         ${info.purpose ? `<p><strong>用途：</strong>${esc(info.purpose)}</p>` : ''}
@@ -1279,7 +1386,7 @@
             <span>${esc(r.id)}</span>
             <span class="badge ${esc(r.status)}">${esc(materialStatusLabel(r.status))}</span>
           </div>
-          <div class="row2">${esc(r.applyDate || '—')}${r.applyDept ? ` · ${esc(r.applyDept)}` : ''} · ${esc(itemsSummary(r.items).slice(0, 48))}${itemsSummary(r.items).length > 48 ? '…' : ''}</div>
+          <div class="row2">${esc(fmtDateZh(r.applyDate))}${r.applyDept ? ` · ${esc(r.applyDept)}` : ''} · ${esc(itemsSummary(r.items).slice(0, 48))}${itemsSummary(r.items).length > 48 ? '…' : ''}</div>
         </button>`).join('');
       box.querySelectorAll('.mine-item').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -1516,8 +1623,7 @@
     $('applyDept')?.addEventListener('change', updateSubmitButton);
 
     async function boot() {
-      const applyDateEl = $('applyDate');
-      if (applyDateEl) applyDateEl.value = new Date().toISOString().slice(0, 10);
+      bindApplyDatePicker();
       await loadMeta();
       await loadApplyOptions();
       updateSubmitButton();
