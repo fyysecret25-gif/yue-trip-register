@@ -1162,9 +1162,12 @@ body.register-page button.primary,
     grid-template-columns: 1fr;
   }
 
-  body.register-page .split-row > label,
+  body.register-page .split-row:not(.keep-split) > label,
   body.register-page .row2 > label {
     grid-template-rows: auto auto;
+  }
+  body.register-page .split-row.keep-split > label {
+    grid-template-rows: 18px 44px;
   }
 
   body.register-page .tabs {
