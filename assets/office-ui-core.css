@@ -74,9 +74,13 @@ html {
   }
 
   .hub-page,
-  .ledger-hub-page,
-  .ledger-editor-wrap {
+  .ledger-hub-page {
     animation: office-page-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* backwards：结束后不保留 transform，避免把子孙 position:fixed 锁进错位坐标系 */
+  .ledger-editor-wrap {
+    animation: office-page-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) backwards;
   }
 }
 
@@ -110,6 +114,12 @@ html {
 
   .hub-skeleton-line {
     animation: none !important;
+  }
+
+  .office-pressing,
+  button:not(:disabled):active {
+    transform: none !important;
+    filter: none !important;
   }
 }
 
@@ -220,6 +230,52 @@ textarea:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
+}
+
+/* 全局按下反馈：缩小 + 稍变暗（JS 加 .office-pressing 保持约 200ms） */
+.office-pressing {
+  filter: brightness(0.92);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .office-pressing {
+    transform: scale(0.97) !important;
+    transition-duration: 0.12s !important;
+  }
+
+  .hub-card.office-pressing,
+  .ios-widget-card.office-pressing {
+    transform: scale(0.98) !important;
+  }
+
+  button:not(:disabled):active,
+  .hub-btn:active,
+  .ledger-btn:active,
+  .ledger-btn-ghost:active,
+  .ledger-add-inline:active,
+  .ledger-del:active,
+  .ledger-inv-action:active,
+  .ledger-filter-clear-all:active,
+  .ledger-link-inv:active,
+  .ledger-unlink-inv:active,
+  .stock-widget-btn:active,
+  .stock-tile-apply:not(:disabled):active,
+  .material-flow-step:active,
+  .office-mod-link:active,
+  .chrome-btn:active,
+  .chrome-back-btn:active,
+  .office-ios-dialog-btn:active,
+  .office-toast-action:active,
+  .office-cmd-list [role="option"]:active {
+    transform: scale(0.97);
+    filter: brightness(0.92);
+  }
+
+  .hub-card:active,
+  .ios-widget-card:not(.is-skeleton):active {
+    transform: scale(0.98);
+    filter: brightness(0.92);
+  }
 }
 
 /* 顶栏 */
