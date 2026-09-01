@@ -1317,12 +1317,47 @@ body.register-page button.primary,
     box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
   }
 
-  /* 照片下拉须高于固定提交栏，否则「拍照」点不到 */
+  /* iPhone / 微信：照片改为底部操作表，盖住固定提交栏，避免「拍照」点不到 */
   body.register-page .photo-add-wrap.menu-open {
-    z-index: 120;
+    z-index: 230;
   }
   body.register-page .photo-menu {
-    z-index: 120;
+    z-index: 230;
+  }
+  body.register-page .photo-menu-mask {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    background: rgba(15, 23, 32, 0.38);
+    -webkit-tap-highlight-color: transparent;
+  }
+  body.register-page .photo-menu-mask.is-on {
+    display: block;
+  }
+  body.register-page .photo-menu.show.is-sheet {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    min-width: 0;
+    top: auto;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 230;
+    border-radius: 14px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  body.register-page .photo-menu.show.is-sheet .photo-menu-btn {
+    min-height: 48px;
+    padding: 14px 16px;
+    font-size: 16px;
+    text-align: center;
+  }
+  body.photo-menu-open.register-page form > #btn,
+  body.photo-menu-open.register-page form > #btnSubmit {
+    pointer-events: none;
   }
 
   body.register-page form > #btnSubmit:disabled {
