@@ -1299,7 +1299,8 @@ body.register-page button.primary,
 
   body.register-page form:has(#btn:not([disabled])),
   body.register-page form:has(#btnSubmit:not([disabled])) {
-    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+    /* 照片菜单向上展开时仍留出触控余量（iPhone 安全区 + 提交栏） */
+    padding-bottom: calc(96px + env(safe-area-inset-bottom));
   }
 
   body.register-page form > #btn,
@@ -1314,6 +1315,14 @@ body.register-page button.primary,
     padding: 16px;
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
     box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  /* 照片下拉须高于固定提交栏，否则「拍照」点不到 */
+  body.register-page .photo-add-wrap.menu-open {
+    z-index: 120;
+  }
+  body.register-page .photo-menu {
+    z-index: 120;
   }
 
   body.register-page form > #btnSubmit:disabled {
