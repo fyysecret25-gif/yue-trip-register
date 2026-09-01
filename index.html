@@ -9,11 +9,11 @@
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css?v=64" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=64" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=64" />
-  <script src="./assets/office-icons.js?v=64" defer></script>
-  <script src="./assets/office-date.js?v=64" defer></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=65" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=65" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=65" />
+  <script src="./assets/office-icons.js?v=65" defer></script>
+  <script src="./assets/office-date.js?v=65" defer></script>
   <script src="./assets/office-escape.js" defer></script>
   <style>
     :root {
@@ -273,6 +273,10 @@
       position: relative;
       width: 100%;
     }
+    /* 打开菜单时抬高层级，避免被底部固定「提交」挡住（iPhone / 微信） */
+    .photo-add-wrap.menu-open {
+      z-index: 120;
+    }
     .photo-add-box {
       width: 100%;
       height: calc(var(--inline-input-h) * 2);
@@ -327,15 +331,19 @@
       position: absolute;
       left: 0;
       top: calc(100% + 4px);
-      z-index: 12;
+      z-index: 120;
       background: var(--card);
       border: 1px solid var(--line);
       border-radius: 10px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
       min-width: 100%;
       overflow: hidden;
     }
     .photo-menu.show { display: grid; }
+    .photo-menu.open-up {
+      top: auto;
+      bottom: calc(100% + 4px);
+    }
     .photo-menu-btn {
       appearance: none;
       border: 0;
@@ -970,7 +978,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-01T04:50:50.415Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-01T04:56:22.833Z"};</script>
 
 
   <script>
@@ -1477,8 +1485,29 @@
 
     function closePhotoMenus(except) {
       document.querySelectorAll('.photo-menu.show').forEach((menu) => {
-        if (menu !== except) menu.classList.remove('show');
+        if (menu === except) return;
+        menu.classList.remove('show');
+        menu.classList.remove('open-up');
+        const wrap = menu.closest('.photo-add-wrap');
+        if (wrap) wrap.classList.remove('menu-open');
       });
+    }
+    function placePhotoMenu(menu) {
+      if (!menu) return;
+      const wrap = menu.closest('.photo-add-wrap');
+      if (wrap) wrap.classList.add('menu-open');
+      menu.classList.remove('open-up');
+      menu.classList.add('show');
+      // 底部固定提交栏约占 76px + 安全区；空间不足则向上展开
+      const submitReserve = 96;
+      const anchor = wrap || menu.parentElement;
+      const rect = anchor.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom - submitReserve;
+      const need = 108;
+      if (spaceBelow < need) menu.classList.add('open-up');
+      try {
+        menu.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      } catch (e) { /* ignore */ }
     }
     function bindPhotoPicker(boxId, menuId) {
       $(boxId).addEventListener('click', (e) => {
@@ -1486,7 +1515,7 @@
         const menu = $(menuId);
         const open = menu.classList.contains('show');
         closePhotoMenus();
-        if (!open) menu.classList.add('show');
+        if (!open) placePhotoMenu(menu);
       });
     }
     bindPhotoPicker('photoDepartBox', 'photoDepartMenu');
