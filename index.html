@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <script>document.documentElement.classList.toggle('is-android', /Android/i.test(navigator.userAgent || ''));</script>
   <meta name="theme-color" content="#f5f5f7" />
   <meta name="color-scheme" content="light" />
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css" />
-  <script src="./assets/office-icons.js" defer></script>
-  <script src="./assets/office-date.js" defer></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=63" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=63" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=63" />
+  <script src="./assets/office-icons.js?v=63" defer></script>
+  <script src="./assets/office-date.js?v=63"></script>
   <script src="./assets/office-escape.js" defer></script>
   <style>
     :root {
@@ -110,8 +111,16 @@
     .split-row,
     .row2 {
       display: grid;
-      grid-template-columns: 6fr 4fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 12px;
+      align-items: stretch;
+    }
+    .split-row.keep-split,
+    .row2.keep-split,
+    .photo-row.keep-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
       align-items: stretch;
     }
     .split-row > label,
@@ -121,22 +130,110 @@
       gap: 6px;
       min-width: 0;
       margin: 0;
+      overflow: hidden;
     }
-    .split-row > label > input:not([type="file"]),
+    .split-row > label > input:not([type="file"]):not(.form-date-picker):not(.form-time-picker),
     .split-row > label > select,
     .row2 > label > input,
     .row2 > label > select {
       height: 44px;
       min-height: 44px;
-      padding: 10px 12px;
+      min-width: 0;
+      max-width: 100%;
+      padding: 10px 8px;
       box-sizing: border-box;
     }
     .split-row.mileage-row-short {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr) !important;
+    }
+    .ctrl-box {
+      display: block;
+      height: 44px;
+      min-height: 44px;
+      max-height: 44px;
+      min-width: 0;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+    .ctrl-box.form-date-wrap,
+    .ctrl-box.form-time-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      background-color: #fbfcfe;
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 15px 15px;
+      cursor: pointer;
+    }
+    .ctrl-box.form-date-wrap {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E");
+    }
+    .ctrl-box.form-time-wrap {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E");
+    }
+    .ctrl-box.form-date-wrap:focus-within,
+    .ctrl-box.form-time-wrap:focus-within {
+      outline: 2px solid rgba(31, 78, 121, 0.25);
+      border-color: var(--brand2);
+      background-color: #fff;
+    }
+    .form-date-text,
+    .form-time-text {
+      pointer-events: none;
+      user-select: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 28px 0 10px;
+      line-height: 1.2;
+    }
+    .form-date-text.is-placeholder,
+    .form-time-text.is-placeholder {
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .form-date-picker,
+    .form-time-picker {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 10px;
+      opacity: 0;
+      cursor: pointer;
+      min-height: 0 !important;
+      min-width: 0;
+      font-size: 16px;
+    }
+    .form-date-picker::-webkit-calendar-picker-indicator,
+    .form-time-picker::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .form-date-picker:focus,
+    .form-time-picker:focus {
+      outline: none;
+      box-shadow: none;
+      border: 0;
+      background: transparent;
     }
     .field-inline {
       display: grid;
-      grid-template-columns: 3.5em 1fr;
+      grid-template-columns: 3.6em minmax(0, 1fr);
       gap: 8px 10px;
       align-items: center;
       min-width: 0;
@@ -158,7 +255,7 @@
     }
     .photo-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 10px;
       align-items: start;
     }
@@ -610,21 +707,71 @@
     @media (max-width: 640px) {
       h1 { font-size: 22px; }
       .brand { font-size: 12px; }
-      form, .panel-card, .gate-card { padding: 16px 14px 18px; }
+      form, .panel-card, .gate-card { padding: 14px 12px 16px; }
       .preview { max-height: 180px; }
-      .split-row,
-      .row2 {
+      .split-row:not(.keep-split),
+      .row2:not(.keep-split) {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 10px;
       }
-      .split-row > label,
-      .row2 > label {
-        grid-template-rows: auto auto;
+      .split-row.keep-split,
+      .row2.keep-split,
+      .photo-row.keep-split {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 8px !important;
       }
-      .photo-row {
-        grid-template-columns: 1fr;
-        gap: 12px;
+      .split-row.keep-split.mileage-row-short {
+        grid-template-columns: minmax(0, 1fr) !important;
       }
+      .split-row.keep-split > label,
+      .row2.keep-split > label {
+        grid-template-rows: 18px 44px;
+        gap: 4px;
+      }
+      .field-label {
+        font-size: 12px;
+        height: 18px;
+        line-height: 18px;
+      }
+      .form-date-text,
+      .form-time-text {
+        font-size: 14px;
+        padding: 0 24px 0 8px;
+      }
+      .photo-row.keep-split {
+        gap: 8px !important;
+      }
+      .user-bar.show {
+        flex-wrap: nowrap;
+      }
+      .user-bar .name {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .user-actions {
+        flex-shrink: 0;
+      }
+    }
+    html.is-android {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    html.is-android .split-row.keep-split,
+    html.is-android .row2.keep-split,
+    html.is-android .photo-row.keep-split {
+      gap: 8px;
+    }
+    html.is-android input:not(.form-date-picker):not(.form-time-picker),
+    html.is-android select {
+      font-size: 15px;
+    }
+    html.is-android .form-date-text,
+    html.is-android .form-time-text {
+      font-size: 13px;
     }
   </style>
 </head>
@@ -646,7 +793,7 @@
     <div class="user-bar" id="userBar">
       <span class="name" id="userGreeting">您好</span>
       <div class="user-actions">
-        <button type="button" class="btn-change-code" id="btnChangeCode">修改口令</button>
+        <button type="button" class="btn-change-code" id="btnChangeCode">改口令</button>
         <button type="button" class="btn-logout" id="btnLogout">退出</button>
       </div>
     </div>
@@ -665,9 +812,12 @@
     <div class="panel active" id="panelReg">
     <form id="form" autocomplete="on">
       <div class="split-6-4">
-        <div class="split-row">
+        <div class="split-row keep-split">
           <label><span class="field-label req">日期</span>
-            <input type="date" name="date" id="date" required />
+            <span class="ctrl-box form-date-wrap" title="点击选择日期">
+              <span class="form-date-text" id="dateText"></span>
+              <input type="date" class="form-date-picker" name="date" id="date" required aria-label="日期" />
+            </span>
           </label>
           <label><span class="field-label req">车牌号码</span>
             <select name="plate" id="plate" required>
@@ -675,32 +825,38 @@
             </select>
           </label>
         </div>
-        <div class="split-row">
+        <div class="split-row keep-split">
           <label><span class="field-label">出发时间</span>
-            <input type="time" name="departTime" id="departTime" />
+            <span class="ctrl-box form-time-wrap" title="点击选择时间">
+              <span class="form-time-text is-placeholder" id="departTimeText">选时间</span>
+              <input type="time" class="form-time-picker" name="departTime" id="departTime" aria-label="出发时间" />
+            </span>
           </label>
-          <label><span class="field-label req">出发表显里程</span>
+          <label><span class="field-label req">出发表显</span>
             <input type="number" name="departOdometer" id="departOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" />
           </label>
         </div>
-        <div class="split-row">
+        <div class="split-row keep-split">
           <label><span class="field-label">返回时间</span>
-            <input type="time" name="returnTime" id="returnTime" />
+            <span class="ctrl-box form-time-wrap" title="点击选择时间">
+              <span class="form-time-text is-placeholder" id="returnTimeText">选时间</span>
+              <input type="time" class="form-time-picker" name="returnTime" id="returnTime" aria-label="返回时间" />
+            </span>
           </label>
-          <label id="returnOdoWrap"><span class="field-label req" id="returnOdoReq">返程表显里程</span>
+          <label id="returnOdoWrap"><span class="field-label req" id="returnOdoReq">返程表显</span>
             <input type="number" name="returnOdometer" id="returnOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" />
           </label>
         </div>
-        <div class="split-row">
-          <label><span class="field-label">出车总时长</span>
+        <div class="split-row keep-split">
+          <label><span class="field-label">总时长</span>
             <input id="durationText" readonly tabindex="-1" placeholder="自动计算" />
           </label>
-          <label id="mileageWrap"><span class="field-label">行驶里程（公里）</span>
+          <label id="mileageWrap"><span class="field-label">行驶里程</span>
             <input type="number" name="mileage" id="mileage" readonly tabindex="-1" placeholder="自动计算" />
           </label>
         </div>
       </div>
-      <div class="row2">
+      <div class="row2 keep-split">
         <label><span class="field-label req">司机</span>
           <input name="driver" id="driver" required maxlength="40" placeholder="姓名" />
         </label>
@@ -727,7 +883,7 @@
         <span class="inline-label req" id="destReq">目的地</span>
         <input name="destination" id="destination" required maxlength="200" placeholder="如：机场；短程可不填" />
       </div>
-      <div class="photo-row" id="photoRow">
+      <div class="photo-row keep-split" id="photoRow">
         <div class="photo-field" id="photoBlock">
           <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
           <div class="photo-add-wrap">
@@ -804,7 +960,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-01T03:18:37.469Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-01T03:48:44.799Z"};</script>
 
 
   <script>
@@ -817,10 +973,55 @@
     const CLOUD = IS_PUBLIC && PUB.cloudQueue?.enabled && PUB.cloudQueue?.baseUrl
       ? { baseUrl: String(PUB.cloudQueue.baseUrl).replace(/\/$/, '') }
       : null;
+    document.documentElement.classList.toggle('is-android', /Android/i.test(navigator.userAgent || ''));
     const $ = (id) => document.getElementById(id);
     const today = new Date();
     const ymd = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
     $('date').value = ymd;
+
+    function fmtDateZh(iso) {
+      if (typeof window.officeFormatDateZh === 'function' && iso) return window.officeFormatDateZh(iso);
+      const m = String(iso || '').match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      if (!m) return '';
+      return `${Number(m[1])}年${Number(m[2])}月${Number(m[3])}日`;
+    }
+    function syncPickerText(inputId, textId, kind) {
+      const input = $(inputId);
+      const text = $(textId);
+      if (!input || !text) return;
+      const v = String(input.value || '').trim();
+      if (kind === 'date') {
+        text.textContent = v ? fmtDateZh(v) : '请选择日期';
+      } else {
+        text.textContent = v || '选时间';
+      }
+      text.classList.toggle('is-placeholder', !v);
+    }
+    function bindMaskedPicker(inputId, textId, kind) {
+      const input = $(inputId);
+      const wrap = input?.closest('.ctrl-box');
+      if (!input) return;
+      syncPickerText(inputId, textId, kind);
+      input.addEventListener('change', () => syncPickerText(inputId, textId, kind));
+      input.addEventListener('input', () => syncPickerText(inputId, textId, kind));
+      wrap?.addEventListener('click', (ev) => {
+        if (ev.target === input) return;
+        try {
+          if (typeof input.showPicker === 'function') input.showPicker();
+          else input.focus();
+        } catch {
+          input.focus();
+        }
+      });
+    }
+    function syncAllPickerTexts() {
+      syncPickerText('date', 'dateText', 'date');
+      syncPickerText('departTime', 'departTimeText', 'time');
+      syncPickerText('returnTime', 'returnTimeText', 'time');
+    }
+    bindMaskedPicker('date', 'dateText', 'date');
+    bindMaskedPicker('departTime', 'departTimeText', 'time');
+    bindMaskedPicker('returnTime', 'returnTimeText', 'time');
 
     const savedDriver = localStorage.getItem('trip_driver') || '';
     if (savedDriver) $('driver').value = savedDriver;
@@ -1498,6 +1699,7 @@
         $('destination').value = '';
         $('departTime').value = '';
         $('returnTime').value = '';
+        syncAllPickerTexts();
         $('durationText').value = '';
         $('departOdometer').value = '';
         $('returnOdometer').value = '';

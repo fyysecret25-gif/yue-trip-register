@@ -1139,35 +1139,64 @@ body.register-page button.primary,
   }
 
   body.register-page .user-bar {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 8px;
     padding: 10px 12px;
   }
 
   body.register-page .user-bar .name {
-    flex: 1 1 100%;
+    flex: 1 1 auto;
+    min-width: 0;
     font-size: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   body.register-page .user-actions {
-    width: 100%;
+    width: auto;
+    flex-shrink: 0;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 6px;
   }
 
   body.register-page .split-row:not(.keep-split),
-  body.register-page .row2,
-  body.register-page .photo-row,
+  body.register-page .row2:not(.keep-split),
+  body.register-page .photo-row:not(.keep-split),
   body.register-page .pick-row {
     grid-template-columns: 1fr;
   }
 
   body.register-page .split-row:not(.keep-split) > label,
-  body.register-page .row2 > label {
+  body.register-page .row2:not(.keep-split) > label {
     grid-template-rows: auto auto;
   }
-  body.register-page .split-row.keep-split > label {
+  body.register-page .split-row.keep-split,
+  body.register-page .row2.keep-split,
+  body.register-page .photo-row.keep-split {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+  body.register-page .split-row.keep-split.mileage-row-short {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  body.register-page .split-row.keep-split > label,
+  body.register-page .row2.keep-split > label {
     grid-template-rows: 18px 44px;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  body.register-page .field-inline {
+    grid-template-columns: 3.6em minmax(0, 1fr);
+    align-items: center;
+  }
+
+  body.register-page .form-date-picker,
+  body.register-page .form-time-picker {
+    min-height: 0 !important;
+    height: 100%;
   }
 
   body.register-page .tabs {
@@ -1234,9 +1263,9 @@ body.register-page button.primary,
   }
 
   body.register-page .qgrid div {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
   }
 
   body.register-page .qgrid b {
@@ -1342,13 +1371,10 @@ body.register-page button.primary,
     font-size: 20px;
   }
 
-  body.register-page .user-actions {
-    flex-direction: column;
-  }
-
   body.register-page .user-actions button {
-    width: 100%;
-    text-align: center;
+    min-height: 36px;
+    padding: 6px 10px;
+    font-size: 12px;
   }
 }
 
