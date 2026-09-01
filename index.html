@@ -9,11 +9,11 @@
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css?v=63" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=63" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=63" />
-  <script src="./assets/office-icons.js?v=63" defer></script>
-  <script src="./assets/office-date.js?v=63"></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=64" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=64" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=64" />
+  <script src="./assets/office-icons.js?v=64" defer></script>
+  <script src="./assets/office-date.js?v=64" defer></script>
   <script src="./assets/office-escape.js" defer></script>
   <style>
     :root {
@@ -781,13 +781,23 @@
       <h1>十八局南方公司出车登记</h1>
     </header>
 
-    <div class="gate-card" id="gateBox" style="display:none">
+    <!-- 默认显示登录框：微信 WebView 若脚本中断，避免 gate/app 双隐藏导致白屏 -->
+    <div class="gate-card" id="gateBox" style="display:grid">
       <label><span class="req">登记口令</span>
         <input id="accessCodeInput" autocomplete="off" spellcheck="false" placeholder="个人口令" />
       </label>
       <button type="button" id="btnUnlock" style="width:100%;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));cursor:pointer">登录</button>
       <div class="msg" id="gateMsg"></div>
     </div>
+    <script>
+      /* 微信内置浏览器：主脚本未跑完前先保证登录区可见，避免双隐藏白屏 */
+      (function () {
+        try {
+          var g = document.getElementById('gateBox');
+          if (g) g.style.display = 'grid';
+        } catch (e) {}
+      })();
+    </script>
 
     <div id="appMain" style="display:none">
     <div class="user-bar" id="userBar">
@@ -960,7 +970,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-01T03:48:44.799Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-01T04:50:50.415Z"};</script>
 
 
   <script>
@@ -970,14 +980,33 @@
     const NTFY = IS_PUBLIC
       ? { server: String(PUB.ntfyServer || 'https://ntfy.sh').replace(/\/$/, ''), topic: String(PUB.ntfyTopic || '') }
       : null;
-    const CLOUD = IS_PUBLIC && PUB.cloudQueue?.enabled && PUB.cloudQueue?.baseUrl
+    const CLOUD = (IS_PUBLIC && PUB && PUB.cloudQueue && PUB.cloudQueue.enabled && PUB.cloudQueue.baseUrl)
       ? { baseUrl: String(PUB.cloudQueue.baseUrl).replace(/\/$/, '') }
       : null;
-    document.documentElement.classList.toggle('is-android', /Android/i.test(navigator.userAgent || ''));
+    try {
+      document.documentElement.classList.toggle('is-android', /Android/i.test(navigator.userAgent || ''));
+      document.documentElement.classList.toggle('is-wechat', /MicroMessenger/i.test(navigator.userAgent || ''));
+    } catch (e0) { /* ignore */ }
     const $ = (id) => document.getElementById(id);
+    function lsGet(key) {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function lsSet(key, val) {
+      try { localStorage.setItem(key, val); } catch (e) { /* WeChat / quota */ }
+    }
+    function lsDel(key) {
+      try { localStorage.removeItem(key); } catch (e) { /* ignore */ }
+    }
+    function showGate(msgType, msgText) {
+      const gate = $('gateBox');
+      const app = $('appMain');
+      if (gate) gate.style.display = 'grid';
+      if (app) app.style.display = 'none';
+      if (msgType && msgText) showGateMsg(msgType, msgText);
+    }
     const today = new Date();
     const ymd = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-    $('date').value = ymd;
+    try { if ($('date')) $('date').value = ymd; } catch (e1) { /* ignore */ }
 
     function fmtDateZh(iso) {
       if (typeof window.officeFormatDateZh === 'function' && iso) return window.officeFormatDateZh(iso);
@@ -999,35 +1028,46 @@
     }
     function bindMaskedPicker(inputId, textId, kind) {
       const input = $(inputId);
-      const wrap = input?.closest('.ctrl-box');
       if (!input) return;
+      const wrap = input.closest ? input.closest('.ctrl-box') : null;
       syncPickerText(inputId, textId, kind);
-      input.addEventListener('change', () => syncPickerText(inputId, textId, kind));
-      input.addEventListener('input', () => syncPickerText(inputId, textId, kind));
-      wrap?.addEventListener('click', (ev) => {
-        if (ev.target === input) return;
-        try {
-          if (typeof input.showPicker === 'function') input.showPicker();
-          else input.focus();
-        } catch {
-          input.focus();
-        }
-      });
+      input.addEventListener('change', function () { syncPickerText(inputId, textId, kind); });
+      input.addEventListener('input', function () { syncPickerText(inputId, textId, kind); });
+      if (wrap) {
+        wrap.addEventListener('click', function (ev) {
+          if (ev.target === input) return;
+          try {
+            if (typeof input.showPicker === 'function') input.showPicker();
+            else input.focus();
+          } catch (err) {
+            try { input.focus(); } catch (e2) { /* ignore */ }
+          }
+        });
+      }
     }
     function syncAllPickerTexts() {
       syncPickerText('date', 'dateText', 'date');
       syncPickerText('departTime', 'departTimeText', 'time');
       syncPickerText('returnTime', 'returnTimeText', 'time');
     }
-    bindMaskedPicker('date', 'dateText', 'date');
-    bindMaskedPicker('departTime', 'departTimeText', 'time');
-    bindMaskedPicker('returnTime', 'returnTimeText', 'time');
+    try {
+      bindMaskedPicker('date', 'dateText', 'date');
+      bindMaskedPicker('departTime', 'departTimeText', 'time');
+      bindMaskedPicker('returnTime', 'returnTimeText', 'time');
+    } catch (e2) { /* ignore */ }
 
-    const savedDriver = localStorage.getItem('trip_driver') || '';
-    if (savedDriver) $('driver').value = savedDriver;
+    const savedDriver = lsGet('trip_driver') || '';
+    if (savedDriver && $('driver')) $('driver').value = savedDriver;
 
-    let accessCode = (new URLSearchParams(location.search).get('k') || localStorage.getItem('trip_access_code') || '').trim();
-    let accessName = localStorage.getItem('trip_access_name') || '';
+    let accessCode = '';
+    let accessName = '';
+    try {
+      accessCode = (new URLSearchParams(location.search).get('k') || lsGet('trip_access_code') || '').trim();
+      accessName = lsGet('trip_access_name') || '';
+    } catch (e3) {
+      accessCode = '';
+      accessName = '';
+    }
     let needAccessCode = false;
 
     function myIdsKey() { return 'trip_my_ids_' + (accessCode || '_'); }
@@ -1173,20 +1213,21 @@
       $('userGreeting').textContent = accessName ? `您好，${accessName}` : '您好';
     }
     function enterApp() {
-      $('gateBox').style.display = 'none';
-      $('appMain').style.display = 'block';
+      const gate = $('gateBox');
+      const app = $('appMain');
+      if (gate) gate.style.display = 'none';
+      if (app) app.style.display = 'block';
       updateUserBar();
     }
     function logout() {
       accessCode = '';
       accessName = '';
-      localStorage.removeItem('trip_access_code');
-      localStorage.removeItem('trip_access_name');
-      $('gateBox').style.display = 'grid';
-      $('appMain').style.display = 'none';
-      $('userBar').classList.remove('show');
-      $('accessCodeInput').value = '';
-      showGateMsg('ok', '已退出，请重新登录');
+      lsDel('trip_access_code');
+      lsDel('trip_access_name');
+      showGate('ok', '已退出，请重新登录');
+      const bar = $('userBar');
+      if (bar) bar.classList.remove('show');
+      if ($('accessCodeInput')) $('accessCodeInput').value = '';
     }
     function openChangeCodeDialog() {
       $('codeMask').classList.add('show');
@@ -1211,11 +1252,11 @@
     async function unlockWithCode(code) {
       const c = String(code || '').trim();
       if (!c) {
-        showGateMsg('err', '请填写登记口令');
+        showGate('err', '请填写登记口令');
         return false;
       }
       const btn = $('btnUnlock');
-      btn.disabled = true;
+      if (btn) btn.disabled = true;
       showGateMsg('ok', '正在验证…');
       try {
         if (IS_PUBLIC) {
@@ -1223,8 +1264,8 @@
           if (!row) throw new Error('口令无效');
           accessCode = c;
           accessName = row.name || '';
-          localStorage.setItem('trip_access_code', c);
-          if (accessName) localStorage.setItem('trip_access_name', accessName);
+          lsSet('trip_access_code', c);
+          if (accessName) lsSet('trip_access_name', accessName);
           enterApp();
           return true;
         }
@@ -1235,33 +1276,40 @@
         if (!r.ok) throw new Error(data.error || '口令无效');
         accessCode = c;
         accessName = data.name || '';
-        localStorage.setItem('trip_access_code', c);
-        if (accessName) localStorage.setItem('trip_access_name', accessName);
+        lsSet('trip_access_code', c);
+        if (accessName) lsSet('trip_access_name', accessName);
         enterApp();
         maybeShowChangeBanner(data.shouldPromptChangeCode);
         return true;
       } catch (e) {
-        showGateMsg('err', e.message || '口令无效');
+        accessCode = '';
+        accessName = '';
+        lsDel('trip_access_code');
+        lsDel('trip_access_name');
+        showGate('err', (e && e.message) || '口令无效');
         return false;
       } finally {
-        btn.disabled = false;
+        if (btn) btn.disabled = false;
       }
     }
 
     async function loadMeta() {
       if (IS_PUBLIC) {
-        needAccessCode = !!PUB.needAccessCode;
-        populateVehicleOptions(PUB.vehicles || []);
-        populateHandlerOptions(PUB.handlers || []);
-        $('btnChangeCode').style.display = 'none';
-        $('changeBanner').style.display = 'none';
+        needAccessCode = !!(PUB && PUB.needAccessCode);
+        populateVehicleOptions((PUB && PUB.vehicles) || []);
+        populateHandlerOptions((PUB && PUB.handlers) || []);
+        if ($('btnChangeCode')) $('btnChangeCode').style.display = 'none';
+        if ($('changeBanner')) $('changeBanner').style.display = 'none';
         if (needAccessCode) {
-          if (accessCode) await unlockWithCode(accessCode);
-          else {
-            $('gateBox').style.display = 'grid';
-            $('appMain').style.display = 'none';
-            const k = new URLSearchParams(location.search).get('k') || '';
-            if (k) $('accessCodeInput').value = k;
+          if (accessCode) {
+            const ok = await unlockWithCode(accessCode);
+            if (!ok) showGate();
+          } else {
+            showGate();
+            try {
+              const k = new URLSearchParams(location.search).get('k') || '';
+              if (k && $('accessCodeInput')) $('accessCodeInput').value = k;
+            } catch (e) { /* ignore */ }
           }
         } else {
           enterApp();
@@ -1275,13 +1323,15 @@
       populateHandlerOptions(data.handlers || []);
 
       if (data.needAccessCode) {
-        if (accessCode) await unlockWithCode(accessCode);
-        else {
-          $('gateBox').style.display = 'grid';
-          $('appMain').style.display = 'none';
-          if (new URLSearchParams(location.search).get('k')) {
-            $('accessCodeInput').value = new URLSearchParams(location.search).get('k');
-          }
+        if (accessCode) {
+          const ok = await unlockWithCode(accessCode);
+          if (!ok) showGate();
+        } else {
+          showGate();
+          try {
+            const k = new URLSearchParams(location.search).get('k');
+            if (k && $('accessCodeInput')) $('accessCodeInput').value = k;
+          } catch (e) { /* ignore */ }
         }
       } else {
         enterApp();
@@ -1869,7 +1919,10 @@
       switchPanel('panelMine');
     });
 
-    loadMeta().catch((e) => show('err', '无法连接登记服务：' + e.message));
+    loadMeta().catch((e) => {
+      showGate('err', '无法连接登记服务：' + ((e && e.message) || String(e)));
+      try { show('err', '无法连接登记服务：' + ((e && e.message) || String(e))); } catch (e2) { /* msg 可能仍隐藏 */ }
+    });
   </script>
 </body>
 </html>
