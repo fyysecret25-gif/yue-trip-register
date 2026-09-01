@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-31T13:54:21.103Z",
+  "updatedAt": "2026-09-01T03:18:19.318Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -320,7 +320,7 @@
       "spec": "AE631-Z",
       "unit": "台",
       "category": "固资",
-      "available": 2,
+      "available": 1,
       "vendor": "北京京东世纪信息技术",
       "location": "仓库",
       "price": "423.89"
@@ -344,7 +344,7 @@
       "spec": "电动",
       "unit": "个",
       "category": "生活用品",
-      "available": 6,
+      "available": 5,
       "vendor": "京东",
       "location": "仓库",
       "price": "29.44"
@@ -392,7 +392,7 @@
       "spec": "19L",
       "unit": "桶",
       "category": "水饮",
-      "available": 7,
+      "available": 6,
       "vendor": "叶利辉",
       "location": "仓库",
       "price": "0.00"
