@@ -1192,6 +1192,13 @@ body.register-page button.primary,
     grid-template-columns: 3.6em minmax(0, 1fr);
     align-items: center;
   }
+  body.register-page .field-inline.field-remark {
+    align-items: start;
+    overflow: visible;
+  }
+  body.register-page .field-inline.field-remark textarea {
+    min-height: 72px;
+  }
 
   body.register-page .form-date-picker,
   body.register-page .form-time-picker {

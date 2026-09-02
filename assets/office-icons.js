@@ -28,6 +28,7 @@
     repair: mk('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>', 20, 1.65),
     'fixed-consume': mk('<path d="M10 2h4v3l1.5 2.5V20a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2V7.5L10 5V2z"/><path d="M10 12h4"/>', 20, 1.65),
     menu: mk('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h3M8 18h8"/>', 20, 1.65),
+    'working-fund': mk('<rect x="2" y="6" width="20" height="14" rx="2"/><path d="M16 12h.01"/><path d="M2 10h20"/>', 20, 1.65),
     invoice: mk('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>', 20, 1.65),
     advance: mk('<circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 6v2M12 16v2"/>', 20, 1.65),
     stock: mk('<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7l8.7 5 8.7-5M12 22V12"/>', 20, 1.65),
@@ -43,7 +44,7 @@
   const HUB_KEYS = new Set([
     'overview', 'approval', 'register', 'archive', 'staff', 'host', 'utility', 'repair',
     'invoice', 'advance', 'stock', 'plan', 'inbound', 'outbound', 'catalog', 'winetea', 'request',
-    'fixed-consume', 'menu',
+    'fixed-consume', 'menu', 'working-fund',
   ]);
 
   window.OfficeIcons = {

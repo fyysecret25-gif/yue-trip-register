@@ -9,11 +9,11 @@
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css?v=66" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=66" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=66" />
-  <script src="./assets/office-icons.js?v=66" defer></script>
-  <script src="./assets/office-date.js?v=66" defer></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=71" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=71" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=71" />
+  <script src="./assets/office-icons.js?v=71" defer></script>
+  <script src="./assets/office-date.js?v=71" defer></script>
   <script src="./assets/office-escape.js" defer></script>
   <style>
     :root {
@@ -252,6 +252,21 @@
       padding: 10px 12px;
       box-sizing: border-box;
       min-width: 0;
+    }
+    .field-inline.field-remark {
+      align-items: start;
+      overflow: visible;
+    }
+    .field-inline.field-remark .inline-label {
+      padding-top: 12px;
+    }
+    .field-inline.field-remark textarea {
+      min-height: 72px;
+      height: auto;
+      resize: vertical;
+      line-height: 1.45;
+      padding: 10px 12px;
+      box-sizing: border-box;
     }
     .photo-row {
       display: grid;
@@ -808,8 +823,15 @@
       gap: 8px;
     }
     html.is-android input:not(.form-date-picker):not(.form-time-picker),
-    html.is-android select {
+    html.is-android select,
+    html.is-android textarea {
       font-size: 15px;
+    }
+    html.is-android .field-remark {
+      display: grid;
+    }
+    html.is-android .field-inline.field-remark textarea {
+      min-height: 72px;
     }
     html.is-android .form-date-text,
     html.is-android .form-time-text {
@@ -935,6 +957,10 @@
         <span class="inline-label req" id="destReq">目的地</span>
         <input name="destination" id="destination" required maxlength="200" placeholder="如：机场；短程可不填" />
       </div>
+      <div class="field-inline field-remark">
+        <span class="inline-label">备&nbsp;&nbsp;注</span>
+        <textarea name="remark" id="remark" maxlength="300" rows="2" placeholder="选填，特殊情况请说明"></textarea>
+      </div>
       <div class="photo-row keep-split" id="photoRow">
         <div class="photo-field" id="photoBlock">
           <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
@@ -1013,7 +1039,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-01T05:04:20.070Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-02T09:18:28.446Z"};</script>
 
 
   <script>
@@ -1720,6 +1746,7 @@
             purpose,
             origin: $('origin').value.trim(),
             destination: $('destination').value.trim(),
+            remark: ($('remark').value || '').trim(),
             departTime: $('departTime').value,
             returnTime: $('returnTime').value,
             durationText: $('durationText').value,
@@ -1824,6 +1851,7 @@
           purpose,
           origin: $('origin').value.trim(),
           destination: $('destination').value.trim(),
+          remark: ($('remark').value || '').trim(),
           departTime: $('departTime').value,
           returnTime: $('returnTime').value,
           durationText: $('durationText').value,
@@ -1860,6 +1888,7 @@
         $('purpose').value = '';
         $('origin').value = '';
         $('destination').value = '';
+        $('remark').value = '';
         $('departTime').value = '';
         $('returnTime').value = '';
         syncAllPickerTexts();
@@ -1938,6 +1967,7 @@
           <div><b>车牌</b><span>${esc(info.plate || '—')}</span></div>
           <div><b>司机</b><span>${esc(info.driver || '—')}</span></div>
           <div><b>事由</b><span>${esc(info.purpose || '—')}</span></div>
+          ${info.remark ? `<div><b>备注</b><span>${esc(info.remark)}</span></div>` : ''}
           ${info.rejectReason ? `<div><b>驳回原因</b><span>${esc(info.rejectReason)}</span></div>` : ''}
           <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
