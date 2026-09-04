@@ -38,6 +38,8 @@
     catalog: mk('<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>', 20, 1.7),
     winetea: mk('<path d="M8 3h8l-1 8a5 5 0 0 1-10 0L8 3z"/><path d="M12 16v5M8 21h8"/>', 20, 1.7),
     request: mk('<path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-1.42-1.42a2 2 0 0 1 2.83-2.83l.79.79"/>', 20, 1.55),
+    fullscreenEnter: mk('<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>', 16, 1.75),
+    fullscreenExit: mk('<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>', 16, 1.75),
   };
 
   const MODULE_KEYS = new Set(['workplan', 'material', 'vehicle', 'canteen', 'reimburse']);
@@ -82,6 +84,15 @@
     linkChevron(label) {
       const I = window.OfficeIcons;
       return `${label}<span class="office-icon office-icon-chevron">${I.chevron()}</span>`;
+    },
+    fullscreenEnter() {
+      return PATHS.fullscreenEnter;
+    },
+    fullscreenExit() {
+      return PATHS.fullscreenExit;
+    },
+    fullscreen(active) {
+      return active ? PATHS.fullscreenExit : PATHS.fullscreenEnter;
     },
   };
 })();
