@@ -1039,7 +1039,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-03T01:32:01.846Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-04T02:07:30.690Z"};</script>
 
 
   <script>
@@ -1143,15 +1143,29 @@
     function loadMyIdList() {
       try { return JSON.parse(localStorage.getItem(myIdsKey()) || '[]'); } catch { return []; }
     }
+    function isTerminalStatus(s) {
+      return s === 'approved' || s === 'rejected' || s === 'denied';
+    }
+    function pickKeptStatus(prev, incoming) {
+      if (incoming && incoming !== 'pending') return incoming;
+      if (isTerminalStatus(prev) && (!incoming || incoming === 'pending')) return prev;
+      return incoming || prev || 'pending';
+    }
     function addMyId(id, meta) {
       if (!id) return;
+      const prev = loadMyIdList().find((x) => x.id === id) || {};
       const list = loadMyIdList().filter((x) => x.id !== id);
       list.unshift({
         id: String(id),
-        date: meta?.date || '',
-        plate: meta?.plate || '',
-        purpose: meta?.purpose || '',
-        submittedAt: meta?.submittedAt || new Date().toISOString(),
+        date: meta?.date || prev.date || '',
+        plate: meta?.plate || prev.plate || '',
+        purpose: meta?.purpose || prev.purpose || '',
+        remark: meta?.remark || prev.remark || '',
+        submittedAt: meta?.submittedAt || prev.submittedAt || new Date().toISOString(),
+        status: pickKeptStatus(prev.status, meta?.status),
+        decidedAt: meta?.decidedAt || prev.decidedAt || '',
+        decidedBy: meta?.decidedBy || prev.decidedBy || '',
+        rejectReason: meta?.rejectReason || prev.rejectReason || '',
       });
       localStorage.setItem(myIdsKey(), JSON.stringify(list.slice(0, 100)));
     }
@@ -1819,7 +1833,12 @@
               date: payload.date,
               plate: payload.plate,
               purpose: payload.purpose,
+              remark: payload.remark || '',
               submittedAt: payload.submittedAt,
+              status: found?.status || 'pending',
+              decidedAt: found?.decidedAt || '',
+              decidedBy: found?.decidedBy || '',
+              rejectReason: found?.rejectReason || '',
             });
             localStorage.setItem('trip_last_id', assignedId);
             $('okId').textContent = assignedId;
@@ -1968,7 +1987,9 @@
           <div><b>司机</b><span>${esc(info.driver || '—')}</span></div>
           <div><b>事由</b><span>${esc(info.purpose || '—')}</span></div>
           ${info.remark ? `<div><b>备注</b><span>${esc(info.remark)}</span></div>` : ''}
+          ${info.status === 'approved' ? `<div><b>审批结果</b><span>已同意登记</span></div>` : ''}
           ${info.rejectReason ? `<div><b>驳回原因</b><span>${esc(info.rejectReason)}</span></div>` : ''}
+          ${info.decidedBy ? `<div><b>审批人</b><span>${esc(info.decidedBy)}</span></div>` : ''}
           <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
         </div>`;
@@ -2020,19 +2041,31 @@
             if (!prev || row.time >= prev._t) byId.set(b.id, Object.assign({}, b, { _t: row.time }));
           }
           for (const s of stored) {
-            if (!byId.has(s.id)) {
+            const prev = byId.get(s.id);
+            if (!prev) {
               byId.set(s.id, {
                 id: s.id,
-                status: 'pending',
+                status: isTerminalStatus(s.status) ? s.status : (s.status || 'pending'),
                 date: s.date,
                 plate: s.plate,
                 purpose: s.purpose,
+                remark: s.remark || '',
                 submittedAt: s.submittedAt,
+                decidedAt: s.decidedAt || '',
+                decidedBy: s.decidedBy || '',
+                rejectReason: s.rejectReason || '',
               });
+              continue;
             }
+            prev.status = pickKeptStatus(s.status, prev.status);
+            if (!prev.decidedAt && s.decidedAt) prev.decidedAt = s.decidedAt;
+            if (!prev.decidedBy && s.decidedBy) prev.decidedBy = s.decidedBy;
+            if (!prev.remark && s.remark) prev.remark = s.remark;
+            if (!prev.rejectReason && s.rejectReason) prev.rejectReason = s.rejectReason;
           }
           records = [...byId.values()]
             .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
+          records.forEach((rec) => addMyId(rec.id, rec));
         } else {
         const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
         const r = await fetch(`${VEHICLE_API}/my-records${qs}`, {
@@ -2046,6 +2079,7 @@
           updateUserBar();
         }
         records = data.records || [];
+        records.forEach((rec) => addMyId(rec.id, rec));
         }
         renderMineList(records);
         showMineMsg('ok', records.length ? `共 ${records.length} 条申请` : '暂无申请记录');
