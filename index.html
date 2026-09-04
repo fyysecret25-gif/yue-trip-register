@@ -639,17 +639,33 @@
     .mine-list { display: grid; gap: 8px; }
     .mine-item {
       display: grid;
-      gap: 4px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 4px 8px;
       padding: 12px;
       border: 1px solid var(--line);
       border-radius: 10px;
       background: #f8fafc;
-      cursor: pointer;
       text-align: left;
       font-family: inherit;
       width: 100%;
     }
-    .mine-item:active { background: #eef3f8; }
+    .mine-item-main { grid-column: 1; }
+    .mine-item > .mine-cancel { grid-column: 2; grid-row: 1; align-self: center; }
+    .mine-item-main {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      display: grid;
+      gap: 4px;
+    }
+    .mine-item-main:active { opacity: 0.85; }
     .mine-item .row1 {
       display: flex;
       justify-content: space-between;
@@ -659,11 +675,33 @@
       font-weight: 700;
       color: var(--ink);
     }
+    .mine-item .row1-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
     .mine-item .row2 {
       font-size: 12px;
       color: var(--muted);
       line-height: 1.45;
     }
+    .mine-cancel {
+      appearance: none;
+      border: 1px solid #f0c2bf;
+      background: #fff5f4;
+      color: var(--danger);
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: 650;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .mine-cancel:disabled { opacity: 0.55; cursor: default; }
+    .mine-detail-cancel { margin-top: 10px; width: 100%; padding: 10px 12px; font-size: 15px; }
 
     .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-change-code {
@@ -1039,7 +1077,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-03T01:32:01.846Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-04T02:30:45.188Z"};</script>
 
 
   <script>
@@ -1143,15 +1181,30 @@
     function loadMyIdList() {
       try { return JSON.parse(localStorage.getItem(myIdsKey()) || '[]'); } catch { return []; }
     }
+    function isTerminalStatus(s) {
+      return s === 'approved' || s === 'rejected' || s === 'denied' || s === 'cancelled';
+    }
+    function pickKeptStatus(prev, incoming) {
+      if (incoming && incoming !== 'pending') return incoming;
+      if (isTerminalStatus(prev) && (!incoming || incoming === 'pending')) return prev;
+      return incoming || prev || 'pending';
+    }
     function addMyId(id, meta) {
       if (!id) return;
+      const prev = loadMyIdList().find((x) => x.id === id) || {};
       const list = loadMyIdList().filter((x) => x.id !== id);
       list.unshift({
         id: String(id),
-        date: meta?.date || '',
-        plate: meta?.plate || '',
-        purpose: meta?.purpose || '',
-        submittedAt: meta?.submittedAt || new Date().toISOString(),
+        date: meta?.date || prev.date || '',
+        plate: meta?.plate || prev.plate || '',
+        purpose: meta?.purpose || prev.purpose || '',
+        remark: meta?.remark || prev.remark || '',
+        submittedAt: meta?.submittedAt || prev.submittedAt || new Date().toISOString(),
+        status: pickKeptStatus(prev.status, meta?.status),
+        clientToken: meta?.clientToken || prev.clientToken || '',
+        decidedAt: meta?.decidedAt || prev.decidedAt || '',
+        decidedBy: meta?.decidedBy || prev.decidedBy || '',
+        rejectReason: meta?.rejectReason || prev.rejectReason || '',
       });
       localStorage.setItem(myIdsKey(), JSON.stringify(list.slice(0, 100)));
     }
@@ -1176,6 +1229,13 @@
         if (!msg || msg.event !== 'message') continue;
         let body = {};
         try { body = typeof msg.message === 'string' ? JSON.parse(msg.message) : (msg.message || {}); } catch { continue; }
+        if (body.type === 'trip_cancel') {
+          out.push({
+            body: Object.assign({}, body, { type: 'trip_status', status: 'cancelled' }),
+            time: Number(msg.time) || 0,
+          });
+          continue;
+        }
         if (body.type !== 'trip_status') continue;
         out.push({ body, time: Number(msg.time) || 0 });
       }
@@ -1819,7 +1879,13 @@
               date: payload.date,
               plate: payload.plate,
               purpose: payload.purpose,
+              remark: payload.remark || '',
               submittedAt: payload.submittedAt,
+              status: found?.status || 'pending',
+              clientToken,
+              decidedAt: found?.decidedAt || '',
+              decidedBy: found?.decidedBy || '',
+              rejectReason: found?.rejectReason || '',
             });
             localStorage.setItem('trip_last_id', assignedId);
             $('okId').textContent = assignedId;
@@ -1938,7 +2004,7 @@
       el.textContent = text;
     }
     function statusLabel(s) {
-      return ({ pending: '待审批', approved: '已同意登记', rejected: '已驳回' })[s] || s;
+      return ({ pending: '待审批', approved: '已同意登记', rejected: '已驳回', cancelled: '已撤回' })[s] || s;
     }
     function esc(s) {
       return String(s ?? '').replace(/[&<>"']/g, (c) => (
@@ -1968,10 +2034,15 @@
           <div><b>司机</b><span>${esc(info.driver || '—')}</span></div>
           <div><b>事由</b><span>${esc(info.purpose || '—')}</span></div>
           ${info.remark ? `<div><b>备注</b><span>${esc(info.remark)}</span></div>` : ''}
+          ${info.status === 'approved' ? `<div><b>审批结果</b><span>已同意登记</span></div>` : ''}
           ${info.rejectReason ? `<div><b>驳回原因</b><span>${esc(info.rejectReason)}</span></div>` : ''}
+          ${info.decidedBy ? `<div><b>审批人</b><span>${esc(info.decidedBy)}</span></div>` : ''}
           <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
-        </div>`;
+        </div>
+        ${info.status === 'pending' ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>撤回申请</button>' : ''}`;
+      const cancelBtn = el.querySelector('[data-cancel]');
+      if (cancelBtn) cancelBtn.addEventListener('click', () => cancelOwnRecord(info));
     }
     function renderMineList(records) {
       const box = $('mineList');
@@ -1981,19 +2052,80 @@
         return;
       }
       box.innerHTML = records.map((r) => `
-        <button type="button" class="mine-item" data-id="${esc(r.id)}">
-          <div class="row1">
-            <span>${esc(r.id)}</span>
-            <span class="badge ${esc(r.status)}">${statusLabel(r.status)}</span>
-          </div>
-          <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
-        </button>`).join('');
-      box.querySelectorAll('.mine-item').forEach((btn) => {
+        <div class="mine-item">
+          <button type="button" class="mine-item-main" data-id="${esc(r.id)}">
+            <div class="row1">
+              <span>${esc(r.id)}</span>
+              <span class="row1-right">
+                <span class="badge ${esc(r.status)}">${statusLabel(r.status)}</span>
+              </span>
+            </div>
+            <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
+          </button>
+          ${r.status === 'pending' ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">撤回</button>` : ''}
+        </div>`).join('');
+      box.querySelectorAll('.mine-item-main').forEach((btn) => {
         btn.addEventListener('click', () => {
           const rec = records.find((x) => String(x.id) === btn.dataset.id);
           if (rec) renderRecordDetail(rec, 'mineDetail');
         });
       });
+      box.querySelectorAll('[data-cancel]').forEach((btn) => {
+        btn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          const rec = records.find((x) => String(x.id) === btn.dataset.cancel);
+          if (rec) cancelOwnRecord(rec);
+        });
+      });
+    }
+    async function cancelOwnRecord(rec) {
+      if (!rec?.id || rec.status !== 'pending') return;
+      if (!confirm('确认撤回这条待审批申请？办公室将不再处理，且不可恢复。')) return;
+      const stored = loadMyIdList().find((x) => x.id === rec.id) || {};
+      const token = rec.clientToken || stored.clientToken || '';
+      try {
+        if (IS_PUBLIC) {
+          if (!NTFY?.topic) throw new Error('公网撤回未配置，请联系办公室');
+          const payload = {
+            type: 'trip_cancel',
+            id: rec.id,
+            clientToken: token,
+            accessName: accessName || localStorage.getItem('trip_access_name') || '',
+            date: rec.date || '',
+            plate: rec.plate || '',
+            purpose: rec.purpose || '',
+            submittedAt: rec.submittedAt || '',
+          };
+          const r = await fetch(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              Title: `Trip cancel ${String(rec.id).slice(0, 8)}`,
+              Tags: 'trip_cancel,car',
+            },
+            body: JSON.stringify(payload),
+          });
+          if (!r.ok) throw new Error('撤回发送失败 HTTP ' + r.status);
+        } else {
+          const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
+          const r = await fetch(`${VEHICLE_API}/cancel${qs}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+              ...(accessCode ? { 'X-Access-Code': accessCode } : {}),
+            },
+            body: JSON.stringify({ id: rec.id, clientToken: token }),
+          });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) throw new Error(data.error || '撤回失败');
+        }
+        addMyId(rec.id, { ...rec, ...stored, status: 'cancelled', clientToken: token });
+        showMineMsg('ok', '已撤回');
+        await loadMyRecords();
+      } catch (e) {
+        showMineMsg('err', e.message || String(e));
+      }
     }
     async function loadMyRecords() {
       $('btnRefreshMine').disabled = true;
@@ -2020,19 +2152,33 @@
             if (!prev || row.time >= prev._t) byId.set(b.id, Object.assign({}, b, { _t: row.time }));
           }
           for (const s of stored) {
-            if (!byId.has(s.id)) {
+            const prev = byId.get(s.id);
+            if (!prev) {
               byId.set(s.id, {
                 id: s.id,
-                status: 'pending',
+                status: isTerminalStatus(s.status) ? s.status : (s.status || 'pending'),
                 date: s.date,
                 plate: s.plate,
                 purpose: s.purpose,
+                remark: s.remark || '',
                 submittedAt: s.submittedAt,
+                clientToken: s.clientToken || '',
+                decidedAt: s.decidedAt || '',
+                decidedBy: s.decidedBy || '',
+                rejectReason: s.rejectReason || '',
               });
+              continue;
             }
+            prev.status = pickKeptStatus(s.status, prev.status);
+            if (!prev.decidedAt && s.decidedAt) prev.decidedAt = s.decidedAt;
+            if (!prev.decidedBy && s.decidedBy) prev.decidedBy = s.decidedBy;
+            if (!prev.remark && s.remark) prev.remark = s.remark;
+            if (!prev.rejectReason && s.rejectReason) prev.rejectReason = s.rejectReason;
           }
           records = [...byId.values()]
+            .filter((r) => r.status !== 'cancelled')
             .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
+          [...byId.values()].forEach((rec) => addMyId(rec.id, rec));
         } else {
         const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
         const r = await fetch(`${VEHICLE_API}/my-records${qs}`, {
@@ -2046,6 +2192,7 @@
           updateUserBar();
         }
         records = data.records || [];
+        records.forEach((rec) => addMyId(rec.id, rec));
         }
         renderMineList(records);
         showMineMsg('ok', records.length ? `共 ${records.length} 条申请` : '暂无申请记录');
