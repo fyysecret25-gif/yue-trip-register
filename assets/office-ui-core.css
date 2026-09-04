@@ -526,7 +526,8 @@ textarea:focus-visible,
   transform: scale(0.98);
 }
 
-.chrome-btn.chrome-theme {
+.chrome-btn.chrome-theme,
+.chrome-btn.chrome-fs {
   min-width: 36px;
   padding: 7px 11px;
   font-size: 1rem;
@@ -534,8 +535,16 @@ textarea:focus-visible,
   color: var(--muted);
 }
 
-.chrome-btn.chrome-theme:hover {
+.chrome-btn.chrome-theme:hover,
+.chrome-btn.chrome-fs:hover,
+.chrome-btn.chrome-fs.is-active {
   color: var(--ink);
+}
+
+.chrome-btn.chrome-fs svg {
+  width: 16px;
+  height: 16px;
+  display: block;
 }
 
 @media (max-width: 720px) {
@@ -565,7 +574,8 @@ textarea:focus-visible,
     gap: 6px;
   }
 
-  .chrome-btn.chrome-theme {
+  .chrome-btn.chrome-theme,
+  .chrome-btn.chrome-fs {
     order: -1;
   }
 }
