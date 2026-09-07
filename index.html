@@ -557,16 +557,6 @@
       box-shadow: var(--shadow);
       padding: 18px 16px 20px;
     }
-    .query-result {
-      display: none;
-      margin-top: 12px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      background: #f8fafc;
-      font-size: 14px;
-    }
-    .query-result.show { display: block; }
     .badge {
       display: inline-block;
       font-size: 13px;
@@ -653,6 +643,21 @@
       overflow: visible;
       box-sizing: border-box;
     }
+    .mine-item.is-open {
+      background: #fff;
+      border-color: #b7d4f0;
+    }
+    .mine-item-detail {
+      display: none;
+      grid-column: 1;
+      min-width: 0;
+      width: 100%;
+      margin: 0;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      font-size: 14px;
+    }
+    .mine-item.is-open .mine-item-detail { display: block; }
     .mine-item-main { grid-column: 1; }
     .mine-item-main {
       -webkit-appearance: none;
@@ -868,6 +873,10 @@
       .mine-item {
         grid-template-columns: minmax(0, 1fr);
         overflow: visible;
+      }
+      .mine-item-detail {
+        min-width: 0;
+        width: 100%;
       }
       .mine-item-main {
         min-width: 0;
@@ -1106,7 +1115,6 @@
         </div>
         <div class="msg" id="mineMsg"></div>
         <div class="mine-list" id="mineList"></div>
-        <div class="query-result" id="mineDetail"></div>
       </div>
     </div>
     </div>
@@ -1129,7 +1137,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:45:51.699Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:56:36.992Z"};</script>
 
 
   <script>
@@ -2208,11 +2216,8 @@
         return String(iso);
       }
     }
-    function renderRecordDetail(info, targetId) {
-      const el = $(targetId);
-      el.className = 'query-result show';
-      el.innerHTML = `
-        <span class="badge ${info.status}">${statusLabel(info.status)}</span>
+    function recordDetailHtml(info) {
+      return `
         <div class="qgrid">
           <div><b>编号</b><span>${esc(info.id)}</span></div>
           <div><b>日期</b><span>${esc(info.date || '—')}</span></div>
@@ -2227,19 +2232,48 @@
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
         </div>
         ${canSelfDelete(info.status) ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>删除申请</button>' : ''}`;
-      const cancelBtn = el.querySelector('[data-cancel]');
-      if (cancelBtn) cancelBtn.addEventListener('click', () => cancelOwnRecord(info));
+    }
+    function collapseMineItem(item) {
+      item.classList.remove('is-open');
+      const main = item.querySelector('.mine-item-main');
+      if (main) main.setAttribute('aria-expanded', 'false');
+      const detail = item.querySelector('.mine-item-detail');
+      if (detail) {
+        detail.hidden = true;
+        detail.innerHTML = '';
+      }
+    }
+    function expandMineItem(item, rec) {
+      item.classList.add('is-open');
+      const main = item.querySelector('.mine-item-main');
+      if (main) main.setAttribute('aria-expanded', 'true');
+      const detail = item.querySelector('.mine-item-detail');
+      if (!detail) return;
+      detail.innerHTML = recordDetailHtml(rec);
+      detail.hidden = false;
+      const cancelBtn = detail.querySelector('[data-cancel]');
+      if (cancelBtn) {
+        cancelBtn.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          cancelOwnRecord(rec);
+        });
+      }
+    }
+    function toggleMineItem(item, rec, box) {
+      const wasOpen = item.classList.contains('is-open');
+      box.querySelectorAll('.mine-item.is-open').forEach(collapseMineItem);
+      if (!wasOpen) expandMineItem(item, rec);
     }
     function renderMineList(records) {
       const box = $('mineList');
-      $('mineDetail').className = 'query-result';
       if (!records.length) {
         box.innerHTML = '<div class="mine-empty">暂无申请记录<br>提交出车登记后将显示在此</div>';
         return;
       }
       box.innerHTML = records.map((r) => `
-        <div class="mine-item">
-          <div class="mine-item-main" role="button" tabindex="0" data-id="${esc(r.id)}">
+        <div class="mine-item" data-id="${esc(r.id)}">
+          <div class="mine-item-main" role="button" tabindex="0" aria-expanded="false" data-id="${esc(r.id)}">
             <div class="row1">
               <span>${esc(r.id)}</span>
               <span class="row1-right">
@@ -2249,17 +2283,19 @@
             </div>
             <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
           </div>
+          <div class="mine-item-detail" hidden></div>
         </div>`).join('');
       box.querySelectorAll('.mine-item-main').forEach((btn) => {
-        const open = () => {
+        const toggle = () => {
           const rec = records.find((x) => String(x.id) === btn.dataset.id);
-          if (rec) renderRecordDetail(rec, 'mineDetail');
+          const item = btn.closest('.mine-item');
+          if (rec && item) toggleMineItem(item, rec, box);
         };
-        btn.addEventListener('click', open);
+        btn.addEventListener('click', toggle);
         btn.addEventListener('keydown', (ev) => {
           if (ev.key === 'Enter' || ev.key === ' ') {
             ev.preventDefault();
-            open();
+            toggle();
           }
         });
       });

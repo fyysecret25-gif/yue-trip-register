@@ -1337,6 +1337,14 @@ body.register-page button.primary,
     grid-template-columns: minmax(0, 1fr);
     overflow: visible;
   }
+  body.register-page .mine-item.is-open {
+    background: #fff;
+    border-color: #b7d4f0;
+  }
+  body.register-page .mine-item-detail {
+    min-width: 0;
+    width: 100%;
+  }
   body.register-page .mine-item-main {
     min-width: 0;
     width: auto;
