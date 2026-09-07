@@ -9,11 +9,11 @@
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css?v=73" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=73" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=73" />
-  <script src="./assets/office-icons.js?v=73" defer></script>
-  <script src="./assets/office-date.js?v=73" defer></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=78" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=78" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=78" />
+  <script src="./assets/office-icons.js?v=78" defer></script>
+  <script src="./assets/office-date.js?v=78" defer></script>
   <script src="./assets/office-escape.js" defer></script>
   <style>
     :root {
@@ -639,9 +639,9 @@
     .mine-list { display: grid; gap: 8px; }
     .mine-item {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 4px 8px;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+      gap: 10px;
       padding: 12px;
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -649,16 +649,22 @@
       text-align: left;
       font-family: inherit;
       width: 100%;
+      min-width: 0;
+      overflow: visible;
+      box-sizing: border-box;
     }
     .mine-item-main { grid-column: 1; }
-    .mine-item > .mine-cancel { grid-column: 2; grid-row: 1; align-self: center; }
+    .mine-item > .mine-cancel { grid-column: 1; }
     .mine-item-main {
+      -webkit-appearance: none;
       appearance: none;
       border: 0;
       background: transparent;
       padding: 0;
       margin: 0;
-      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      width: auto;
       text-align: left;
       font-family: inherit;
       cursor: pointer;
@@ -687,21 +693,30 @@
       line-height: 1.45;
     }
     .mine-cancel {
+      -webkit-appearance: none;
       appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 1px solid #f0c2bf;
       background: #fff5f4;
       color: var(--danger);
       border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 13px;
+      padding: 10px 12px;
+      min-height: 44px;
+      font-size: 16px;
       font-weight: 650;
       cursor: pointer;
       font-family: inherit;
       margin: 0;
       white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 2;
     }
     .mine-cancel:disabled { opacity: 0.55; cursor: default; }
-    .mine-detail-cancel { margin-top: 10px; width: 100%; padding: 10px 12px; font-size: 15px; }
+    .mine-detail-cancel { margin-top: 10px; width: 100%; padding: 10px 12px; font-size: 16px; }
 
     .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-change-code {
@@ -849,6 +864,22 @@
       }
       .user-actions {
         flex-shrink: 0;
+      }
+      .mine-item {
+        grid-template-columns: minmax(0, 1fr);
+        overflow: visible;
+      }
+      .mine-item-main {
+        min-width: 0;
+        width: auto;
+        max-width: 100%;
+      }
+      .mine-item > .mine-cancel,
+      .mine-detail-cancel {
+        grid-column: 1;
+        width: 100%;
+        min-height: 44px;
+        font-size: 16px;
       }
     }
     html.is-android {
@@ -1018,7 +1049,7 @@
       </div>
       <div class="photo-row keep-split" id="photoRow">
         <div class="photo-field" id="photoBlock">
-          <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
+          <input type="file" id="photoDepart" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" />
           <div class="photo-add-wrap">
             <button type="button" class="photo-add-box" id="photoDepartBox" aria-label="添加出发表显照片">
               <img class="preview" id="previewDepart" alt="出发表显预览" />
@@ -1034,7 +1065,7 @@
           </div>
         </div>
         <div class="photo-field" id="photoBlock2">
-          <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" required />
+          <input type="file" id="photoReturn" class="file-hidden" accept="image/*,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp,.heic,.heif" />
           <div class="photo-add-wrap">
             <button type="button" class="photo-add-box" id="photoReturnBox" aria-label="添加返程表显照片">
               <img class="preview" id="previewReturn" alt="返程表显预览" />
@@ -1094,7 +1125,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T02:34:00.422Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:13:34.450Z"};</script>
 
 
   <script>
@@ -1830,8 +1861,10 @@
         mileageRow.classList.remove('mileage-row-short');
       }
       if (short) $('returnOdometer').value = '';
-      $('photoDepart').required = !short;
-      $('photoReturn').required = !short;
+      // 照片框是隐藏的：不可再标 required。选图后 replaceFileInput 会清空原生 value，
+      // 微信/安卓会弹出系统选择器标题「选择一个」并挡住提交；是否有图看 pickedFiles。
+      $('photoDepart').required = false;
+      $('photoReturn').required = false;
       $('photoReq').classList.toggle('req', !short);
       $('photoReq2').classList.toggle('req', !short);
     }
@@ -2170,7 +2203,7 @@
           <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
         </div>
-        ${info.status === 'pending' ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>撤回申请</button>' : ''}`;
+        ${info.status === 'pending' ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>删除申请</button>' : ''}`;
       const cancelBtn = el.querySelector('[data-cancel]');
       if (cancelBtn) cancelBtn.addEventListener('click', () => cancelOwnRecord(info));
     }
@@ -2192,7 +2225,7 @@
             </div>
             <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
           </button>
-          ${r.status === 'pending' ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">撤回</button>` : ''}
+          ${r.status === 'pending' ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">删除申请</button>` : ''}
         </div>`).join('');
       box.querySelectorAll('.mine-item-main').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -2211,12 +2244,12 @@
     }
     async function cancelOwnRecord(rec) {
       if (!rec?.id || rec.status !== 'pending') return;
-      if (!confirm('确认撤回这条待审批申请？办公室将不再处理，且不可恢复。')) return;
+      if (!confirm('确认删除这条待审批申请？办公室将不再处理，且不可恢复。')) return;
       const stored = loadMyIdList().find((x) => x.id === rec.id) || {};
       const token = rec.clientToken || stored.clientToken || '';
       try {
         if (IS_PUBLIC) {
-          if (!NTFY?.topic) throw new Error('公网撤回未配置，请联系办公室');
+          if (!NTFY?.topic) throw new Error('公网删除未配置，请联系办公室');
           const payload = {
             type: 'trip_cancel',
             id: rec.id,
@@ -2236,7 +2269,7 @@
             },
             body: JSON.stringify(payload),
           });
-          if (!r.ok) throw new Error('撤回发送失败 HTTP ' + r.status);
+          if (!r.ok) throw new Error('删除发送失败 HTTP ' + r.status);
         } else {
           const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
           const r = await fetch(`${VEHICLE_API}/cancel${qs}`, {
@@ -2248,10 +2281,10 @@
             body: JSON.stringify({ id: rec.id, clientToken: token }),
           });
           const data = await r.json().catch(() => ({}));
-          if (!r.ok) throw new Error(data.error || '撤回失败');
+          if (!r.ok) throw new Error(data.error || '删除失败');
         }
         addMyId(rec.id, { ...rec, ...stored, status: 'cancelled', clientToken: token });
-        showMineMsg('ok', '已撤回');
+        showMineMsg('ok', '已删除');
         await loadMyRecords();
       } catch (e) {
         showMineMsg('err', e.message || String(e));
