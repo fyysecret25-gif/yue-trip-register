@@ -604,6 +604,61 @@ html.office-soft-nav-loading main {
   overflow: hidden;
 }
 
+/* 车辆 / 食堂 / 报销：子模块卡约缩小 20%（物资 Hub 保持原高度） */
+.vehicle-hub-page .ios-widget-module.material-action-card.ios-widget-card,
+.canteen-hub-page .ios-widget-module.material-action-card.ios-widget-card,
+.reimburse-hub-page .ios-widget-module.material-action-card.ios-widget-card {
+  min-height: clamp(188px, 22vw, 220px) !important;
+  border-radius: 18px;
+}
+
+.vehicle-hub-page .ios-widget-module .ios-widget-inner,
+.canteen-hub-page .ios-widget-module .ios-widget-inner,
+.reimburse-hub-page .ios-widget-module .ios-widget-inner {
+  padding: clamp(13px, 1.28vw, 16px) clamp(13px, 1.28vw, 16px) 5px;
+  gap: 5px;
+}
+
+.vehicle-hub-page .ios-widget-module .ios-widget-head,
+.canteen-hub-page .ios-widget-module .ios-widget-head,
+.reimburse-hub-page .ios-widget-module .ios-widget-head {
+  gap: 8px;
+}
+
+.vehicle-hub-page .ios-widget-module .ios-widget-icon,
+.canteen-hub-page .ios-widget-module .ios-widget-icon,
+.reimburse-hub-page .ios-widget-module .ios-widget-icon {
+  width: 29px;
+  height: 29px;
+  border-radius: 8px;
+}
+
+.vehicle-hub-page .ios-widget-module .office-icon-hub svg,
+.canteen-hub-page .ios-widget-module .office-icon-hub svg,
+.reimburse-hub-page .ios-widget-module .office-icon-hub svg {
+  width: 14px;
+  height: 14px;
+}
+
+.vehicle-hub-page .ios-widget-module .ios-widget-kicker,
+.canteen-hub-page .ios-widget-module .ios-widget-kicker,
+.reimburse-hub-page .ios-widget-module .ios-widget-kicker {
+  font-size: var(--widget-kicker-size, 0.7rem);
+}
+
+.vehicle-hub-page .ios-widget-module .ios-widget-balance,
+.canteen-hub-page .ios-widget-module .ios-widget-balance,
+.reimburse-hub-page .ios-widget-module .ios-widget-balance {
+  font-size: var(--widget-balance-size, clamp(1.4rem, 1.08rem + 1.12vw, 1.8rem));
+  margin-top: 3px;
+}
+
+.vehicle-hub-page .ios-widget-module .ios-widget-foot,
+.canteen-hub-page .ios-widget-module .ios-widget-foot,
+.reimburse-hub-page .ios-widget-module .ios-widget-foot {
+  padding: 9px clamp(13px, 1.28vw, 16px) 11px;
+}
+
 .ios-widget-module.material-action-card.ios-widget-card::before {
   content: "";
   position: absolute;
@@ -800,17 +855,6 @@ html.office-soft-nav-loading main {
   border-top: 1px solid rgba(201, 162, 39, 0.18);
   font-weight: 600;
   padding: 11px clamp(16px, 1.6vw, 20px) 14px;
-}
-
-.reimburse-hub-page .reimburse-hub-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(18px, 2vw, 24px);
-}
-
-@media (max-width: 640px) {
-  .reimburse-hub-page .reimburse-hub-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 .ios-widget-module.material-action-out {
@@ -1367,6 +1411,7 @@ body.register-page button.primary,
     pointer-events: none;
   }
 
+  body.register-page form > #btn:disabled,
   body.register-page form > #btnSubmit:disabled {
     position: static;
     box-shadow: none;
@@ -1375,6 +1420,7 @@ body.register-page button.primary,
     margin-top: 0;
   }
 
+  body.register-page form:has(#btn[disabled]),
   body.register-page form:has(#btnSubmit[disabled]) {
     padding-bottom: 0;
   }
