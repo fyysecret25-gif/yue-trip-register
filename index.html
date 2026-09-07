@@ -9,11 +9,11 @@
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css?v=72" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=72" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=72" />
-  <script src="./assets/office-icons.js?v=72" defer></script>
-  <script src="./assets/office-date.js?v=72" defer></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=78" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=78" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=78" />
+  <script src="./assets/office-icons.js?v=78" defer></script>
+  <script src="./assets/office-date.js?v=78" defer></script>
   <script src="./assets/office-escape.js" defer></script>
   <style>
     :root {
@@ -639,9 +639,9 @@
     .mine-list { display: grid; gap: 8px; }
     .mine-item {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 4px 8px;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: stretch;
+      gap: 10px;
       padding: 12px;
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -649,16 +649,22 @@
       text-align: left;
       font-family: inherit;
       width: 100%;
+      min-width: 0;
+      overflow: visible;
+      box-sizing: border-box;
     }
     .mine-item-main { grid-column: 1; }
-    .mine-item > .mine-cancel { grid-column: 2; grid-row: 1; align-self: center; }
+    .mine-item > .mine-cancel { grid-column: 1; }
     .mine-item-main {
+      -webkit-appearance: none;
       appearance: none;
       border: 0;
       background: transparent;
       padding: 0;
       margin: 0;
-      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      width: auto;
       text-align: left;
       font-family: inherit;
       cursor: pointer;
@@ -687,21 +693,30 @@
       line-height: 1.45;
     }
     .mine-cancel {
+      -webkit-appearance: none;
       appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border: 1px solid #f0c2bf;
       background: #fff5f4;
       color: var(--danger);
       border-radius: 8px;
-      padding: 4px 10px;
-      font-size: 13px;
+      padding: 10px 12px;
+      min-height: 44px;
+      font-size: 16px;
       font-weight: 650;
       cursor: pointer;
       font-family: inherit;
       margin: 0;
       white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 2;
     }
     .mine-cancel:disabled { opacity: 0.55; cursor: default; }
-    .mine-detail-cancel { margin-top: 10px; width: 100%; padding: 10px 12px; font-size: 15px; }
+    .mine-detail-cancel { margin-top: 10px; width: 100%; padding: 10px 12px; font-size: 16px; }
 
     .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-change-code {
@@ -850,6 +865,22 @@
       .user-actions {
         flex-shrink: 0;
       }
+      .mine-item {
+        grid-template-columns: minmax(0, 1fr);
+        overflow: visible;
+      }
+      .mine-item-main {
+        min-width: 0;
+        width: auto;
+        max-width: 100%;
+      }
+      .mine-item > .mine-cancel,
+      .mine-detail-cancel {
+        grid-column: 1;
+        width: 100%;
+        min-height: 44px;
+        font-size: 16px;
+      }
     }
     html.is-android {
       -webkit-text-size-adjust: 100%;
@@ -874,6 +905,23 @@
     html.is-android .form-date-text,
     html.is-android .form-time-text {
       font-size: 13px;
+    }
+    html, body.register-page {
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    @media (max-width: 640px) {
+      body.register-page form > #btn:disabled {
+        position: static !important;
+        box-shadow: none;
+        border-radius: 12px !important;
+        padding: 14px 16px;
+        margin-top: 4px;
+      }
+      body.register-page form:has(#btn[disabled]) {
+        padding-bottom: 0;
+      }
     }
   </style>
 </head>
@@ -1077,7 +1125,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-04T02:30:45.188Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:09:41.375Z"};</script>
 
 
   <script>
@@ -1095,6 +1143,20 @@
       document.documentElement.classList.toggle('is-wechat', /MicroMessenger/i.test(navigator.userAgent || ''));
     } catch (e0) { /* ignore */ }
     const $ = (id) => document.getElementById(id);
+    const pickedFiles = { photoDepart: null, photoReturn: null };
+    const previewUrls = { photoDepart: null, photoReturn: null };
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+    async function fetchWithTimeout(url, opts, ms) {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), ms);
+      try {
+        return await fetch(url, Object.assign({}, opts, { signal: ctrl.signal }));
+      } finally {
+        clearTimeout(timer);
+      }
+    }
     function lsGet(key) {
       try { return localStorage.getItem(key); } catch (e) { return null; }
     }
@@ -1215,9 +1277,10 @@
         (row) => String(row.code || '').trim().toLowerCase() === c,
       ) || null;
     }
-    async function fetchPublicStatusMessages() {
-      const url = `${NTFY.server}/${encodeURIComponent(NTFY.topic)}/json?poll=1&since=72h`;
-      const r = await fetch(url, { headers: { Accept: 'application/json' } });
+    async function fetchPublicStatusMessages(sinceSpec) {
+      const since = sinceSpec || '72h';
+      const url = `${NTFY.server}/${encodeURIComponent(NTFY.topic)}/json?poll=1&since=${encodeURIComponent(since)}`;
+      const r = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 8000);
       if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
       const text = (await r.text()).trim();
       if (!text) return [];
@@ -1258,12 +1321,12 @@
         accessName: j.payload?.accessName || '',
       };
     }
-    async function findStatusByToken(token) {
+    async function findStatusByToken(token, sinceSpec) {
       try {
         const cloud = await findStatusByTokenCloud(token);
         if (cloud) return cloud;
       } catch (_) { /* fallback ntfy */ }
-      const list = await fetchPublicStatusMessages();
+      const list = await fetchPublicStatusMessages(sinceSpec);
       let best = null;
       for (const row of list) {
         if (String(row.body.clientToken || '') !== String(token)) continue;
@@ -1291,16 +1354,31 @@
       }
     }
     async function uploadPhotoNtfy(blob, filename) {
-      const r = await fetch(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
-        method: 'PUT',
-        headers: { Filename: filename, Title: 'Trip photo' },
-        body: blob,
-      });
-      if (!r.ok) throw new Error('照片上传失败 HTTP ' + r.status);
-      const j = await r.json();
-      const url = j && j.attachment && j.attachment.url;
-      if (!url) throw new Error('未取得照片链接');
-      return url;
+      let lastErr = null;
+      for (let i = 0; i < 4; i++) {
+        try {
+          if (i > 0) show('ok', `照片通道繁忙，正在重试（${i}/3）…`);
+          const r = await fetchWithTimeout(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
+            method: 'PUT',
+            headers: { Filename: filename, Title: 'Trip photo' },
+            body: blob,
+          }, 20000);
+          if (r.status === 429) {
+            lastErr = new Error('照片通道繁忙，请稍后再试');
+            await sleep(1500 * (i + 1));
+            continue;
+          }
+          if (!r.ok) throw new Error('照片上传失败 HTTP ' + r.status);
+          const j = await r.json();
+          const url = j && j.attachment && j.attachment.url;
+          if (!url) throw new Error('未取得照片链接');
+          return url;
+        } catch (e) {
+          lastErr = e.name === 'AbortError' ? new Error('照片上传超时，请换小图或稍后重试') : e;
+          if (i < 3) await sleep(1500 * (i + 1));
+        }
+      }
+      throw lastErr || new Error('照片上传失败');
     }
     function populateVehicleOptions(vehicles) {
       const sel = $('plate');
@@ -1548,7 +1626,7 @@
     $('departTime').addEventListener('input', recalcDuration);
     $('returnTime').addEventListener('input', recalcDuration);
 
-    function compressImage(file, maxSide = 1600, quality = 0.72) {
+    function compressOnce(file, maxSide, quality) {
       return new Promise((resolve, reject) => {
         const url = URL.createObjectURL(file);
         const img = new Image();
@@ -1576,6 +1654,24 @@
         img.src = url;
       });
     }
+    async function compressImage(file) {
+      const steps = [
+        [1600, 0.72],
+        [1280, 0.62],
+        [1024, 0.55],
+      ];
+      let lastErr = null;
+      for (const [side, quality] of steps) {
+        try {
+          const blob = await compressOnce(file, side, quality);
+          if (blob.size <= 1.5 * 1024 * 1024) return blob;
+          lastErr = new Error('图片仍偏大');
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      throw lastErr || new Error('图片压缩失败');
+    }
     function blobToDataUrl(blob) {
       return new Promise((resolve, reject) => {
         const fr = new FileReader();
@@ -1584,25 +1680,67 @@
         fr.readAsDataURL(blob);
       });
     }
-    function bindPhotoPreview(inputId, previewId, boxId) {
-      const box = $(boxId);
-      $(inputId).addEventListener('change', () => {
-        $(inputId).removeAttribute('capture');
-        const f = $(inputId).files && $(inputId).files[0];
-        const img = $(previewId);
-        if (!f) {
-          img.classList.remove('show');
-          img.removeAttribute('src');
-          box.classList.remove('has-photo');
-          return;
-        }
-        img.src = URL.createObjectURL(f);
-        img.classList.add('show');
-        box.classList.add('has-photo');
-      });
+    function photoPreviewIds(inputId) {
+      return inputId === 'photoDepart'
+        ? { previewId: 'previewDepart', boxId: 'photoDepartBox' }
+        : { previewId: 'previewReturn', boxId: 'photoReturnBox' };
     }
-    bindPhotoPreview('photoDepart', 'previewDepart', 'photoDepartBox');
-    bindPhotoPreview('photoReturn', 'previewReturn', 'photoReturnBox');
+    function revokePreview(inputId) {
+      if (previewUrls[inputId]) {
+        URL.revokeObjectURL(previewUrls[inputId]);
+        previewUrls[inputId] = null;
+      }
+    }
+    function replaceFileInput(inputId) {
+      const old = $(inputId);
+      if (!old || !old.parentNode) return;
+      const neu = old.cloneNode(false);
+      neu.value = '';
+      neu.removeAttribute('capture');
+      old.parentNode.replaceChild(neu, old);
+      neu.addEventListener('change', () => handlePhotoPicked(inputId));
+    }
+    function handlePhotoPicked(inputId) {
+      const { previewId, boxId } = photoPreviewIds(inputId);
+      const input = $(inputId);
+      if (input) input.removeAttribute('capture');
+      const f = input && input.files && input.files[0];
+      pickedFiles[inputId] = f || null;
+      const img = $(previewId);
+      const box = $(boxId);
+      revokePreview(inputId);
+      if (!f) {
+        img.classList.remove('show');
+        img.removeAttribute('src');
+        box.classList.remove('has-photo');
+        return;
+      }
+      previewUrls[inputId] = URL.createObjectURL(f);
+      img.src = previewUrls[inputId];
+      img.classList.add('show');
+      box.classList.add('has-photo');
+      replaceFileInput(inputId);
+    }
+    function clearPickedPhotos() {
+      pickedFiles.photoDepart = null;
+      pickedFiles.photoReturn = null;
+      revokePreview('photoDepart');
+      revokePreview('photoReturn');
+      ['previewDepart', 'previewReturn'].forEach((id) => {
+        const img = $(id);
+        if (!img) return;
+        img.classList.remove('show');
+        img.removeAttribute('src');
+      });
+      const box1 = $('photoDepartBox');
+      const box2 = $('photoReturnBox');
+      if (box1) box1.classList.remove('has-photo');
+      if (box2) box2.classList.remove('has-photo');
+      replaceFileInput('photoDepart');
+      replaceFileInput('photoReturn');
+    }
+    $('photoDepart').addEventListener('change', () => handlePhotoPicked('photoDepart'));
+    $('photoReturn').addEventListener('change', () => handlePhotoPicked('photoReturn'));
 
     function isCompactPhotoUi() {
       try {
@@ -1732,6 +1870,15 @@
     $('purpose').addEventListener('change', applyPurposeRules);
     applyPurposeRules();
 
+    $('form').addEventListener('input', () => {
+      const box = $('okBox');
+      if (box) box.classList.remove('show');
+    });
+    window.addEventListener('pageshow', () => {
+      closePhotoMenus();
+      const btn = $('btn');
+      if (btn) btn.disabled = false;
+    });
     $('form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = $('btn');
@@ -1752,8 +1899,8 @@
         return;
       }
       const short = purpose === '短程出车';
-      const f1 = $('photoDepart').files && $('photoDepart').files[0];
-      const f2 = $('photoReturn').files && $('photoReturn').files[0];
+      const f1 = pickedFiles.photoDepart;
+      const f2 = pickedFiles.photoReturn;
       if (!short && (!f1 || !f2)) {
         show('err', '请上传出发与返程表显照片');
         btn.disabled = false;
@@ -1838,15 +1985,33 @@
             }
           }
           if (NTFY?.topic) {
-            fetch(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                Title: 'Trip request',
-                Tags: 'car,office',
-              },
-              body: JSON.stringify(payload),
-            }).catch(() => {});
+            let ntfyOk = false;
+            let ntfyErr = null;
+            for (let i = 0; i < 4 && !ntfyOk; i++) {
+              try {
+                if (i > 0) show('ok', `提交通道繁忙，正在重试（${i}/3）…`);
+                const nr = await fetchWithTimeout(`${NTFY.server}/${encodeURIComponent(NTFY.topic)}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    Title: 'Trip request',
+                    Tags: 'car,office',
+                  },
+                  body: JSON.stringify(payload),
+                }, 15000);
+                if (nr.status === 429) {
+                  ntfyErr = new Error('提交过于频繁，请等一两分钟再试');
+                  await sleep(1500 * (i + 1));
+                  continue;
+                }
+                if (!nr.ok) throw new Error('提交失败 HTTP ' + nr.status);
+                ntfyOk = true;
+              } catch (e) {
+                ntfyErr = e.name === 'AbortError' ? new Error('提交超时，请稍后重试') : e;
+                if (i < 3) await sleep(1500 * (i + 1));
+              }
+            }
+            if (!ntfyOk && !cloudOk) throw (ntfyErr || new Error('提交失败，请稍后重试'));
           } else if (!cloudOk) {
             throw new Error('提交失败：当前网络无法连接云端，请联系办公室');
           }
@@ -1854,9 +2019,10 @@
           let assignedId = '';
           let deniedMsg = '';
           const deadline = Date.now() + 20000;
+          const pollSince = String(Math.floor(Date.now() / 1000) - 120);
           while (Date.now() < deadline && !assignedId && !deniedMsg) {
             try {
-              const found = await findStatusByToken(clientToken);
+              const found = await findStatusByToken(clientToken, pollSince);
               if (found && found.status === 'denied') deniedMsg = found.rejectReason || '登记被拒绝';
               else if (found && found.id && found.status !== 'denied') assignedId = String(found.id);
             } catch (_) { /* retry */ }
@@ -1962,12 +2128,7 @@
         $('departOdometer').value = '';
         $('returnOdometer').value = '';
         $('mileage').value = '';
-        $('photoDepart').value = '';
-        $('photoReturn').value = '';
-        $('previewDepart').classList.remove('show');
-        $('previewReturn').classList.remove('show');
-        $('photoDepartBox').classList.remove('has-photo');
-        $('photoReturnBox').classList.remove('has-photo');
+        clearPickedPhotos();
         closePhotoMenus();
         applyPurposeRules();
       } catch (err) {
@@ -2040,7 +2201,7 @@
           <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
         </div>
-        ${info.status === 'pending' ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>撤回申请</button>' : ''}`;
+        ${info.status === 'pending' ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>删除申请</button>' : ''}`;
       const cancelBtn = el.querySelector('[data-cancel]');
       if (cancelBtn) cancelBtn.addEventListener('click', () => cancelOwnRecord(info));
     }
@@ -2062,7 +2223,7 @@
             </div>
             <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
           </button>
-          ${r.status === 'pending' ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">撤回</button>` : ''}
+          ${r.status === 'pending' ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">删除申请</button>` : ''}
         </div>`).join('');
       box.querySelectorAll('.mine-item-main').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -2081,12 +2242,12 @@
     }
     async function cancelOwnRecord(rec) {
       if (!rec?.id || rec.status !== 'pending') return;
-      if (!confirm('确认撤回这条待审批申请？办公室将不再处理，且不可恢复。')) return;
+      if (!confirm('确认删除这条待审批申请？办公室将不再处理，且不可恢复。')) return;
       const stored = loadMyIdList().find((x) => x.id === rec.id) || {};
       const token = rec.clientToken || stored.clientToken || '';
       try {
         if (IS_PUBLIC) {
-          if (!NTFY?.topic) throw new Error('公网撤回未配置，请联系办公室');
+          if (!NTFY?.topic) throw new Error('公网删除未配置，请联系办公室');
           const payload = {
             type: 'trip_cancel',
             id: rec.id,
@@ -2106,7 +2267,7 @@
             },
             body: JSON.stringify(payload),
           });
-          if (!r.ok) throw new Error('撤回发送失败 HTTP ' + r.status);
+          if (!r.ok) throw new Error('删除发送失败 HTTP ' + r.status);
         } else {
           const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
           const r = await fetch(`${VEHICLE_API}/cancel${qs}`, {
@@ -2118,10 +2279,10 @@
             body: JSON.stringify({ id: rec.id, clientToken: token }),
           });
           const data = await r.json().catch(() => ({}));
-          if (!r.ok) throw new Error(data.error || '撤回失败');
+          if (!r.ok) throw new Error(data.error || '删除失败');
         }
         addMyId(rec.id, { ...rec, ...stored, status: 'cancelled', clientToken: token });
-        showMineMsg('ok', '已撤回');
+        showMineMsg('ok', '已删除');
         await loadMyRecords();
       } catch (e) {
         showMineMsg('err', e.message || String(e));
