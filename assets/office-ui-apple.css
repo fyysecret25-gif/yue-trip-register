@@ -604,7 +604,8 @@ html.office-soft-nav-loading main {
   overflow: hidden;
 }
 
-/* 车辆 / 食堂 / 报销：子模块卡约缩小 20%（物资 Hub 保持原高度） */
+/* 物资 / 车辆 / 食堂 / 报销：子模块卡约缩小 20% */
+.material-hub-page .ios-widget-module.material-action-card.ios-widget-card,
 .vehicle-hub-page .ios-widget-module.material-action-card.ios-widget-card,
 .canteen-hub-page .ios-widget-module.material-action-card.ios-widget-card,
 .reimburse-hub-page .ios-widget-module.material-action-card.ios-widget-card {
@@ -612,6 +613,7 @@ html.office-soft-nav-loading main {
   border-radius: 18px;
 }
 
+.material-hub-page .ios-widget-module .ios-widget-inner,
 .vehicle-hub-page .ios-widget-module .ios-widget-inner,
 .canteen-hub-page .ios-widget-module .ios-widget-inner,
 .reimburse-hub-page .ios-widget-module .ios-widget-inner {
@@ -619,12 +621,14 @@ html.office-soft-nav-loading main {
   gap: 5px;
 }
 
+.material-hub-page .ios-widget-module .ios-widget-head,
 .vehicle-hub-page .ios-widget-module .ios-widget-head,
 .canteen-hub-page .ios-widget-module .ios-widget-head,
 .reimburse-hub-page .ios-widget-module .ios-widget-head {
   gap: 8px;
 }
 
+.material-hub-page .ios-widget-module .ios-widget-icon,
 .vehicle-hub-page .ios-widget-module .ios-widget-icon,
 .canteen-hub-page .ios-widget-module .ios-widget-icon,
 .reimburse-hub-page .ios-widget-module .ios-widget-icon {
@@ -633,6 +637,7 @@ html.office-soft-nav-loading main {
   border-radius: 8px;
 }
 
+.material-hub-page .ios-widget-module .office-icon-hub svg,
 .vehicle-hub-page .ios-widget-module .office-icon-hub svg,
 .canteen-hub-page .ios-widget-module .office-icon-hub svg,
 .reimburse-hub-page .ios-widget-module .office-icon-hub svg {
@@ -640,12 +645,14 @@ html.office-soft-nav-loading main {
   height: 14px;
 }
 
+.material-hub-page .ios-widget-module .ios-widget-kicker,
 .vehicle-hub-page .ios-widget-module .ios-widget-kicker,
 .canteen-hub-page .ios-widget-module .ios-widget-kicker,
 .reimburse-hub-page .ios-widget-module .ios-widget-kicker {
   font-size: var(--widget-kicker-size, 0.7rem);
 }
 
+.material-hub-page .ios-widget-module .ios-widget-balance,
 .vehicle-hub-page .ios-widget-module .ios-widget-balance,
 .canteen-hub-page .ios-widget-module .ios-widget-balance,
 .reimburse-hub-page .ios-widget-module .ios-widget-balance {
@@ -653,6 +660,7 @@ html.office-soft-nav-loading main {
   margin-top: 3px;
 }
 
+.material-hub-page .ios-widget-module .ios-widget-foot,
 .vehicle-hub-page .ios-widget-module .ios-widget-foot,
 .canteen-hub-page .ios-widget-module .ios-widget-foot,
 .reimburse-hub-page .ios-widget-module .ios-widget-foot {
@@ -1334,16 +1342,20 @@ body.register-page button.primary,
     width: auto;
     max-width: 100%;
   }
-  body.register-page .mine-item > .mine-cancel,
-  body.register-page .mine-detail-cancel {
-    grid-column: 1;
-    width: 100%;
-    min-height: 44px;
-    font-size: 16px;
+  body.register-page .mine-item .mine-cancel {
+    width: auto;
+    flex-shrink: 0;
+    min-height: 32px;
+    font-size: 13px;
     -webkit-appearance: none;
     appearance: none;
     position: relative;
     z-index: 2;
+  }
+  body.register-page .mine-detail-cancel {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
   }
 
   body.register-page .item-row {
