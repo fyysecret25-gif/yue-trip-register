@@ -996,7 +996,7 @@
               <input type="time" class="form-time-picker" name="departTime" id="departTime" aria-label="出发时间" />
             </span>
           </label>
-          <label><span class="field-label req">出发表显</span>
+          <label><span class="field-label req" id="departOdoReq">出发表显</span>
             <input type="number" name="departOdometer" id="departOdometer" required min="0" step="0.1" inputmode="decimal" placeholder="公里" />
           </label>
         </div>
@@ -1129,7 +1129,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:35:39.460Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:45:51.699Z"};</script>
 
 
   <script>
@@ -1405,6 +1405,7 @@
       }
       const lastPlate = localStorage.getItem('trip_plate');
       if (lastPlate && [...sel.options].some((o) => o.value === lastPlate)) sel.value = lastPlate;
+      if (typeof applyPurposeRules === 'function') applyPurposeRules();
     }
     function populateHandlerOptions(handlers) {
       const hsel = $('handler');
@@ -1861,11 +1862,17 @@
     }
     function applyPurposeRules() {
       const short = resolvePurpose() === '短程出车';
+      const otherPlate = ($('plate').value || '').trim() === '其他';
+      const departOdoReq = !otherPlate;
+      const returnOdoReq = !otherPlate && !short;
+      const photosReq = !otherPlate && !short;
       $('destination').required = !short;
       $('destReq').classList.toggle('req', !short);
-      $('returnOdometer').required = !short;
-      $('returnOdoReq').classList.toggle('req', !short);
-      $('returnOdoWrap').style.opacity = short ? '0.55' : '1';
+      $('departOdometer').required = departOdoReq;
+      $('departOdoReq').classList.toggle('req', departOdoReq);
+      $('returnOdometer').required = returnOdoReq;
+      $('returnOdoReq').classList.toggle('req', returnOdoReq);
+      $('returnOdoWrap').style.opacity = returnOdoReq ? '1' : '0.55';
       const mileageRow = $('mileageWrap').closest('.split-row');
       if (short) {
         $('mileageWrap').style.display = 'none';
@@ -1874,16 +1881,17 @@
         $('mileageWrap').style.display = '';
         mileageRow.classList.remove('mileage-row-short');
       }
-      if (short) $('returnOdometer').value = '';
+      if (short && !otherPlate) $('returnOdometer').value = '';
       // 照片框是隐藏的：不可再标 required。选图后 replaceFileInput 会清空原生 value，
       // 微信/安卓会弹出系统选择器标题「选择一个」并挡住提交；是否有图看 pickedFiles。
       $('photoDepart').required = false;
       $('photoReturn').required = false;
-      $('photoReq').classList.toggle('req', !short);
-      $('photoReq2').classList.toggle('req', !short);
+      $('photoReq').classList.toggle('req', photosReq);
+      $('photoReq2').classList.toggle('req', photosReq);
     }
     $('purpose').addEventListener('input', applyPurposeRules);
     $('purpose').addEventListener('change', applyPurposeRules);
+    $('plate').addEventListener('change', applyPurposeRules);
     applyPurposeRules();
 
     $('form').addEventListener('input', () => {
@@ -1915,9 +1923,10 @@
         return;
       }
       const short = purpose === '短程出车';
+      const otherPlate = ($('plate').value || '').trim() === '其他';
       const f1 = pickedFiles.photoDepart;
       const f2 = pickedFiles.photoReturn;
-      if (!short && (!f1 || !f2)) {
+      if (!short && !otherPlate && (!f1 || !f2)) {
         show('err', '请上传出发与返程表显照片');
         btn.disabled = false;
         return;
