@@ -1326,6 +1326,24 @@ body.register-page button.primary,
   body.register-page .mine-item {
     padding: 14px 12px;
     min-height: 56px;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: visible;
+  }
+  body.register-page .mine-item-main {
+    min-width: 0;
+    width: auto;
+    max-width: 100%;
+  }
+  body.register-page .mine-item > .mine-cancel,
+  body.register-page .mine-detail-cancel {
+    grid-column: 1;
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    z-index: 2;
   }
 
   body.register-page .item-row {
