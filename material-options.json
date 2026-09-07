@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-07T01:02:04.998Z",
+  "updatedAt": "2026-09-07T02:26:11.207Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -392,7 +392,7 @@
       "spec": "100抽",
       "unit": "包",
       "category": "纸品",
-      "available": 188,
+      "available": 187,
       "vendor": "山姆",
       "location": "仓库",
       "price": "1.67"
@@ -404,7 +404,7 @@
       "spec": "维达",
       "unit": "包",
       "category": "纸品",
-      "available": 12,
+      "available": 11,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
