@@ -9,11 +9,11 @@
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css?v=78" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=78" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=78" />
-  <script src="./assets/office-icons.js?v=78" defer></script>
-  <script src="./assets/office-date.js?v=78" defer></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=80" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=80" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=80" />
+  <script src="./assets/office-icons.js?v=80" defer></script>
+  <script src="./assets/office-date.js?v=80" defer></script>
   <script src="./assets/office-escape.js" defer></script>
   <style>
     :root {
@@ -654,7 +654,6 @@
       box-sizing: border-box;
     }
     .mine-item-main { grid-column: 1; }
-    .mine-item > .mine-cancel { grid-column: 1; }
     .mine-item-main {
       -webkit-appearance: none;
       appearance: none;
@@ -702,21 +701,22 @@
       background: #fff5f4;
       color: var(--danger);
       border-radius: 8px;
-      padding: 10px 12px;
-      min-height: 44px;
-      font-size: 16px;
+      padding: 4px 10px;
+      min-height: 32px;
+      font-size: 13px;
       font-weight: 650;
       cursor: pointer;
       font-family: inherit;
       margin: 0;
       white-space: nowrap;
-      width: 100%;
+      width: auto;
+      flex-shrink: 0;
       box-sizing: border-box;
       position: relative;
       z-index: 2;
     }
     .mine-cancel:disabled { opacity: 0.55; cursor: default; }
-    .mine-detail-cancel { margin-top: 10px; width: 100%; padding: 10px 12px; font-size: 16px; }
+    .mine-detail-cancel { margin-top: 10px; width: 100%; min-height: 44px; padding: 10px 12px; font-size: 16px; }
 
     .user-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .btn-change-code {
@@ -874,9 +874,13 @@
         width: auto;
         max-width: 100%;
       }
-      .mine-item > .mine-cancel,
+      .mine-item .mine-cancel {
+        width: auto;
+        flex-shrink: 0;
+        min-height: 32px;
+        font-size: 13px;
+      }
       .mine-detail-cancel {
-        grid-column: 1;
         width: 100%;
         min-height: 44px;
         font-size: 16px;
@@ -1125,7 +1129,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:13:34.450Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-07T03:29:09.867Z"};</script>
 
 
   <script>
@@ -2203,7 +2207,7 @@
           <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
         </div>
-        ${info.status === 'pending' ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>删除申请</button>' : ''}`;
+        ${canSelfDelete(info.status) ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>删除申请</button>' : ''}`;
       const cancelBtn = el.querySelector('[data-cancel]');
       if (cancelBtn) cancelBtn.addEventListener('click', () => cancelOwnRecord(info));
     }
@@ -2216,21 +2220,28 @@
       }
       box.innerHTML = records.map((r) => `
         <div class="mine-item">
-          <button type="button" class="mine-item-main" data-id="${esc(r.id)}">
+          <div class="mine-item-main" role="button" tabindex="0" data-id="${esc(r.id)}">
             <div class="row1">
               <span>${esc(r.id)}</span>
               <span class="row1-right">
+                ${canSelfDelete(r.status) ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">删除</button>` : ''}
                 <span class="badge ${esc(r.status)}">${statusLabel(r.status)}</span>
               </span>
             </div>
             <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
-          </button>
-          ${r.status === 'pending' ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">删除申请</button>` : ''}
+          </div>
         </div>`).join('');
       box.querySelectorAll('.mine-item-main').forEach((btn) => {
-        btn.addEventListener('click', () => {
+        const open = () => {
           const rec = records.find((x) => String(x.id) === btn.dataset.id);
           if (rec) renderRecordDetail(rec, 'mineDetail');
+        };
+        btn.addEventListener('click', open);
+        btn.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') {
+            ev.preventDefault();
+            open();
+          }
         });
       });
       box.querySelectorAll('[data-cancel]').forEach((btn) => {
@@ -2242,9 +2253,15 @@
         });
       });
     }
+    function canSelfDelete(status) {
+      return status === 'pending' || status === 'rejected';
+    }
     async function cancelOwnRecord(rec) {
-      if (!rec?.id || rec.status !== 'pending') return;
-      if (!confirm('确认删除这条待审批申请？办公室将不再处理，且不可恢复。')) return;
+      if (!rec?.id || !canSelfDelete(rec.status)) return;
+      const tip = rec.status === 'rejected'
+        ? '确认删除这条已驳回申请？不可恢复。'
+        : '确认删除这条待审批申请？办公室将不再处理，且不可恢复。';
+      if (!confirm(tip)) return;
       const stored = loadMyIdList().find((x) => x.id === rec.id) || {};
       const token = rec.clientToken || stored.clientToken || '';
       try {
