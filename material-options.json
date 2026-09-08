@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-08T02:34:03.552Z",
+  "updatedAt": "2026-09-08T02:34:35.578Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -288,6 +288,42 @@
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
+    },
+    {
+      "skuKey": "办公用品:::A4纸:::晨光",
+      "code": "0203260827005001",
+      "name": "A4纸",
+      "spec": "晨光",
+      "unit": "包",
+      "category": "办公用品",
+      "available": 50,
+      "vendor": "交接",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "skuKey": "固资:::奥克斯（AUX）消毒柜:::XDG-SY810-B26",
+      "code": "0101260830000101",
+      "name": "奥克斯（AUX）消毒柜",
+      "spec": "XDG-SY810-B26",
+      "unit": "台",
+      "category": "固资",
+      "available": 1,
+      "vendor": "肇庆京东盛甲贸易",
+      "location": "仓库",
+      "price": "1751.33"
+    },
+    {
+      "skuKey": "固资:::得力（deli）保险柜:::AE631-Z",
+      "code": "0101260830000201",
+      "name": "得力（deli）保险柜",
+      "spec": "AE631-Z",
+      "unit": "台",
+      "category": "固资",
+      "available": 1,
+      "vendor": "北京京东世纪信息技术",
+      "location": "仓库",
+      "price": "423.89"
     },
     {
       "skuKey": "生活用品:::抽水器:::电动",
