@@ -9,12 +9,14 @@
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
   <title>十八局南方公司出车登记</title>
-  <link rel="preload" href="./assets/office-ui-core.css?v=80" as="style" />
-  <link rel="stylesheet" href="./assets/office-ui-core.css?v=80" />
-  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=80" />
-  <script src="./assets/office-icons.js?v=80" defer></script>
-  <script src="./assets/office-date.js?v=80" defer></script>
+  <link rel="preload" href="./assets/office-ui-core.css?v=81" as="style" />
+  <link rel="stylesheet" href="./assets/office-ui-core.css?v=81" />
+  <link rel="stylesheet" href="./assets/office-ui-dialogs.css?v=81" />
+  <link rel="stylesheet" href="./assets/office-ui-apple.css?v=81" />
+  <script src="./assets/office-icons.js?v=81" defer></script>
+  <script src="./assets/office-date.js?v=81" defer></script>
   <script src="./assets/office-escape.js" defer></script>
+  <script src="./assets/office-ios-dialog.js?v=81" defer></script>
   <style>
     :root {
       --bg: #f5f5f7;
@@ -1136,7 +1138,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-08T01:21:49.862Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-08T01:59:32.953Z"};</script>
 
 
   <script>
@@ -1612,6 +1614,22 @@
       const el = $('msg');
       el.className = `msg show ${type}`;
       el.textContent = text;
+    }
+
+    function notifySubmitOk({ id, message } = {}) {
+      const msg = message
+        || (id
+          ? `申请编号：${id}\n已提交，等待办公室同意。`
+          : '已提交，等待办公室同意。');
+      show('ok', '提交成功');
+      if (typeof window.officeAlert === 'function') {
+        return window.officeAlert({
+          title: '提交成功',
+          message: msg,
+          confirmLabel: '好',
+        });
+      }
+      return Promise.resolve();
     }
 
     function recalcMileage() {
@@ -2101,12 +2119,14 @@
             localStorage.setItem('trip_last_id', assignedId);
             $('okId').textContent = assignedId;
             $('okBox').classList.add('show');
-            show('ok', '提交成功');
+            await notifySubmitOk({ id: assignedId });
           } else {
             if (cloudOk) {
-              show('ok', '已提交至云端队列，办公室开机后将分配编号。可在「查询进度」跟踪。');
+              const queueMsg = '已提交至云端队列，办公室开机后将分配编号。可在「查询进度」跟踪。';
+              await notifySubmitOk({ message: queueMsg });
             } else if (NTFY?.topic) {
-              show('ok', '已提交，办公室上线后将分配编号。可在「查询进度」查看。');
+              const queueMsg = '已提交，办公室上线后将分配编号。可在「查询进度」查看。';
+              await notifySubmitOk({ message: queueMsg });
             } else {
               show('err', '已提交，但暂未取到编号。请稍后在「查询进度」查看，或联系办公室。');
             }
@@ -2160,7 +2180,7 @@
         localStorage.setItem('trip_last_id', data.id || '');
         $('okId').textContent = data.id || '';
         $('okBox').classList.add('show');
-        show('ok', '提交成功');
+        await notifySubmitOk({ id: data.id || '' });
         }
         $('purpose').value = '';
         $('origin').value = '';
