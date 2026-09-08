@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-04T02:41:34.706Z",
+  "updatedAt": "2026-09-08T02:21:30.094Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -326,18 +326,6 @@
       "price": "423.89"
     },
     {
-      "skuKey": "生活用品:::安利优生活浓缩:::1L",
-      "code": "0612260828000601",
-      "name": "安利优生活浓缩",
-      "spec": "1L",
-      "unit": "瓶",
-      "category": "生活用品",
-      "available": 2,
-      "vendor": "安利中国日用品",
-      "location": "仓库",
-      "price": "42.00"
-    },
-    {
       "skuKey": "生活用品:::抽水器:::电动",
       "code": "0699260828001001",
       "name": "抽水器",
@@ -375,12 +363,12 @@
     },
     {
       "skuKey": "水饮:::瓶装水:::农夫山泉",
-      "code": "0612260825001201",
+      "code": "0408260904001001",
       "name": "瓶装水",
       "spec": "农夫山泉",
       "unit": "箱",
       "category": "水饮",
-      "available": 11,
+      "available": 10,
       "vendor": "叶利辉",
       "location": "仓库",
       "price": "35.00"
@@ -392,7 +380,7 @@
       "spec": "19L",
       "unit": "桶",
       "category": "水饮",
-      "available": 11,
+      "available": 9,
       "vendor": "叶利辉",
       "location": "仓库、食堂",
       "price": "20.00"
@@ -404,7 +392,7 @@
       "spec": "100抽",
       "unit": "包",
       "category": "纸品",
-      "available": 191,
+      "available": 187,
       "vendor": "山姆",
       "location": "仓库",
       "price": "1.67"
@@ -416,7 +404,7 @@
       "spec": "维达",
       "unit": "包",
       "category": "纸品",
-      "available": 12,
+      "available": 11,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
