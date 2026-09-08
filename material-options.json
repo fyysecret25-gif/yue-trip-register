@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-08T02:21:30.094Z",
+  "updatedAt": "2026-09-08T02:21:46.368Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -380,10 +380,10 @@
       "spec": "19L",
       "unit": "桶",
       "category": "水饮",
-      "available": 9,
+      "available": 17,
       "vendor": "叶利辉",
       "location": "仓库、食堂",
-      "price": "20.00"
+      "price": "10.59"
     },
     {
       "skuKey": "纸品:::抽纸.MM:::100抽",
