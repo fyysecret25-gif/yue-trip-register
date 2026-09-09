@@ -10,6 +10,22 @@
 
   let activeDialog = null;
 
+  /** 关闭后短暂吞掉点穿，避免点遮罩关掉弹窗后点到下层「驳回/同意」 */
+  function armClickThroughShield() {
+    const shield = document.createElement('div');
+    shield.setAttribute('aria-hidden', 'true');
+    shield.style.cssText = 'position:fixed;inset:0;z-index:2600;background:transparent;';
+    const kill = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+    };
+    shield.addEventListener('pointerdown', kill, true);
+    shield.addEventListener('click', kill, true);
+    document.body.appendChild(shield);
+    setTimeout(() => shield.remove(), 350);
+  }
+
   function closeDialog(result) {
     if (!activeDialog) return;
     const { el, resolve, onKeydown } = activeDialog;
@@ -17,6 +33,7 @@
     document.removeEventListener('keydown', onKeydown);
     el.remove();
     document.body.classList.remove('office-ios-dialog-open');
+    armClickThroughShield();
     resolve(result);
   }
 
@@ -38,16 +55,32 @@
         if (e.key === 'Escape') closeDialog(null);
       };
 
+      const dismissAsCancel = () => closeDialog(null);
+
+      // 遮罩 / 弹窗外空白：一律取消，禁止当成确认
+      el.addEventListener('pointerdown', (e) => {
+        if (e.target === el || e.target.classList?.contains('office-ios-dialog-backdrop')) {
+          e.preventDefault();
+        }
+      });
+
       el.addEventListener('click', (e) => {
+        if (e.target === el || e.target.classList?.contains('office-ios-dialog-backdrop')) {
+          e.preventDefault();
+          e.stopPropagation();
+          dismissAsCancel();
+          return;
+        }
         const node = e.target.closest('[data-action]');
-        if (!node) return;
-        if (node.dataset.action === 'confirm') {
+        if (!node || !el.contains(node)) return;
+        const action = node.getAttribute('data-action');
+        if (action === 'confirm') {
           const value = typeof opts.getResultOnConfirm === 'function'
             ? opts.getResultOnConfirm(el)
             : true;
           closeDialog(value);
-        } else if (node.dataset.action === 'cancel') {
-          closeDialog(null);
+        } else if (action === 'cancel') {
+          dismissAsCancel();
         }
       });
 
@@ -120,6 +153,7 @@
     const confirmLabel = opts.confirmLabel || '确定';
     const cancelLabel = opts.cancelLabel || '取消';
     const multiline = !!opts.multiline;
+    const destructive = !!opts.destructive;
     const inputId = 'officeIosDialogInput';
 
     const field = multiline
@@ -133,7 +167,7 @@
         <div class="office-ios-dialog-form">${field}</div>
         <div class="office-ios-dialog-actions">
           <button type="button" class="office-ios-dialog-btn cancel" data-action="cancel">${esc(cancelLabel)}</button>
-          <button type="button" class="office-ios-dialog-btn confirm" data-action="confirm">${esc(confirmLabel)}</button>
+          <button type="button" class="office-ios-dialog-btn ${destructive ? 'destructive' : 'confirm'}" data-action="confirm">${esc(confirmLabel)}</button>
         </div>
       </div>`;
 
