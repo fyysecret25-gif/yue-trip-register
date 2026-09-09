@@ -26,6 +26,10 @@
     staff: mk('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>', 20, 1.65),
     host: mk('<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>', 20, 1.65),
     utility: mk('<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>', 20, 1.7),
+    electric: mk('<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>', 20, 1.7),
+    water: mk('<path d="M12 2.7c-3.5 4.2-6 7.4-6 10.3a6 6 0 0 0 12 0c0-2.9-2.5-6.1-6-10.3z"/><path d="M10 14.5c.5 1.2 1.5 2 2.5 2"/>', 20, 1.7),
+    gas: mk('<path d="M8.5 14.5c0 2.2 1.6 4 3.5 4s3.5-1.8 3.5-4c0-2.4-2.2-3.8-3.5-6.5-1.3 2.7-3.5 4.1-3.5 6.5z"/><path d="M9.5 18.8c-.8.5-1.3 1.3-1.3 2.2M14.5 18.8c.8.5 1.3 1.3 1.3 2.2"/>', 20, 1.7),
+    'property-fee': mk('<path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-5h6v5"/><path d="M9 11h.01M15 11h.01M12 11h.01"/>', 20, 1.7),
     rent: mk('<path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-4h6v4"/><path d="M12 11v.01"/>', 20, 1.7),
     repair: mk('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>', 20, 1.65),
     'fixed-consume': mk('<path d="M10 2h4v3l1.5 2.5V20a2 2 0 0 1-2 2h-3a2 2 0 0 1-2-2V7.5L10 5V2z"/><path d="M10 12h4"/>', 20, 1.65),
@@ -46,7 +50,8 @@
 
   const MODULE_KEYS = new Set(['workplan', 'material', 'vehicle', 'canteen', 'property', 'reimburse']);
   const HUB_KEYS = new Set([
-    'overview', 'approval', 'register', 'archive', 'staff', 'host', 'utility', 'repair', 'rent',
+    'overview', 'approval', 'register', 'archive', 'staff', 'host', 'utility', 'electric', 'water', 'gas',
+    'property-fee', 'repair', 'rent',
     'invoice', 'advance', 'stock', 'plan', 'inbound', 'outbound', 'catalog', 'winetea', 'request',
     'fixed-consume', 'menu', 'working-fund',
   ]);
