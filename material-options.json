@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-17T03:28:17.785Z",
+  "updatedAt": "2026-09-18T00:59:26.551Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -240,6 +240,54 @@
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
+    },
+    {
+      "skuKey": "办公用品:::硒鼓:::HP4104dn",
+      "code": "0203260918000103",
+      "name": "硒鼓",
+      "spec": "HP4104dn",
+      "unit": "个",
+      "category": "办公用品",
+      "available": 1,
+      "vendor": "京东",
+      "location": "仓库",
+      "price": "254.51"
+    },
+    {
+      "skuKey": "办公用品:::硒鼓:::HP4104dw",
+      "code": "0203260918000102",
+      "name": "硒鼓",
+      "spec": "HP4104dw",
+      "unit": "个",
+      "category": "办公用品",
+      "available": 1,
+      "vendor": "京东",
+      "location": "仓库",
+      "price": "226.24"
+    },
+    {
+      "skuKey": "办公用品:::硒鼓:::HPM283fdw（带芯片）",
+      "code": "0203260918000101",
+      "name": "硒鼓",
+      "spec": "HPM283fdw（带芯片）",
+      "unit": "个",
+      "category": "办公用品",
+      "available": 1,
+      "vendor": "京东",
+      "location": "仓库",
+      "price": "415.21"
+    },
+    {
+      "skuKey": "办公用品:::硒鼓:::M232dw",
+      "code": "0203260918000401",
+      "name": "硒鼓",
+      "spec": "M232dw",
+      "unit": "个",
+      "category": "办公用品",
+      "available": 4,
+      "vendor": "京东",
+      "location": "仓库",
+      "price": "399.95"
     },
     {
       "skuKey": "办公用品:::橡皮:::橡皮",
