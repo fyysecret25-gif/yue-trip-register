@@ -1139,7 +1139,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-20T00:58:14.097Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-20T08:11:27.191Z"};</script>
 
 
   <script>
@@ -1308,7 +1308,8 @@
       } catch (e) { /* 名单文件缺失时仍用页内嵌名单 */ }
     }
     async function fetchPublicStatusMessages(sinceSpec) {
-      const since = sinceSpec || '72h';
+      // 查询进度略拉长回溯，避免刚过 72h 的已通过从公网列表消失
+      const since = sinceSpec || '168h';
       const url = `${NTFY.server}/${encodeURIComponent(NTFY.topic)}/json?poll=1&since=${encodeURIComponent(since)}`;
       const r = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 8000);
       if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
@@ -1325,6 +1326,28 @@
         if (body.type === 'trip_cancel') {
           out.push({
             body: Object.assign({}, body, { type: 'trip_status', status: 'cancelled' }),
+            time: Number(msg.time) || 0,
+          });
+          continue;
+        }
+        // 申请原文也纳入：状态回写丢失时，至少能按口令看到待审批条目
+        if (body.type === 'trip_request') {
+          out.push({
+            body: {
+              type: 'trip_status',
+              id: body.id || '',
+              clientToken: body.clientToken || '',
+              status: 'pending',
+              date: body.date || '',
+              plate: body.plate || '',
+              driver: body.driver || '',
+              purpose: body.purpose || '',
+              remark: body.remark || '',
+              accessName: body.accessName || '',
+              accessCode: body.accessCode || '',
+              submittedAt: body.submittedAt || '',
+              _fromRequest: true,
+            },
             time: Number(msg.time) || 0,
           });
           continue;
@@ -2415,6 +2438,23 @@
         showMineMsg('err', e.message || String(e));
       }
     }
+    function mineRecordKey(b) {
+      const id = String(b?.id || '').trim();
+      if (id && !id.startsWith('denied-')) return `id:${id}`;
+      const token = String(b?.clientToken || '').trim();
+      if (token) return `tok:${token}`;
+      return '';
+    }
+    function mineRowMatchesUser(b, name, code, stored) {
+      if (b.id && String(b.id).startsWith('denied-')) return false;
+      if (name && b.accessName && b.accessName === name) return true;
+      // 申请原文常无 accessName，用登记口令或司机名对齐本人
+      if (code && b.accessCode && normalizeAccessCode(b.accessCode) === normalizeAccessCode(code)) return true;
+      if (name && !b.accessName && b.driver && b.driver === name) return true;
+      if (b.id && stored.some((s) => s.id === b.id)) return true;
+      if (b.clientToken && stored.some((s) => s.clientToken && s.clientToken === b.clientToken)) return true;
+      return false;
+    }
     async function loadMyRecords() {
       $('btnRefreshMine').disabled = true;
       showMineMsg('ok', '…');
@@ -2422,22 +2462,75 @@
         let records = [];
         if (IS_PUBLIC) {
           const name = accessName || localStorage.getItem('trip_access_name') || '';
+          const code = accessCode || localStorage.getItem('trip_access_code') || '';
           const stored = loadMyIdList();
           const list = await fetchPublicStatusMessages();
-          const byId = new Map();
+          const byKey = new Map();
           for (const row of list) {
             const b = row.body;
-            if (!b.id || String(b.id).startsWith('denied-')) continue;
-            const matchName = name && b.accessName === name;
-            const matchId = stored.some((s) => s.id === b.id);
-            if (!matchName && !matchId) continue;
+            if (!mineRowMatchesUser(b, name, code, stored)) continue;
             if (b.accessName && !name) {
               accessName = b.accessName;
               localStorage.setItem('trip_access_name', accessName);
               updateUserBar();
             }
-            const prev = byId.get(b.id);
-            if (!prev || row.time >= prev._t) byId.set(b.id, Object.assign({}, b, { _t: row.time }));
+            const key = mineRecordKey(b);
+            if (!key) continue;
+            const prev = byKey.get(key);
+            // 正式状态回写优先于申请原文 stub；同级取较新
+            if (!prev) {
+              byKey.set(key, Object.assign({}, b, { _t: row.time }));
+              continue;
+            }
+            const prevStub = Boolean(prev._fromRequest);
+            const nextStub = Boolean(b._fromRequest);
+            if (prevStub && !nextStub) {
+              byKey.set(key, Object.assign({}, b, { _t: row.time }));
+            } else if (!prevStub && nextStub) {
+              /* keep real status */
+            } else if (row.time >= prev._t) {
+              byKey.set(key, Object.assign({}, b, { _t: row.time }));
+            }
+          }
+          // 有编号的状态回写并入同 token 的申请 stub，避免一条变两条
+          for (const [key, rec] of [...byKey.entries()]) {
+            if (!key.startsWith('id:') || !rec.clientToken) continue;
+            const tokKey = `tok:${rec.clientToken}`;
+            const stub = byKey.get(tokKey);
+            if (!stub) continue;
+            if (!rec.date && stub.date) rec.date = stub.date;
+            if (!rec.plate && stub.plate) rec.plate = stub.plate;
+            if (!rec.purpose && stub.purpose) rec.purpose = stub.purpose;
+            if (!rec.submittedAt && stub.submittedAt) rec.submittedAt = stub.submittedAt;
+            byKey.delete(tokKey);
+          }
+          // 仅有申请、尚无状态回写时：按 token 再查一次（云端 / ntfy 状态）
+          for (const [key, rec] of [...byKey.entries()]) {
+            if (!key.startsWith('tok:') || !rec.clientToken) continue;
+            try {
+              const found = await findStatusByToken(rec.clientToken);
+              if (!found?.id || String(found.id).startsWith('denied-')) continue;
+              byKey.delete(key);
+              const idKey = `id:${found.id}`;
+              const prev = byKey.get(idKey) || rec;
+              byKey.set(idKey, Object.assign({}, prev, found, {
+                id: found.id,
+                status: pickKeptStatus(prev.status, found.status),
+                clientToken: rec.clientToken,
+                date: found.date || prev.date || '',
+                plate: found.plate || prev.plate || '',
+                purpose: found.purpose || prev.purpose || '',
+                submittedAt: found.submittedAt || prev.submittedAt || '',
+                _t: Date.now(),
+              }));
+            } catch (_) { /* 保持 pending stub */ }
+          }
+          const byId = new Map();
+          for (const rec of byKey.values()) {
+            const id = String(rec.id || '').trim() || mineRecordKey(rec);
+            if (!id || String(id).startsWith('denied-')) continue;
+            const displayId = String(rec.id || '').trim() || id.replace(/^tok:/, '待编号-');
+            byId.set(displayId, Object.assign({}, rec, { id: displayId }));
           }
           for (const s of stored) {
             const prev = byId.get(s.id);
@@ -2462,11 +2555,14 @@
             if (!prev.decidedBy && s.decidedBy) prev.decidedBy = s.decidedBy;
             if (!prev.remark && s.remark) prev.remark = s.remark;
             if (!prev.rejectReason && s.rejectReason) prev.rejectReason = s.rejectReason;
+            if (!prev.clientToken && s.clientToken) prev.clientToken = s.clientToken;
           }
           records = [...byId.values()]
             .filter((r) => r.status !== 'cancelled')
             .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
-          [...byId.values()].forEach((rec) => addMyId(rec.id, rec));
+          [...byId.values()].forEach((rec) => {
+            if (rec.id && !String(rec.id).startsWith('待编号-')) addMyId(rec.id, rec);
+          });
         } else {
         const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
         const r = await fetch(`${VEHICLE_API}/my-records${qs}`, {
