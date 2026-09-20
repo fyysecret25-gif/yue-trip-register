@@ -8,6 +8,7 @@
   <meta name="color-scheme" content="light" />
   <meta name="description" content="十八局南方公司出车登记" />
   <meta name="robots" content="noindex, nofollow" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>十八局南方公司出车登记</title>
   <link rel="preload" href="./assets/office-ui-core.css?v=81" as="style" />
   <link rel="stylesheet" href="./assets/office-ui-core.css?v=81" />
@@ -1138,7 +1139,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-20T00:38:17.222Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-20T00:58:14.097Z"};</script>
 
 
   <script>
@@ -1283,12 +1284,28 @@
       });
       localStorage.setItem(myIdsKey(), JSON.stringify(list.slice(0, 100)));
     }
+    function normalizeAccessCode(raw) {
+      let s = String(raw || '');
+      try { s = s.normalize('NFKC'); } catch (e) { /* ignore */ }
+      return s.replace(/[\u200b\u200c\u200d\ufeff\u2060]/g, '').replace(/\s+/g, '').toLowerCase();
+    }
     function resolvePublicAccess(code) {
-      const c = String(code || '').trim().toLowerCase();
-      if (!c) return null;
+      const c = normalizeAccessCode(code);
+      if (!c || !PUB) return null;
       return (PUB.accessCodes || []).find(
-        (row) => String(row.code || '').trim().toLowerCase() === c,
+        (row) => normalizeAccessCode(row.code) === c,
       ) || null;
+    }
+    async function refreshPublicCodes() {
+      try {
+        const url = new URL('codes.json', location.href);
+        url.searchParams.set('t', String(Date.now()));
+        const r = await fetchWithTimeout(url.href, { cache: 'no-store' }, 8000);
+        if (!r.ok) return;
+        const data = await r.json();
+        const list = Array.isArray(data) ? data : (data.accessCodes || []);
+        if (PUB && Array.isArray(list) && list.length) PUB.accessCodes = list;
+      } catch (e) { /* 名单文件缺失时仍用页内嵌名单 */ }
     }
     async function fetchPublicStatusMessages(sinceSpec) {
       const since = sinceSpec || '72h';
@@ -1492,11 +1509,15 @@
       showGateMsg('ok', '正在验证…');
       try {
         if (IS_PUBLIC) {
-          const row = resolvePublicAccess(c);
+          let row = resolvePublicAccess(c);
+          if (!row) {
+            await refreshPublicCodes();
+            row = resolvePublicAccess(c);
+          }
           if (!row) throw new Error('口令无效');
-          accessCode = c;
+          accessCode = String(row.code || '').trim();
           accessName = row.name || '';
-          lsSet('trip_access_code', c);
+          lsSet('trip_access_code', accessCode);
           if (accessName) lsSet('trip_access_name', accessName);
           enterApp();
           return true;
