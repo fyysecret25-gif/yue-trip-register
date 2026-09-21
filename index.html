@@ -1139,7 +1139,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-20T08:11:27.191Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-21T04:10:24.178Z"};</script>
 
 
   <script>
@@ -2273,6 +2273,11 @@
       el.className = 'msg show ' + type;
       el.textContent = text;
     }
+    function friendlyRequestId(id) {
+      const s = String(id || '');
+      if (!s || s.startsWith('待编号-') || s.startsWith('tok:')) return '待编号';
+      return s;
+    }
     function statusLabel(s) {
       return ({ pending: '待审批', approved: '已同意登记', rejected: '已驳回', cancelled: '已撤回' })[s] || s;
     }
@@ -2295,7 +2300,7 @@
     function recordDetailHtml(info) {
       return `
         <div class="qgrid">
-          <div><b>编号</b><span>${esc(info.id)}</span></div>
+          <div><b>编号</b><span>${esc(friendlyRequestId(info.id))}</span></div>
           <div><b>日期</b><span>${esc(info.date || '—')}</span></div>
           <div><b>车牌</b><span>${esc(info.plate || '—')}</span></div>
           <div><b>司机</b><span>${esc(info.driver || '—')}</span></div>
@@ -2351,7 +2356,7 @@
         <div class="mine-item" data-id="${esc(r.id)}">
           <div class="mine-item-main" role="button" tabindex="0" aria-expanded="false" data-id="${esc(r.id)}">
             <div class="row1">
-              <span>${esc(r.id)}</span>
+              <span>${esc(friendlyRequestId(r.id))}</span>
               <span class="row1-right">
                 ${canSelfDelete(r.status) ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">删除</button>` : ''}
                 <span class="badge ${esc(r.status)}">${statusLabel(r.status)}</span>
