@@ -24,7 +24,7 @@
   --blur: blur(20px);
   --chrome-nav-h: 48px;
   --chrome-bar-h: 52px;
-  --chrome-h: calc(var(--chrome-nav-h) + var(--chrome-bar-h));
+  --chrome-h: var(--chrome-nav-h);
   --hub-scale: clamp(1rem, 0.85rem + 0.35vw, 1.125rem);
   /* 与驾驶舱 .hub-page 同宽同边距，各板块页共用 */
   --office-content-max: 1680px;
@@ -292,21 +292,28 @@ textarea:focus-visible,
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
 }
 
-.office-module-nav,
-.office-chrome-bar {
+.office-chrome-top {
   max-width: var(--office-content-max);
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
   padding-left: var(--office-pad-x);
   padding-right: var(--office-pad-x);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--chrome-nav-h);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .office-module-nav {
   display: flex;
   align-items: center;
   gap: 6px;
-  height: var(--chrome-nav-h);
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   padding-top: 0;
   padding-bottom: 0;
   overflow-x: auto;
@@ -315,8 +322,8 @@ textarea:focus-visible,
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   scrollbar-width: thin;
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border-bottom: none;
 }
 
 .office-mod-link {
@@ -345,16 +352,6 @@ textarea:focus-visible,
   box-shadow: 0 4px 14px rgba(0, 113, 227, 0.28);
 }
 
-.office-chrome-bar {
-  height: var(--chrome-bar-h);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 0;
-  padding-bottom: 0;
-  gap: 12px;
-}
-
 .office-chrome {
   position: fixed;
   top: 0;
@@ -375,50 +372,20 @@ textarea:focus-visible,
 
 .chrome-side {
   flex: 0 0 auto;
-  min-width: 88px;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.chrome-mid {
-  flex: 1;
-  min-width: 0;
-  text-align: center;
-  display: grid;
-  gap: 2px;
-  justify-items: center;
-}
-
-.chrome-updated {
-  margin: 0;
-  font-size: 0.6875rem;
-  color: var(--muted-light);
-  font-weight: 500;
-  line-height: 1.2;
-}
-
-.office-chrome .chrome-title,
-.office-chrome-bar .chrome-title {
-  position: static;
-  transform: none;
-  margin: 0;
-  font-size: 0.9375rem;
-  font-weight: 650;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  text-align: center;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  pointer-events: none;
-  line-height: 1.2;
+.chrome-side.chrome-left:not(:has(.chrome-back-btn)) {
+  display: none;
 }
 
 .chrome-side.chrome-right {
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
   gap: 8px;
 }
 

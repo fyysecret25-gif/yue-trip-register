@@ -92,10 +92,7 @@ body.register-page .notice-actions button {
   cursor: pointer;
 }
 
-/* Hub 顶栏已显示页面标题时，去掉正文区重复 header */
-body.register-page.with-chrome .wrap > header {
-  display: none !important;
-}
+/* 顶栏已无页面标题，登记页正文 header 正常显示 */
 
 .hub-hero {
   text-align: center;
@@ -143,9 +140,14 @@ body.register-page.with-chrome .wrap > header {
   border-bottom-color: rgba(0, 0, 0, 0.08);
 }
 
-.office-module-nav {
+.office-chrome-top {
   background: transparent;
   border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.office-module-nav {
+  background: transparent;
+  border-bottom: none;
 }
 
 .office-mod-link {
@@ -168,11 +170,6 @@ body.register-page.with-chrome .wrap > header {
   background: var(--apple-ink);
   border-color: var(--apple-ink);
   box-shadow: none;
-}
-
-.office-chrome-bar .chrome-title {
-  font-weight: 600;
-  letter-spacing: -0.022em;
 }
 
 .chrome-btn {
@@ -1153,16 +1150,12 @@ body.register-page button.primary,
 
 /* 登记页 · 手机优先（出车登记 / 物资领用申请） */
 @media (max-width: 640px) {
-  body.register-page.with-chrome {
-    --chrome-nav-h: 0px;
-    --chrome-h: var(--chrome-bar-h);
-  }
-
+  /* 隐藏模块链接；单行保留返回 + 操作组 */
   body.register-page .office-module-nav {
     display: none;
   }
 
-  body.register-page .office-chrome-bar .chrome-save-lamp {
+  body.register-page .office-chrome-top .chrome-save-lamp {
     display: none;
   }
 
@@ -1605,8 +1598,8 @@ body.register-page button.primary,
     border-bottom-color: rgba(255, 255, 255, 0.08);
   }
 
-  :root:not([data-office-theme="light"]) .office-module-nav,
-  :root[data-office-theme="dark"] .office-module-nav {
+  :root:not([data-office-theme="light"]) .office-chrome-top,
+  :root[data-office-theme="dark"] .office-chrome-top {
     background: rgba(28, 28, 30, 0.65);
   }
 
