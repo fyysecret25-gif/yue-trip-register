@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-24T08:23:51.676Z",
+  "updatedAt": "2026-09-24T08:24:52.321Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -398,6 +398,78 @@
       "price": "0.00"
     },
     {
+      "skuKey": "电脑配件:::电脑机箱风扇:::风扇",
+      "code": "0612260828000106",
+      "name": "电脑机箱风扇",
+      "spec": "风扇",
+      "unit": "个",
+      "category": "电脑配件",
+      "available": 1,
+      "vendor": "广西藏宝阁科技",
+      "location": "仓库",
+      "price": "14.16"
+    },
+    {
+      "skuKey": "电脑配件:::电脑配件:::鼠标",
+      "code": "0101260824000102",
+      "name": "电脑配件",
+      "spec": "鼠标",
+      "unit": "个",
+      "category": "电脑配件",
+      "available": 1,
+      "vendor": "拼多多",
+      "location": "仓库",
+      "price": "59.85"
+    },
+    {
+      "skuKey": "电脑配件:::电脑配件:::HDMI高清线",
+      "code": "0101260824000103",
+      "name": "电脑配件",
+      "spec": "HDMI高清线",
+      "unit": "根",
+      "category": "电脑配件",
+      "available": 1,
+      "vendor": "拼多多",
+      "location": "仓库",
+      "price": "46.90"
+    },
+    {
+      "skuKey": "电脑配件:::电源:::电源",
+      "code": "0612260828000108",
+      "name": "电源",
+      "spec": "电源",
+      "unit": "个",
+      "category": "电脑配件",
+      "available": 1,
+      "vendor": "广西藏宝阁科技",
+      "location": "仓库",
+      "price": "264.60"
+    },
+    {
+      "skuKey": "电脑配件:::散热器:::散热器",
+      "code": "0612260828000102",
+      "name": "散热器",
+      "spec": "散热器",
+      "unit": "个",
+      "category": "电脑配件",
+      "available": 1,
+      "vendor": "广西藏宝阁科技",
+      "location": "仓库",
+      "price": "156.64"
+    },
+    {
+      "skuKey": "电脑配件:::主板:::主板",
+      "code": "0612260828000101",
+      "name": "主板",
+      "spec": "主板",
+      "unit": "块",
+      "category": "电脑配件",
+      "available": 1,
+      "vendor": "广西藏宝阁科技",
+      "location": "仓库",
+      "price": "628.32"
+    },
+    {
       "skuKey": "固资:::奥克斯（AUX）消毒柜:::XDG-SY810-B26",
       "code": "0101260830000101",
       "name": "奥克斯（AUX）消毒柜",
@@ -420,6 +492,18 @@
       "vendor": "北京京东世纪信息技术",
       "location": "仓库",
       "price": "423.89"
+    },
+    {
+      "skuKey": "固资:::显卡:::5060Ti",
+      "code": "0612260828000103",
+      "name": "显卡",
+      "spec": "5060Ti",
+      "unit": "块",
+      "category": "固资",
+      "available": 1,
+      "vendor": "广西藏宝阁科技",
+      "location": "仓库",
+      "price": "5167.26"
     },
     {
       "skuKey": "生活用品:::垃圾袋:::中号",
