@@ -611,11 +611,48 @@
       font-family: inherit;
       margin: 0;
     }
+    .mine-filters { display: grid; gap: 8px; margin-bottom: 10px; }
+    .mine-search {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 16px;
+      font-family: inherit;
+      background: #fff;
+    }
+    .mine-filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .mine-chips { display: flex; flex-wrap: wrap; gap: 6px; min-width: 0; }
+    .mine-chips button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: inherit;
+      margin: 0;
+    }
+    .mine-chips button.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
     .mine-toolbar {
       display: flex;
       justify-content: flex-end;
       margin-bottom: 10px;
     }
+    .mine-filter-row .mine-toolbar { margin: 0; flex-shrink: 0; }
     .mine-toolbar button {
       appearance: none;
       border: 1px solid var(--line);
@@ -1112,8 +1149,19 @@
 
     <div class="panel" id="panelMine">
       <div class="panel-card">
-        <div class="mine-toolbar">
-          <button type="button" id="btnRefreshMine">刷新</button>
+        <div class="mine-filters">
+          <input type="search" id="mineSearch" class="mine-search" placeholder="搜编号、车牌、事由、姓名" enterkeyhint="search" autocomplete="off" />
+          <div class="mine-filter-row">
+            <div class="mine-chips" id="mineChips">
+              <button type="button" class="active" data-status="">全部</button>
+              <button type="button" data-status="pending">待审批</button>
+              <button type="button" data-status="approved">已同意</button>
+              <button type="button" data-status="rejected">已驳回</button>
+            </div>
+            <div class="mine-toolbar">
+              <button type="button" id="btnRefreshMine">刷新</button>
+            </div>
+          </div>
         </div>
         <div class="msg" id="mineMsg"></div>
         <div class="mine-list" id="mineList"></div>
@@ -1139,7 +1187,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"},{"code":"dfs687","name":"杜方帅"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-09-30T00:47:15.634Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"},{"code":"dfs687","name":"杜方帅"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-10-08T08:06:31.026Z"};</script>
 
 
   <script>
@@ -1307,12 +1355,29 @@
         if (PUB && Array.isArray(list) && list.length) PUB.accessCodes = list;
       } catch (e) { /* 名单文件缺失时仍用页内嵌名单 */ }
     }
-    async function fetchPublicStatusMessages(sinceSpec) {
-      // 查询进度略拉长回溯，避免刚过 72h 的已通过从公网列表消失
-      const since = sinceSpec || '168h';
+    function ntfyTimeMs(t) {
+      const n = Number(t) || 0;
+      if (!n) return 0;
+      return n < 1e12 ? n * 1000 : n;
+    }
+    async function fetchPublishedMineIndex() {
+      if (!IS_PUBLIC) return [];
+      const url = new URL('mine.json', location.href);
+      url.searchParams.set('t', String(Date.now()));
+      const r = await fetchWithTimeout(url.href, { cache: 'no-store' }, 8000);
+      if (!r.ok) return [];
+      const data = await r.json();
+      return Array.isArray(data.records) ? data.records : [];
+    }
+    async function fetchPublicStatusMessages(sinceSpec, allowFallback = true) {
+      // ntfy.sh 免费档缓存约 12h；更长的 since（如 7d / 168h）会 HTTP 400。历史记录走 mine.json
+      const since = sinceSpec || '12h';
       const url = `${NTFY.server}/${encodeURIComponent(NTFY.topic)}/json?poll=1&since=${encodeURIComponent(since)}`;
       const r = await fetchWithTimeout(url, { headers: { Accept: 'application/json' } }, 8000);
-      if (!r.ok) throw new Error('查询失败 HTTP ' + r.status);
+      if (!r.ok) {
+        if (allowFallback && r.status === 400 && since !== '12h') return fetchPublicStatusMessages('12h', false);
+        throw new Error('查询失败 HTTP ' + r.status);
+      }
       const text = (await r.text()).trim();
       if (!text) return [];
       const out = [];
@@ -1326,7 +1391,7 @@
         if (body.type === 'trip_cancel') {
           out.push({
             body: Object.assign({}, body, { type: 'trip_status', status: 'cancelled' }),
-            time: Number(msg.time) || 0,
+            time: ntfyTimeMs(msg.time),
           });
           continue;
         }
@@ -1341,19 +1406,24 @@
               date: body.date || '',
               plate: body.plate || '',
               driver: body.driver || '',
+              handler: body.handler || '',
               purpose: body.purpose || '',
+              origin: body.origin || '',
+              destination: body.destination || '',
+              departTime: body.departTime || '',
+              returnTime: body.returnTime || '',
               remark: body.remark || '',
               accessName: body.accessName || '',
               accessCode: body.accessCode || '',
               submittedAt: body.submittedAt || '',
               _fromRequest: true,
             },
-            time: Number(msg.time) || 0,
+            time: ntfyTimeMs(msg.time),
           });
           continue;
         }
         if (body.type !== 'trip_status') continue;
-        out.push({ body, time: Number(msg.time) || 0 });
+        out.push({ body, time: ntfyTimeMs(msg.time) });
       }
       return out;
     }
@@ -2267,6 +2337,10 @@
       btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
     });
 
+    let mineAllRecords = [];
+    let mineFilterStatus = '';
+    let mineFilterQuery = '';
+    let mineLoadNote = '';
     function showMineMsg(type, text) {
       const el = $('mineMsg');
       el.className = 'msg show ' + type;
@@ -2303,7 +2377,10 @@
           <div><b>日期</b><span>${esc(info.date || '—')}</span></div>
           <div><b>车牌</b><span>${esc(info.plate || '—')}</span></div>
           <div><b>司机</b><span>${esc(info.driver || '—')}</span></div>
+          ${info.handler ? `<div><b>经办人</b><span>${esc(info.handler)}</span></div>` : ''}
           <div><b>事由</b><span>${esc(info.purpose || '—')}</span></div>
+          ${(info.origin || info.destination) ? `<div><b>行程</b><span>${esc([info.origin, info.destination].filter(Boolean).join(' → '))}</span></div>` : ''}
+          ${(info.departTime || info.returnTime) ? `<div><b>时间</b><span>${esc([info.departTime, info.returnTime].filter(Boolean).join(' – '))}</span></div>` : ''}
           ${info.remark ? `<div><b>备注</b><span>${esc(info.remark)}</span></div>` : ''}
           ${info.status === 'approved' ? `<div><b>审批结果</b><span>已同意登记</span></div>` : ''}
           ${info.rejectReason ? `<div><b>驳回原因</b><span>${esc(info.rejectReason)}</span></div>` : ''}
@@ -2311,7 +2388,7 @@
           <div><b>提交</b><span>${esc(fmtWhen(info.submittedAt))}</span></div>
           <div><b>审批</b><span>${esc(fmtWhen(info.decidedAt))}</span></div>
         </div>
-        ${canSelfDelete(info.status) ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>删除申请</button>' : ''}`;
+        ${canSelfDelete(info.status, info) ? '<button type="button" class="mine-cancel mine-detail-cancel" data-cancel>删除申请</button>' : ''}`;
     }
     function collapseMineItem(item) {
       item.classList.remove('is-open');
@@ -2348,7 +2425,10 @@
     function renderMineList(records) {
       const box = $('mineList');
       if (!records.length) {
-        box.innerHTML = '<div class="mine-empty">暂无申请记录<br>提交出车登记后将显示在此</div>';
+        const filtered = mineAllRecords.length > 0;
+        box.innerHTML = filtered
+          ? '<div class="mine-empty">没有符合筛选的记录</div>'
+          : '<div class="mine-empty">暂无与你相关的出车记录<br>提交出车登记后将显示在此</div>';
         return;
       }
       box.innerHTML = records.map((r) => `
@@ -2357,11 +2437,11 @@
             <div class="row1">
               <span>${esc(friendlyRequestId(r.id))}</span>
               <span class="row1-right">
-                ${canSelfDelete(r.status) ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">删除</button>` : ''}
+                ${canSelfDelete(r.status, r) ? `<button type="button" class="mine-cancel" data-cancel="${esc(r.id)}">删除</button>` : ''}
                 <span class="badge ${esc(r.status)}">${statusLabel(r.status)}</span>
               </span>
             </div>
-            <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.purpose || '—')}</div>
+            <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.driver || '—')} · ${esc(r.purpose || '—')}</div>
           </div>
           <div class="mine-item-detail" hidden></div>
         </div>`).join('');
@@ -2388,11 +2468,17 @@
         });
       });
     }
-    function canSelfDelete(status) {
-      return status === 'pending' || status === 'rejected';
+    function viewerIsSubmitter(rec) {
+      const name = String(accessName || localStorage.getItem('trip_access_name') || '').trim();
+      const owner = String(rec?.accessName || '').trim();
+      if (!name || !owner) return true;
+      return owner === name;
+    }
+    function canSelfDelete(status, rec) {
+      return (status === 'pending' || status === 'rejected') && viewerIsSubmitter(rec);
     }
     async function cancelOwnRecord(rec) {
-      if (!rec?.id || !canSelfDelete(rec.status)) return;
+      if (!rec?.id || !canSelfDelete(rec.status, rec)) return;
       const tip = rec.status === 'rejected'
         ? '确认删除这条已驳回申请？不可恢复。'
         : '确认删除这条待审批申请？办公室将不再处理，且不可恢复。';
@@ -2449,15 +2535,38 @@
       if (token) return `tok:${token}`;
       return '';
     }
+    function mineNameHit(b, name) {
+      const key = String(name || '').trim();
+      if (!key) return false;
+      return [b.accessName, b.driver, b.handler].some((v) => String(v || '').trim() === key);
+    }
     function mineRowMatchesUser(b, name, code, stored) {
       if (b.id && String(b.id).startsWith('denied-')) return false;
-      if (name && b.accessName && b.accessName === name) return true;
-      // 申请原文常无 accessName，用登记口令或司机名对齐本人
+      if (mineNameHit(b, name)) return true;
+      // 申请原文常无姓名，用登记口令对齐本人
       if (code && b.accessCode && normalizeAccessCode(b.accessCode) === normalizeAccessCode(code)) return true;
-      if (name && !b.accessName && b.driver && b.driver === name) return true;
       if (b.id && stored.some((s) => s.id === b.id)) return true;
       if (b.clientToken && stored.some((s) => s.clientToken && s.clientToken === b.clientToken)) return true;
       return false;
+    }
+    function applyMineView() {
+      const q = mineFilterQuery.trim().toLowerCase();
+      const shown = mineAllRecords.filter((r) => {
+        if (mineFilterStatus && r.status !== mineFilterStatus) return false;
+        if (!q) return true;
+        const blob = [
+          r.id, friendlyRequestId(r.id), r.plate, r.purpose, r.driver, r.handler,
+          r.origin, r.destination, r.date, r.remark,
+        ].join(' ').toLowerCase();
+        return blob.includes(q);
+      });
+      renderMineList(shown);
+      const base = !mineAllRecords.length
+        ? '暂无与你相关的出车记录'
+        : (shown.length === mineAllRecords.length
+          ? `共 ${mineAllRecords.length} 条申请`
+          : `显示 ${shown.length} / ${mineAllRecords.length} 条`);
+      showMineMsg('ok', mineLoadNote ? `${base}。${mineLoadNote}` : base);
     }
     async function loadMyRecords() {
       $('btnRefreshMine').disabled = true;
@@ -2468,7 +2577,25 @@
           const name = accessName || localStorage.getItem('trip_access_name') || '';
           const code = accessCode || localStorage.getItem('trip_access_code') || '';
           const stored = loadMyIdList();
-          const list = await fetchPublicStatusMessages();
+          mineLoadNote = '';
+          let indexRows = [];
+          try {
+            const indexRecords = await fetchPublishedMineIndex();
+            indexRows = indexRecords
+              .filter((b) => mineRowMatchesUser(b, name, code, stored))
+              .map((b) => ({
+                body: b,
+                time: Date.parse(b.decidedAt || b.submittedAt || '') || 0,
+              }));
+          } catch (_) { /* 无底账时仍走最近动态 */ }
+          let liveRows = [];
+          try {
+            liveRows = await fetchPublicStatusMessages();
+          } catch (err) {
+            if (!indexRows.length) throw err;
+            mineLoadNote = '最近动态暂不可用，已显示已入库记录';
+          }
+          const list = indexRows.concat(liveRows);
           const byKey = new Map();
           for (const row of list) {
             const b = row.body;
@@ -2505,6 +2632,10 @@
             if (!rec.date && stub.date) rec.date = stub.date;
             if (!rec.plate && stub.plate) rec.plate = stub.plate;
             if (!rec.purpose && stub.purpose) rec.purpose = stub.purpose;
+            if (!rec.handler && stub.handler) rec.handler = stub.handler;
+            if (!rec.driver && stub.driver) rec.driver = stub.driver;
+            if (!rec.origin && stub.origin) rec.origin = stub.origin;
+            if (!rec.destination && stub.destination) rec.destination = stub.destination;
             if (!rec.submittedAt && stub.submittedAt) rec.submittedAt = stub.submittedAt;
             byKey.delete(tokKey);
           }
@@ -2600,9 +2731,10 @@
         records = data.records || [];
         records.forEach((rec) => addMyId(rec.id, rec));
         }
-        renderMineList(records);
-        showMineMsg('ok', records.length ? `共 ${records.length} 条申请` : '暂无申请记录');
+        mineAllRecords = records;
+        applyMineView();
       } catch (e) {
+        mineAllRecords = [];
         $('mineList').innerHTML = '';
         showMineMsg('err', e.message || String(e));
       } finally {
@@ -2610,6 +2742,17 @@
       }
     }
     $('btnRefreshMine').addEventListener('click', loadMyRecords);
+    $('mineChips').addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button[data-status]');
+      if (!btn) return;
+      mineFilterStatus = btn.dataset.status || '';
+      $('mineChips').querySelectorAll('button').forEach((b) => b.classList.toggle('active', b === btn));
+      applyMineView();
+    });
+    $('mineSearch').addEventListener('input', () => {
+      mineFilterQuery = $('mineSearch').value || '';
+      applyMineView();
+    });
 
     $('btnGotoStatus').addEventListener('click', () => {
       switchPanel('panelMine');
