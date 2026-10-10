@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-10T11:03:25.973Z",
+  "updatedAt": "2026-10-10T11:03:57.888Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -501,6 +501,18 @@
       "unit": "包",
       "category": "纸品",
       "available": 11,
+      "vendor": "交接",
+      "location": "仓库",
+      "price": "0.00"
+    },
+    {
+      "skuKey": "纸品:::湿巾:::心相印.小",
+      "code": "0612260826000101",
+      "name": "湿巾",
+      "spec": "心相印.小",
+      "unit": "包",
+      "category": "纸品",
+      "available": 12,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
