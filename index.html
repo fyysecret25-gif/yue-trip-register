@@ -1187,7 +1187,7 @@
   </div>
 
   </div>
-  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"},{"code":"dfs687","name":"杜方帅"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-10-08T08:06:31.026Z"};</script>
+  <script>window.__TRIP_PUBLIC__={"ntfyServer":"https://ntfy.sh","ntfyTopic":"yue-trip-lk56m7z8ray1fq293p4d","company":"中铁十八局集团南方工程有限公司","needAccessCode":true,"vehicles":[{"plate":"粤B171TN","model":"GL8"},{"plate":"粤A7A07K","model":"GL8"},{"plate":"粤SN18R0","model":"GL8"},{"plate":"其他","model":""}],"handlers":["杨长京","赵君辉","王涛","王惠建","张凌源","刘伟英","唐立新","肖兵","杜琛","乔石","范未鹏","李新纪","王昊天","何凌霄","符乐","张跳","唐康生"],"accessCodes":[{"code":"ycj330","name":"杨长京"},{"code":"zjh355","name":"赵君辉"},{"code":"wt0765","name":"王涛"},{"code":"whj656","name":"王惠建"},{"code":"zly358","name":"张凌源"},{"code":"lwy858","name":"刘伟英"},{"code":"tlx957","name":"唐立新"},{"code":"xb0193","name":"肖兵"},{"code":"dc0775","name":"杜琛"},{"code":"qs0588","name":"乔石"},{"code":"fwp897","name":"范未鹏"},{"code":"lxj923","name":"李新纪"},{"code":"wht881","name":"王昊天"},{"code":"hlx551","name":"何凌霄"},{"code":"fy0225","name":"符乐"},{"code":"tks862","name":"唐康生"},{"code":"zt0658","name":"张跳"},{"code":"txt883","name":"唐小涛"},{"code":"sc0069","name":"苏程"},{"code":"dfs687","name":"杜方帅"}],"cloudQueue":{"enabled":false,"baseUrl":"https://office-queue.fyysecret25.workers.dev"},"updatedAt":"2026-10-18T05:36:40.420Z"};</script>
 
 
   <script>
@@ -1308,10 +1308,20 @@
     function isTerminalStatus(s) {
       return s === 'approved' || s === 'rejected' || s === 'denied' || s === 'cancelled';
     }
+    /** 决策终态可压过 pending（防 ntfy 过期回退）；cancelled 不压过公网仍在的 pending */
     function pickKeptStatus(prev, incoming) {
       if (incoming && incoming !== 'pending') return incoming;
-      if (isTerminalStatus(prev) && (!incoming || incoming === 'pending')) return prev;
+      if (
+        (prev === 'approved' || prev === 'rejected' || prev === 'denied')
+        && (!incoming || incoming === 'pending')
+      ) return prev;
       return incoming || prev || 'pending';
+    }
+    function removeMyId(id) {
+      const key = String(id || '').trim();
+      if (!key) return;
+      const list = loadMyIdList().filter((x) => x.id !== key);
+      localStorage.setItem(myIdsKey(), JSON.stringify(list.slice(0, 100)));
     }
     function addMyId(id, meta) {
       if (!id) return;
@@ -2217,6 +2227,7 @@
               localStorage.setItem('trip_access_name', accessName);
               updateUserBar();
             }
+            removeMyId(`待编号-${clientToken}`);
             addMyId(assignedId, {
               date: payload.date,
               plate: payload.plate,
@@ -2234,6 +2245,16 @@
             $('okBox').classList.add('show');
             await notifySubmitOk({ id: assignedId });
           } else {
+            // 尚未取到编号也要留下本地条目，避免第二条提交后查询进度只剩一条
+            addMyId(`待编号-${clientToken}`, {
+              date: payload.date,
+              plate: payload.plate,
+              purpose: payload.purpose,
+              remark: payload.remark || '',
+              submittedAt: payload.submittedAt,
+              status: 'pending',
+              clientToken,
+            });
             if (cloudOk) {
               const queueMsg = '已提交至云端队列，办公室开机后将分配编号。可在「查询进度」跟踪。';
               await notifySubmitOk({ message: queueMsg });
@@ -2441,7 +2462,7 @@
                 <span class="badge ${esc(r.status)}">${statusLabel(r.status)}</span>
               </span>
             </div>
-            <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.driver || '—')} · ${esc(r.purpose || '—')}</div>
+            <div class="row2">${esc(r.date || '—')} · ${esc(r.plate || '—')} · ${esc(r.departTime || '—')}-${esc(r.returnTime || '—')} · ${esc(r.purpose || '—')}</div>
           </div>
           <div class="mine-item-detail" hidden></div>
         </div>`).join('');
@@ -2668,11 +2689,24 @@
             byId.set(displayId, Object.assign({}, rec, { id: displayId }));
           }
           for (const s of stored) {
+            // 本地「待编号-token」若已有同 token 的正式编号，并入正式条，避免一条变两条或漏一条
+            if (String(s.id || '').startsWith('待编号-') && s.clientToken) {
+              const hit = [...byId.values()].find((r) => r.clientToken && r.clientToken === s.clientToken);
+              if (hit) {
+                hit.status = pickKeptStatus(s.status, hit.status);
+                if (!hit.date && s.date) hit.date = s.date;
+                if (!hit.plate && s.plate) hit.plate = s.plate;
+                if (!hit.purpose && s.purpose) hit.purpose = s.purpose;
+                if (!hit.submittedAt && s.submittedAt) hit.submittedAt = s.submittedAt;
+                continue;
+              }
+            }
             const prev = byId.get(s.id);
             if (!prev) {
+              // 本地误标 cancelled 且公网底账没有时仍展示；有底账则以底账为准（见下）
               byId.set(s.id, {
                 id: s.id,
-                status: isTerminalStatus(s.status) ? s.status : (s.status || 'pending'),
+                status: s.status === 'cancelled' ? 'cancelled' : (isTerminalStatus(s.status) ? s.status : (s.status || 'pending')),
                 date: s.date,
                 plate: s.plate,
                 purpose: s.purpose,
@@ -2693,28 +2727,46 @@
             if (!prev.clientToken && s.clientToken) prev.clientToken = s.clientToken;
           }
           // 本地仍待审的再查云端/ntfy：避免状态回写消息过期后一直卡在「待审批」
-          for (const rec of byId.values()) {
+          for (const [mapId, rec] of [...byId.entries()]) {
             if (rec.status !== 'pending' || !rec.clientToken) continue;
             try {
               const found = await findStatusByToken(rec.clientToken);
               if (!found?.status) continue;
               rec.status = pickKeptStatus(rec.status, found.status);
               if (found.id && !String(found.id).startsWith('denied-') && !String(found.id).startsWith('待编号-')) {
-                rec.id = String(found.id);
+                const realId = String(found.id);
+                if (realId !== mapId) {
+                  byId.delete(mapId);
+                  removeMyId(mapId);
+                  const keep = byId.get(realId) || rec;
+                  byId.set(realId, Object.assign({}, keep, rec, {
+                    id: realId,
+                    status: pickKeptStatus(keep.status, rec.status),
+                    clientToken: rec.clientToken,
+                  }));
+                } else {
+                  rec.id = realId;
+                }
               }
-              if (found.decidedAt) rec.decidedAt = found.decidedAt;
-              if (found.decidedBy) rec.decidedBy = found.decidedBy;
-              if (found.rejectReason) rec.rejectReason = found.rejectReason;
-              if (found.date) rec.date = found.date;
-              if (found.plate) rec.plate = found.plate;
-              if (found.purpose) rec.purpose = found.purpose;
+              const cur = byId.get(String(found.id || mapId)) || rec;
+              if (found.decidedAt) cur.decidedAt = found.decidedAt;
+              if (found.decidedBy) cur.decidedBy = found.decidedBy;
+              if (found.rejectReason) cur.rejectReason = found.rejectReason;
+              if (found.date) cur.date = found.date;
+              if (found.plate) cur.plate = found.plate;
+              if (found.purpose) cur.purpose = found.purpose;
             } catch (_) { /* 保持 pending */ }
           }
           records = [...byId.values()]
             .filter((r) => r.status !== 'cancelled')
             .sort((a, b) => String(b.submittedAt || '').localeCompare(String(a.submittedAt || '')));
           [...byId.values()].forEach((rec) => {
-            if (rec.id && !String(rec.id).startsWith('待编号-')) addMyId(rec.id, rec);
+            if (!rec.id) return;
+            if (String(rec.id).startsWith('待编号-')) addMyId(rec.id, rec);
+            else {
+              if (rec.clientToken) removeMyId(`待编号-${rec.clientToken}`);
+              addMyId(rec.id, rec);
+            }
           });
         } else {
         const qs = accessCode ? `?k=${encodeURIComponent(accessCode)}` : '';
