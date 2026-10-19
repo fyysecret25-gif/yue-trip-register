@@ -156,6 +156,19 @@ html {
   }
 }
 
+/* 软导航回主页：禁止入场动画停在 opacity:0，空壳也会立刻可见 */
+main.hub-page.office-nav-instant {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+main.office-nav-instant .office-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
