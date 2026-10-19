@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19T08:40:42.569Z",
+  "updatedAt": "2026-10-19T09:28:52.574Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -152,7 +152,7 @@
       "spec": "皮质",
       "unit": "本",
       "category": "办公用品",
-      "available": 4,
+      "available": 3,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -392,7 +392,7 @@
       "spec": "晨光",
       "unit": "包",
       "category": "办公用品",
-      "available": 40,
+      "available": 39,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
