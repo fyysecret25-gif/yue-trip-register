@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13T08:42:25.969Z",
+  "updatedAt": "2026-11-13T09:20:17.839Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -488,10 +488,10 @@
       "spec": "农夫山泉",
       "unit": "箱",
       "category": "水饮",
-      "available": 15,
+      "available": 14,
       "vendor": "叶利辉",
       "location": "仓库、食堂",
-      "price": "20.33"
+      "price": "20.71"
     },
     {
       "skuKey": "水饮:::桶装水:::19L",
@@ -512,7 +512,7 @@
       "spec": "88抽",
       "unit": "包",
       "category": "纸品",
-      "available": 69,
+      "available": 63,
       "vendor": "山姆",
       "location": "仓库",
       "price": "3.00"
