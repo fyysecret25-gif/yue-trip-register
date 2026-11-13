@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13T00:52:30.669Z",
+  "updatedAt": "2026-11-13T08:39:24.484Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -56,22 +56,10 @@
       "spec": "便签",
       "unit": "包",
       "category": "办公用品",
-      "available": 38,
+      "available": 37,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
-    },
-    {
-      "skuKey": "办公用品:::订书机:::50页",
-      "code": "0203260914000201",
-      "name": "订书机",
-      "spec": "50页",
-      "unit": "个",
-      "category": "办公用品",
-      "available": 1,
-      "vendor": "京东",
-      "location": "仓库",
-      "price": "24.30"
     },
     {
       "skuKey": "办公用品:::订书针:::订书针",
@@ -80,7 +68,7 @@
       "spec": "订书针",
       "unit": "盒",
       "category": "办公用品",
-      "available": 8,
+      "available": 7,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -104,7 +92,7 @@
       "spec": "回形针",
       "unit": "盒",
       "category": "办公用品",
-      "available": 3,
+      "available": 2,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -200,7 +188,7 @@
       "spec": "起钉器",
       "unit": "个",
       "category": "办公用品",
-      "available": 3,
+      "available": 2,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
