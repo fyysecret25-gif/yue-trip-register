@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13T08:39:24.484Z",
+  "updatedAt": "2026-11-13T08:42:25.969Z",
   "items": [
     {
       "skuKey": "安全防护用品:::手持干粉灭火器:::4KG",
@@ -24,18 +24,6 @@
       "vendor": "京东",
       "location": "仓库",
       "price": "48.85"
-    },
-    {
-      "skuKey": "办公用品:::8孔插座:::公牛",
-      "code": "0203261102000501",
-      "name": "8孔插座",
-      "spec": "公牛",
-      "unit": "个",
-      "category": "办公用品",
-      "available": 2,
-      "vendor": "京东",
-      "location": "仓库",
-      "price": "34.90"
     },
     {
       "skuKey": "办公用品:::笔记本:::小型",
@@ -68,7 +56,7 @@
       "spec": "订书针",
       "unit": "盒",
       "category": "办公用品",
-      "available": 7,
+      "available": 5,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -104,7 +92,7 @@
       "spec": "大号",
       "unit": "卷",
       "category": "办公用品",
-      "available": 10,
+      "available": 9,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -188,7 +176,7 @@
       "spec": "起钉器",
       "unit": "个",
       "category": "办公用品",
-      "available": 2,
+      "available": 1,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -212,7 +200,7 @@
       "spec": "加厚A4",
       "unit": "只",
       "category": "办公用品",
-      "available": 37,
+      "available": 22,
       "vendor": "京东",
       "location": "仓库",
       "price": "0.41"
@@ -260,7 +248,7 @@
       "spec": "爱斯达",
       "unit": "个",
       "category": "办公用品",
-      "available": 5,
+      "available": 3,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -344,7 +332,7 @@
       "spec": "小号",
       "unit": "个",
       "category": "办公用品",
-      "available": 4,
+      "available": 3,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -356,7 +344,7 @@
       "spec": "中号",
       "unit": "个",
       "category": "办公用品",
-      "available": 6,
+      "available": 5,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -368,7 +356,7 @@
       "spec": "塑料5.5cm",
       "unit": "个",
       "category": "办公用品",
-      "available": 41,
+      "available": 31,
       "vendor": "京东",
       "location": "仓库",
       "price": "2.93"
@@ -404,7 +392,7 @@
       "spec": "黑",
       "unit": "盒",
       "category": "办公用品",
-      "available": 2,
+      "available": 1,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -416,7 +404,7 @@
       "spec": "晨光",
       "unit": "包",
       "category": "办公用品",
-      "available": 33,
+      "available": 28,
       "vendor": "交接",
       "location": "仓库",
       "price": "0.00"
@@ -548,7 +536,7 @@
       "spec": "110抽",
       "unit": "包",
       "category": "纸品",
-      "available": 139,
+      "available": 115,
       "vendor": "山姆",
       "location": "仓库",
       "price": "2.08"
